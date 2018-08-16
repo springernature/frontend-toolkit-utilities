@@ -15,8 +15,6 @@ This repository contains utilities and helpers for interacting with the front-en
 	* [Package structure](#package-structure)
 	* [Naming](#naming)
 		* [`package.json`](#packagejson)
-	* [SASS](#sass)
-	* [Javascript](#javascript)
 * [Testing](#testing)
 * [Linting](#linting)
 * [Continuous integration](#continuous-integration)
@@ -50,8 +48,6 @@ All packages are validated on our CI server (Travis) to ensure they conform to c
 You can validate all the packages by running `npm run validate` from within the project on the command line, or test only your package by running `npm run validate -- -p util-name-of-package`.
 
 **You can auto-generate a new package with the correct configuration by running `npm run create` from within the project on the command line. This will generate a folder in the `packages` directory with the correct files and folders.**
-
-<img src="auto-generate.gif" width="600">
 
 ### Package structure
 
