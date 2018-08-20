@@ -18,7 +18,7 @@
     "node": ">=8"
   },
   "scripts": {
-    "test": "jest --colors --coverage --silent",
+    "test": "jest --colors --coverage --silent --passWithNoTests",
     "lint": "npm run lint:js",
     "lint:js": "eslint .",
     "bootstrap": "lerna bootstrap --hoist",
@@ -33,7 +33,7 @@
   "homepage": "https://github.com/springernature/frontend-toolkit-utilities#readme",
   "devDependencies": {
     "@springernature/eslint-config": "^2.0.0",
-    "@springernature/global-package-manager": "^2.3.0",
+    "@springernature/frontend-package-manager": "^0.1.1",
     "babel-preset-env": "^1.7.0",
     "eslint": "^5.1.0",
     "eslint-plugin-import": "^2.13.0",
