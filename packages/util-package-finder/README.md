@@ -129,8 +129,6 @@ $ ./node_modules/.bin/util-package-finder
 
 This command will print a list of all packages within the default (springernature) scope:
 
-<img src="cli-example.png" width="400">
-
 ### Command line arguments
 
 The package finder command-line interface comes with a series of options. Use `util-package-finder -h` from your terminal to show these options.
