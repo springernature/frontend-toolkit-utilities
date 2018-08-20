@@ -121,7 +121,7 @@ const addData = (json, registry) => {
  */
 module.exports = ({scope = 'springernature', filters = [], registry = npmRegistry} = {}) => (
 	validateOptions({scope: scope, filters: filters})
-		.then(opts => fetch(`${registry}/-/v1/search?text=scope:${opts.scope}`))
+		.then(opts => fetch(`${registry}/-/v1/search?text=scope:${opts.scope}&size=250`))
 		.then(response => response.json())
 		.then(json => filterResults(json, getOptions({scope: scope, filters: filters})))
 		.then(json => addData(json, registry))
