@@ -12,13 +12,20 @@ const getPackages = require('../lib');
 program
 	.option('-j, --json', 'Return results as JSON')
 	.option('-s, --scope [name]', 'NPM scope', 'springernature')
+	.option('-r, --registry [url]', 'Registry search URL', 'https://registry.npmjs.org')
 	.option('-f, --filters <items>', 'Comma seperated list of name filters', i => i.split(','))
 	.parse(process.argv);
+
+const params = {
+	...program.scope && {scope: program.scope},
+	...program.filters && {filters: program.filters},
+	...program.registry && {registry: program.registry}
+};
 
 /**
  * Sort the versions in descending order
  * @param {Array} arr
- * @return {Array}
+ * @return {String}
  */
 const sortVersions = arr => {
 	const list = [];
@@ -50,10 +57,7 @@ const printCli = response => {
  * Get data from packages function
  * @param {Object}
  */
-getPackages({
-	...program.scope && {scope: program.scope},
-	...program.filters && {filters: program.filters}
-})
+getPackages(params)
 	.then(response => {
 		if (program.json) {
 			console.log(response);

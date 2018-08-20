@@ -6,7 +6,7 @@ const fetch = require('node-fetch');
 const semver = require('semver');
 
 /**
- * API endpoint to NPM registry
+ * API endpoint to default NPM registry
  * @type {String}
  */
 const npmRegistry = 'https://registry.npmjs.org';
@@ -34,6 +34,7 @@ const setStatus = version => {
  * @return {Promise<Object>}
  */
 const getOptions = opts => {
+	console.log(opts);
 	if (opts.scope.startsWith('@')) {
 		opts.scope = opts.scope.substr(1);
 	}
@@ -80,16 +81,17 @@ const filterResults = (json, opts) => {
  * - all versions of each package from registry
  * - status based on latest version
  * @param {Object} json
+ * @param {String} registry
  * @return {Promise<Object>}
  */
-const addData = json => {
+const addData = (json, registry) => {
 	return new Promise((resolve, reject) => {
 		const promises = [];
 
 		json.objects
 			.map(n => n.package.name)
 			.forEach(name => {
-				const promise = fetch(`${npmRegistry}/${encodeURIComponent(name)}`)
+				const promise = fetch(`${registry}/${encodeURIComponent(name)}`)
 					.then(response => response.json())
 					.then(packageJson => {
 						json.objects
@@ -117,12 +119,12 @@ const addData = json => {
  * Get all available packages
  * @return {Promise<Array>}
  */
-module.exports = ({scope = 'springernature', filters = []} = {}) => (
+module.exports = ({scope = 'springernature', filters = [], registry = npmRegistry} = {}) => (
 	validateOptions({scope: scope, filters: filters})
-		.then(opts => fetch(`${npmRegistry}/-/v1/search?text=scope:${opts.scope}`))
+		.then(opts => fetch(`${registry}/-/v1/search?text=scope:${opts.scope}`))
 		.then(response => response.json())
 		.then(json => filterResults(json, getOptions({scope: scope, filters: filters})))
-		.then(json => addData(json))
+		.then(json => addData(json, registry))
 		.then(json => _.flow(
 			_.map(item => ({
 				name: item.package.name,

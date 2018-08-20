@@ -54,6 +54,11 @@ The scope to search within
 Type: `Array`<br/>
 An array of `strings` that represent package prefixes used within the springernature toolkits
 
+#### registry
+Type: `String`<br/>
+Default: https://registry.npmjs.org<br/>
+Set a custom registry URL
+
 ## Examples
 
 ```js
@@ -117,6 +122,24 @@ packageFinder({
   npm: 'https://www.npmjs.com/package/%40acme%2Fa-package' }]
 */
 
+packageFinder({
+  registry: 'http://registry.springernature.com'
+})
+  .then(response => {
+    console.log(response);
+  }).catch(err => {
+    console.error(err)
+  });
+
+/*
+[{ name: '@springernature/a-package',
+  latest: '0.1.2',
+  versions: [ '0.1.0', '0.1.2' ],
+  status: 'development',
+  description: 'a package',
+  npm: 'https://www.springernature.com/package/%40acme%2Fa-package' }]
+*/
+
 ```
 
 ## CLI
@@ -144,6 +167,10 @@ Example: `util-package-finder -s myscope`
 #### `-f, --filters <items>`
 Comma seperated list of name filters<br/>
 Example: `util-package-finder -f global,local,util`
+
+#### `-r, --registry <url>`
+Custom registry URL<br/>
+Example: `util-package-finder -r http://registry.springernature.com`
 
 ## License
 
