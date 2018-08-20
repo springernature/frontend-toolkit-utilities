@@ -134,5 +134,7 @@ module.exports = ({scope = 'springernature', filters = []} = {}) => (
 			}))
 		)(json.objects))
 		.then(arr => orderBy(arr, item => item.name, ['asc']))
-		.catch(err => { throw err; })
+		.catch(err => {
+			throw err;
+		})
 );
