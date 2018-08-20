@@ -13,13 +13,15 @@ program
 	.option('-j, --json', 'Return results as JSON')
 	.option('-s, --scope [name]', 'NPM scope', 'springernature')
 	.option('-r, --registry [url]', 'Registry search URL', 'https://registry.npmjs.org')
+	.option('-v, --versions', 'Fetch all available versions')
 	.option('-f, --filters <items>', 'Comma seperated list of name filters', i => i.split(','))
 	.parse(process.argv);
 
 const params = {
 	...program.scope && {scope: program.scope},
 	...program.filters && {filters: program.filters},
-	...program.registry && {registry: program.registry}
+	...program.registry && {registry: program.registry},
+	...program.versions && {versions: program.versions}
 };
 
 /**
@@ -45,11 +47,14 @@ const sortVersions = arr => {
  */
 const printCli = response => {
 	console.log(chalk.yellow(`\n${figures.star} ${chalk.bold(response.length)} packages found\n`));
+
 	response.forEach(item => {
-		const versions = sortVersions(item.versions);
 		const status = chalk.dim(`[${item.status}]`);
 		console.log(chalk.cyan(`${figures.pointer} ${item.name} ${status} ${chalk.green.bold.dim(item.latest)}`));
-		console.log(`  ${chalk.dim(versions)}`);
+
+		if (params.versions) {
+			console.log(`  ${chalk.dim(sortVersions(item.versions))}`);
+		}
 	});
 };
 

@@ -8,7 +8,7 @@ Get a list of packages and available versions from within an NPM scope. Returns 
 
 * `name` the package name on NPM
 * `latest` the latest version of the package
-* `versions` array of all versions of the package
+* `versions` array of all versions of the package (optional)
 * `status` the status based on the latest version _(see below)_
 * `description` the package description
 * `npm` a link to the package on NPM
@@ -59,6 +59,11 @@ Type: `String`<br/>
 Default: https://registry.npmjs.org<br/>
 Set a custom registry URL
 
+#### versions
+Type: `Boolean`<br/>
+Default: false<br/>
+Get a list of all available versions
+
 ## Examples
 
 ```js
@@ -74,13 +79,13 @@ packageFinder()
 /*
 [{ name: '@springernature/a-package',
   latest: '0.1.2',
-  versions: [ '0.1.0', '0.1.2' ],
+  versions: null,
   status: 'development',
   description: 'a package',
   npm: 'https://www.npmjs.com/package/%40springernature%2Fa-package' },
 { name: '@springernature/b-package',
   latest: '2.0.0',
-  versions: [ '1.0.1', '2.0.0' ],
+  versions: null,
   status: 'production',
   description: 'another package',
   npm: 'https://www.npmjs.com/package/%40springernature%2Fb-package' }]
@@ -98,7 +103,7 @@ packageFinder({
 /*
 [{ name: '@springernature/a-package',
   latest: '0.1.2',
-  versions: [ '0.1.0', '0.1.2' ],
+  versions: null,
   status: 'development',
   description: 'a package',
   npm: 'https://www.npmjs.com/package/%40springernature%2Fa-package' }]
@@ -116,7 +121,7 @@ packageFinder({
 /*
 [{ name: '@acme/a-package',
   latest: '0.1.2',
-  versions: [ '0.1.0', '0.1.2' ],
+  versions: null,
   status: 'development',
   description: 'a package',
   npm: 'https://www.npmjs.com/package/%40acme%2Fa-package' }]
@@ -134,10 +139,28 @@ packageFinder({
 /*
 [{ name: '@springernature/a-package',
   latest: '0.1.2',
-  versions: [ '0.1.0', '0.1.2' ],
+  versions: null,
   status: 'development',
   description: 'a package',
-  npm: 'https://www.springernature.com/package/%40acme%2Fa-package' }]
+  npm: 'https://www.springernature.com/package/%40springernature%2Fa-package' }]
+*/
+
+packageFinder({
+  versions: true
+})
+  .then(response => {
+    console.log(response);
+  }).catch(err => {
+    console.error(err)
+  });
+
+/*
+[{ name: '@springernature/a-package',
+  latest: '0.1.2',
+  versions: ['0.1.0', '0.1.2'],
+  status: 'development',
+  description: 'a package',
+  npm: 'https://www.npmjs.com/package/%40springernature%2Fa-package' }]
 */
 
 ```
@@ -171,6 +194,10 @@ Example: `util-package-finder -f global,local,util`
 #### `-r, --registry <url>`
 Custom registry URL<br/>
 Example: `util-package-finder -r http://registry.springernature.com`
+
+#### `-v, --versions`
+Show all versions of package<br/>
+Example: `util-package-finder -v`
 
 ## License
 

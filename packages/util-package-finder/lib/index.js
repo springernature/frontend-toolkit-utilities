@@ -12,29 +12,11 @@ const semver = require('semver');
 const npmRegistry = 'https://registry.npmjs.org';
 
 /**
- * Set status of package based on latest verion
- * @param {String} version
- * @return {String}
- */
-const setStatus = version => {
-	if (semver.gte(version, '1.0.0')) {
-		return 'production';
-	}
-	if (semver.gte(version, '0.1.0')) {
-		return 'development';
-	}
-	if (semver.gte(version, '0.0.1')) {
-		return 'experimental';
-	}
-};
-
-/**
  * Get default function options
  * @param {Object} opts
  * @return {Promise<Object>}
  */
 const getOptions = opts => {
-	console.log(opts);
 	if (opts.scope.startsWith('@')) {
 		opts.scope = opts.scope.substr(1);
 	}
@@ -77,16 +59,20 @@ const filterResults = (json, opts) => {
 };
 
 /**
- * Add additional data to json
- * - all versions of each package from registry
- * - status based on latest version
+ * Get all versions of each package from registry
  * @param {Object} json
  * @param {String} registry
+ * @param {Boolean} versions
  * @return {Promise<Object>}
  */
-const addData = (json, registry) => {
+const getVersions = (json, registry, versions) => {
 	return new Promise((resolve, reject) => {
 		const promises = [];
+
+		if (!versions) {
+			resolve(json);
+			return;
+		}
 
 		json.objects
 			.map(n => n.package.name)
@@ -96,12 +82,9 @@ const addData = (json, registry) => {
 					.then(packageJson => {
 						json.objects
 							.filter(item => {
-								const match = item.package.name === packageJson._id;
-								if (match) {
-									item.package.status = setStatus(item.package.version);
+								if (item.package.name === packageJson._id) {
 									item.package.versions = Object.keys(packageJson.versions);
 								}
-								return match;
 							});
 					})
 					.catch(err => reject(err));
@@ -116,20 +99,53 @@ const addData = (json, registry) => {
 };
 
 /**
+ * Get status of package
+ * @param {String} version
+ * @return {String}
+ */
+const getStatus = version => {
+	if (semver.gte(version, '1.0.0')) {
+		return 'production';
+	}
+	if (semver.gte(version, '0.1.0')) {
+		return 'development';
+	}
+	if (semver.gte(version, '0.0.1')) {
+		return 'experimental';
+	}
+};
+
+/**
+ * Set status of package based on latest version
+ * @param {Object} json
+ * @return {String}
+ */
+const setStatus = json => {
+	return new Promise(resolve => {
+		json.objects
+			.filter(item => {
+				item.package.status = getStatus(item.package.version);
+			});
+		resolve(json);
+	});
+};
+
+/**
  * Get all available packages
  * @return {Promise<Array>}
  */
-module.exports = ({scope = 'springernature', filters = [], registry = npmRegistry} = {}) => (
+module.exports = ({scope = 'springernature', filters = [], registry = npmRegistry, versions = false} = {}) => (
 	validateOptions({scope: scope, filters: filters})
 		.then(opts => fetch(`${registry}/-/v1/search?text=scope:${opts.scope}&size=250`))
 		.then(response => response.json())
 		.then(json => filterResults(json, getOptions({scope: scope, filters: filters})))
-		.then(json => addData(json, registry))
+		.then(json => getVersions(json, registry, versions))
+		.then(json => setStatus(json))
 		.then(json => _.flow(
 			_.map(item => ({
 				name: item.package.name,
 				latest: item.package.version,
-				versions: item.package.versions,
+				versions: (versions) ? item.package.versions : null,
 				status: item.package.status,
 				description: item.package.description,
 				npm: item.package.links.npm
