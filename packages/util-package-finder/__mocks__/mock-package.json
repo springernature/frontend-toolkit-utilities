@@ -1,0 +1,52 @@
+{
+  "a-package-name": {
+    "_id": "@springernature/a-package-name",
+    "versions": {
+      "0.0.1": {
+        "name": "a-package-name"
+      }
+    }
+  },
+  "a-nother-package-name": {
+    "_id": "@springernature/a-nother-package-name",
+    "versions": {
+      "0.0.2": {
+        "name": "a-nother-package-name"
+      },
+      "0.0.1": {
+        "name": "a-nother-package-name"
+      }
+    }
+  },
+  "b-package-name": {
+    "_id": "@springernature/b-package-name",
+    "versions": {
+      "0.1.0": {
+        "name": "b-package-name"
+      },
+      "0.0.2": {
+        "name": "b-package-name"
+      },
+      "0.0.1": {
+        "name": "b-package-name"
+      }
+    }
+  },
+  "c-package-name": {
+    "_id": "@springernature/c-package-name",
+    "versions": {
+      "1.0.0": {
+        "name": "c-package-name"
+      },
+      "0.2.0": {
+        "name": "c-package-name"
+      },
+      "0.1.0": {
+        "name": "c-package-name"
+      },
+      "0.0.1": {
+        "name": "c-package-name"
+      }
+    }
+  }
+}

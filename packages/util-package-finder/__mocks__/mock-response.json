@@ -1,0 +1,50 @@
+{
+  "results": [
+    {
+      "name": "@springernature/a-nother-package-name",
+      "description": "a-nother-package-name-description",
+      "latest": "0.0.2",
+      "npm": "https://www.npmjs.com/package/a-nother-package-name",
+      "status": "experimental",
+      "versions": [
+        "0.0.2",
+        "0.0.1"
+      ]
+    },
+    {
+      "name": "@springernature/a-package-name",
+      "description": "a-package-name-description",
+      "latest": "0.0.1",
+      "npm": "https://www.npmjs.com/package/a-package-name",
+      "status": "experimental",
+      "versions": [
+        "0.0.1"
+      ]
+    },
+    {
+      "name": "@springernature/b-package-name",
+      "description": "b-package-name-description",
+      "latest": "0.1.0",
+      "npm": "https://www.npmjs.com/package/b-package-name",
+      "status": "development",
+      "versions": [
+        "0.1.0",
+        "0.0.2",
+        "0.0.1"
+      ]
+    },
+    {
+      "name": "@springernature/c-package-name",
+      "description": "c-package-name-description",
+      "latest": "1.0.0",
+      "npm": "https://www.npmjs.com/package/c-package-name",
+      "status": "production",
+      "versions": [
+        "1.0.0",
+        "0.2.0",
+        "0.1.0",
+        "0.0.1"
+      ]
+    }
+  ]
+}
