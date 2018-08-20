@@ -17,7 +17,7 @@
   },
   "main": "./lib/index.js",
   "bin": {
-    "get-scoped-packages": "./bin/index.js"
+    "util-package-finder": "./bin/index.js"
   },
   "dependencies": {
     "chalk": "^2.4.1",
