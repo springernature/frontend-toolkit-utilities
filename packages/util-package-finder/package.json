@@ -1,0 +1,31 @@
+{
+  "name": "@springernature/util-package-finder",
+  "description": "Get a list of packages and available versions from within an NPM scope",
+  "version": "0.0.0",
+  "license": "MIT",
+  "keywords": [
+    "frontend",
+    "fed",
+    "components",
+    "npm",
+    "packages",
+    "scope"
+  ],
+  "author": "Springer Nature",
+  "engines": {
+    "node": ">=8"
+  },
+  "main": "./lib/index.js",
+  "bin": {
+    "util-package-finder": "./bin/index.js"
+  },
+  "dependencies": {
+    "chalk": "^2.4.1",
+    "figures": "^2.0.0",
+    "jest-fetch-mock": "^1.6.5",
+    "lodash": "^4.17.10",
+    "meow": "^5.0.0",
+    "node-fetch": "^2.2.0",
+    "semver": "^5.5.0"
+  }
+}
