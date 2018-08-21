@@ -8,6 +8,7 @@ const getPackages = require('../../../lib');
 const mockSearchResults = require('../../../__mocks__/mock-search.json');
 const mockPackageResults = require('../../../__mocks__/mock-package.json');
 const mockResponse = require('../../../__mocks__/mock-response.json');
+const mockResponseVersions = require('../../../__mocks__/mock-response-versions.json');
 
 // Public object returning the task
 describe('Get a list of scoped packages', () => {
@@ -79,11 +80,19 @@ describe('Get a list of scoped packages', () => {
 		).resolves.toEqual(mockResponse.results);
 	});
 
-	test('Rejects with error when invalid filter options passed', () => {
+	test('Get all packages with versions', () => {
+		fetch.mockResponses(
+			[JSON.stringify(mockSearchResults), {status: 200}],
+			[JSON.stringify(mockPackageResults['a-package-name']), {status: 200}],
+			[JSON.stringify(mockPackageResults['a-nother-package-name']), {status: 200}],
+			[JSON.stringify(mockPackageResults['b-package-name']), {status: 200}],
+			[JSON.stringify(mockPackageResults['c-package-name']), {status: 200}]
+		);
+
 		expect.assertions(1);
 		return expect(
-			getPackages({filters: false})
-		).rejects.toBeInstanceOf(Error);
+			getPackages({versions: true})
+		).resolves.toEqual(mockResponseVersions.results);
 	});
 
 	test('Returns empty array when no results found', () => {
@@ -97,14 +106,31 @@ describe('Get a list of scoped packages', () => {
 		).resolves.toEqual([]);
 	});
 
+	test('Rejects with error when invalid filter options passed', () => {
+		expect.assertions(1);
+		return expect(
+			getPackages({filters: false})
+		).rejects.toBeInstanceOf(Error);
+	});
+
 	test('Rejects when fetch request does not complete', () => {
+		fetch
+			.mockRejectOnce(new Error('fake error message'));
+
+		expect.assertions(1);
+		return expect(
+			getPackages()
+		).rejects.toBeInstanceOf(Error);
+	});
+
+	test('Rejects when fetch request does not complete for versions', () => {
 		fetch
 			.once(JSON.stringify(mockSearchResults), {status: 200})
 			.mockRejectOnce(new Error('fake error message'));
 
 		expect.assertions(1);
 		return expect(
-			getPackages({filters: ['c']})
+			getPackages({filters: ['c'], versions: true})
 		).rejects.toBeInstanceOf(Error);
 	});
 });
