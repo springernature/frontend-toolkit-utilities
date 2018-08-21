@@ -146,7 +146,8 @@ packageFinder({
 */
 
 packageFinder({
-  versions: true
+  versions: true,
+  filters: ['a']
 })
   .then(response => {
     console.log(response);
