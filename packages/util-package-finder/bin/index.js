@@ -17,7 +17,7 @@ const cli = meow(`
 		--json, -j          Return results as JSON
 		--scope, -s         Set the scope (default: springernature)
 		--registry, -r      Set the registry (default: https://registry.npmjs.org)
-		--versions, -v      Get all available versions
+		--all, -a           Get all available versions
 		--filters, -f       Comma seperated list of name filters
 
 	Examples
@@ -25,9 +25,9 @@ const cli = meow(`
 		util-package-finder -j
 		util-package-finder -s springernature
 		util-package-finder -r http://registry.springernature.com
-		util-package-finder -v
+		util-package-finder -a
 		util-package-finder -f global,local
-		util-package-finder -j -v -f global,local
+		util-package-finder -j -a -f global,local
 `, {
 	booleanDefault: undefined,
 	flags: {
@@ -46,9 +46,9 @@ const cli = meow(`
 			alias: 'r',
 			default: 'https://registry.npmjs.org'
 		},
-		versions: {
+		all: {
 			type: 'boolean',
-			alias: 'v',
+			alias: 'a',
 			default: false
 		},
 		filters: {
@@ -62,7 +62,7 @@ const params = {
 	...cli.flags.scope && {scope: cli.flags.scope},
 	...cli.flags.filters && {filters: cli.flags.filters.split(',')},
 	...cli.flags.registry && {registry: cli.flags.registry},
-	...cli.flags.versions && {versions: cli.flags.versions}
+	...cli.flags.all && {versions: cli.flags.all}
 };
 
 /**

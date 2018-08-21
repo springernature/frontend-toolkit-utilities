@@ -185,7 +185,7 @@ $ util-package-finder --help
     --json, -j          Return results as JSON
     --scope, -s         Set the scope (default: springernature)
     --registry, -r      Set the registry (default: https://registry.npmjs.org)
-    --versions, -v      Get all available versions
+    --all, -a           Get all available versions
     --filters, -f       Comma seperated list of name filters
 
   Examples
@@ -193,9 +193,9 @@ $ util-package-finder --help
     util-package-finder -j
     util-package-finder -s springernature
     util-package-finder -r http://registry.springernature.com
-    util-package-finder -v
+    util-package-finder -a
     util-package-finder -f global,local
-    util-package-finder -j -v -f global,local
+    util-package-finder -j -a -f global,local
 ```
 
 ## License
