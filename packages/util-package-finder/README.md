@@ -173,31 +173,30 @@ The package finder also comes with a command line option:
 $ ./node_modules/.bin/util-package-finder
 ```
 
-This command will print a list of all packages within the default (springernature) scope:
-
 ### Command line arguments
 
-The package finder command-line interface comes with a series of options. Use `util-package-finder -h` from your terminal to show these options.
+```
+$ util-package-finder --help
 
-#### `-j, --json`
-Return results as JSON<br/>
-Example: `util-package-finder -j`
+  Usage
+    util-package-finder [options]
 
-#### `-s, --scope [name]`
-NPM scope (default: springernature)<br/>
-Example: `util-package-finder -s myscope`
+  Options
+    --json, -j          Return results as JSON
+    --scope, -s         Set the scope (default: springernature)
+    --registry, -r      Set the registry (default: https://registry.npmjs.org)
+    --versions, -v      Get all available versions
+    --filters, -f       Comma seperated list of name filters
 
-#### `-f, --filters <items>`
-Comma seperated list of name filters<br/>
-Example: `util-package-finder -f global,local,util`
-
-#### `-r, --registry <url>`
-Custom registry URL<br/>
-Example: `util-package-finder -r http://registry.springernature.com`
-
-#### `-v, --versions`
-Show all versions of package<br/>
-Example: `util-package-finder -v`
+  Examples
+    util-package-finder
+    util-package-finder -j
+    util-package-finder -s springernature
+    util-package-finder -r http://registry.springernature.com
+    util-package-finder -v
+    util-package-finder -f global,local
+    util-package-finder -j -v -f global,local
+```
 
 ## License
 

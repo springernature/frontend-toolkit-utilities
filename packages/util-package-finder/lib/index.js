@@ -85,6 +85,7 @@ const getVersions = (json, registry, versions) => {
 								if (item.package.name === packageJson._id) {
 									item.package.versions = Object.keys(packageJson.versions);
 								}
+								return true;
 							});
 					})
 					.catch(err => reject(err));
@@ -125,6 +126,7 @@ const setStatus = json => {
 		json.objects
 			.filter(item => {
 				item.package.status = getStatus(item.package.version);
+				return true;
 			});
 		resolve(json);
 	});

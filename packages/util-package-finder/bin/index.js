@@ -2,26 +2,67 @@
 'use strict';
 
 const chalk = require('chalk');
-const program = require('commander');
 const figures = require('figures');
 const chunk = require('lodash/chunk');
 const orderBy = require('lodash/orderBy');
+const meow = require('meow');
 
-const getPackages = require('../lib');
+const packageFinder = require('../lib');
 
-program
-	.option('-j, --json', 'Return results as JSON')
-	.option('-s, --scope [name]', 'NPM scope', 'springernature')
-	.option('-r, --registry [url]', 'Registry search URL', 'https://registry.npmjs.org')
-	.option('-v, --versions', 'Fetch all available versions')
-	.option('-f, --filters <items>', 'Comma seperated list of name filters', i => i.split(','))
-	.parse(process.argv);
+const cli = meow(`
+	Usage
+		util-package-finder [options]
+
+	Options
+		--json, -j          Return results as JSON
+		--scope, -s         Set the scope (default: springernature)
+		--registry, -r      Set the registry (default: https://registry.npmjs.org)
+		--versions, -v      Get all available versions
+		--filters, -f       Comma seperated list of name filters
+
+	Examples
+		util-package-finder
+		util-package-finder -j
+		util-package-finder -s springernature
+		util-package-finder -r http://registry.springernature.com
+		util-package-finder -v
+		util-package-finder -f global,local
+		util-package-finder -j -v -f global,local
+`, {
+	booleanDefault: undefined,
+	flags: {
+		json: {
+			type: 'boolean',
+			alias: 'j',
+			default: false
+		},
+		scope: {
+			type: 'string',
+			alias: 's',
+			default: 'springernature'
+		},
+		registry: {
+			type: 'string',
+			alias: 'r',
+			default: 'https://registry.npmjs.org'
+		},
+		versions: {
+			type: 'boolean',
+			alias: 'v',
+			default: false
+		},
+		filters: {
+			type: 'string',
+			alias: 'f'
+		}
+	}
+});
 
 const params = {
-	...program.scope && {scope: program.scope},
-	...program.filters && {filters: program.filters},
-	...program.registry && {registry: program.registry},
-	...program.versions && {versions: program.versions}
+	...cli.flags.scope && {scope: cli.flags.scope},
+	...cli.flags.filters && {filters: cli.flags.filters.split(',')},
+	...cli.flags.registry && {registry: cli.flags.registry},
+	...cli.flags.versions && {versions: cli.flags.versions}
 };
 
 /**
@@ -62,9 +103,9 @@ const printCli = response => {
  * Get data from packages function
  * @param {Object}
  */
-getPackages(params)
+packageFinder(params)
 	.then(response => {
-		if (program.json) {
+		if (cli.flags.json) {
 			console.log(response);
 		} else {
 			printCli(response);
