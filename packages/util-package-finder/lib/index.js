@@ -78,7 +78,7 @@ const getVersions = (json, registry, versions) => {
 			.map(n => n.package.name)
 			.forEach(name => {
 				const promise = got(`${registry}/${encodeURIComponent(name)}`)
-					.then(response => response.body.json())
+					.then(response => JSON.parse(response.body))
 					.then(packageJson => {
 						json.objects
 							.filter(item => {
