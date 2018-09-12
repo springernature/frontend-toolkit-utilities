@@ -2,7 +2,7 @@
 
 const _ = require('lodash/fp');
 const orderBy = require('lodash/orderBy');
-const fetch = require('node-fetch');
+const got = require('got');
 const semver = require('semver');
 
 /**
@@ -77,8 +77,8 @@ const getVersions = (json, registry, versions) => {
 		json.objects
 			.map(n => n.package.name)
 			.forEach(name => {
-				const promise = fetch(`${registry}/${encodeURIComponent(name)}`)
-					.then(response => response.json())
+				const promise = got(`${registry}/${encodeURIComponent(name)}`)
+					.then(response => response.body.json())
 					.then(packageJson => {
 						json.objects
 							.filter(item => {
@@ -138,8 +138,8 @@ const setStatus = json => {
  */
 module.exports = ({scope = 'springernature', filters = [], registry = npmRegistry, versions = false} = {}) => (
 	validateOptions({scope: scope, filters: filters})
-		.then(opts => fetch(`${registry}/-/v1/search?text=scope:${opts.scope}&size=250`))
-		.then(response => response.json())
+		.then(opts => got(`${registry}/-/v1/search?text=scope:${opts.scope}&size=250`))
+		.then(response => JSON.parse(response.body))
 		.then(json => filterResults(json, getOptions({scope: scope, filters: filters})))
 		.then(json => getVersions(json, registry, versions))
 		.then(json => setStatus(json))
