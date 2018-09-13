@@ -4,7 +4,6 @@
 const chalk = require('chalk');
 const figures = require('figures');
 const chunk = require('lodash/chunk');
-const orderBy = require('lodash/orderBy');
 const meow = require('meow');
 
 const packageFinder = require('../lib');
@@ -58,15 +57,14 @@ const params = {
 };
 
 /**
- * Sort the versions in descending order
- * @param {Array} arr
+ * Format the versions into chunks
+ * @param {Array} versions
  * @return {String}
  */
-const sortVersions = arr => {
+const formatVersions = versions => {
 	const list = [];
-	const sorted = orderBy(arr, item => item, ['desc']);
 
-	chunk(sorted, 5).filter(item => {
+	chunk(versions, 5).filter(item => {
 		list.push(item.join(', '));
 		return item;
 	});
@@ -86,7 +84,7 @@ const printCli = response => {
 		console.log(chalk.cyan(`${figures.pointer} ${item.name} ${status} ${chalk.green.bold.dim(item.latest)}`));
 
 		if (params.versions) {
-			console.log(`  ${chalk.dim(sortVersions(item.versions))}`);
+			console.log(`  ${chalk.dim(formatVersions(item.versions))}`);
 		}
 	});
 };

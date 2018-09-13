@@ -66,6 +66,26 @@ const filterResults = (json, opts) => {
 };
 
 /**
+ * Check if version number is valid semver
+ * @param {String} version
+ * @return {Boolean}
+ */
+const isValid = version => {
+	return semver.valid(version);
+};
+
+/**
+ * Sorts an array of versions in descending order
+ * @param {Array} versions
+ * @return {Array}
+ */
+const sortVersions = versions => {
+	return Object.keys(versions)
+		.filter(isValid)
+		.sort(semver.rcompare);
+};
+
+/**
  * Get all versions of each package from registry
  * @param {Object} json
  * @param {Boolean} versions
@@ -89,7 +109,7 @@ const getVersions = (json, versions) => {
 						json.results
 							.filter(item => {
 								if (item.package.name === packageJson._id) {
-									item.package.versions = Object.keys(packageJson.versions);
+									item.package.versions = sortVersions(packageJson.versions);
 								}
 								return true;
 							});
