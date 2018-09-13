@@ -1,6 +1,7 @@
 #! /usr/bin/env node
 'use strict';
 
+const boxen = require('boxen');
 const chalk = require('chalk');
 const figures = require('figures');
 const chunk = require('lodash/chunk');
@@ -85,7 +86,17 @@ const formatVersions = versions => {
  * @param {Array} response
  */
 const printCli = response => {
-	console.log(chalk.yellow(`\n${figures.star} ${chalk.bold(response.length)} packages found\n`));
+	console.log(boxen(
+		chalk.yellow(` ${figures.star} ${chalk.bold(response.length)} packages found ${figures.star} `),
+		{
+			margin: {
+				top: 1,
+				bottom: 1
+			},
+			borderColor: 'yellow',
+			dimBorder: true
+		}
+	));
 
 	response.forEach(item => {
 		const status = chalk.dim(`[${item.status}]`);
