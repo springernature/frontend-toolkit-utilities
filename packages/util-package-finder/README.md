@@ -54,11 +54,6 @@ The scope to search within
 Type: `Array`<br/>
 An array of `strings` that represent package prefixes used within the springernature toolkits
 
-#### registry
-Type: `String`<br/>
-Default: https://registry.npmjs.org<br/>
-Set a custom registry URL
-
 #### versions
 Type: `Boolean`<br/>
 Default: false<br/>
@@ -128,24 +123,6 @@ packageFinder({
 */
 
 packageFinder({
-  registry: 'http://registry.springernature.com'
-})
-  .then(response => {
-    console.log(response);
-  }).catch(err => {
-    console.error(err)
-  });
-
-/*
-[{ name: '@springernature/a-package',
-  latest: '0.1.2',
-  versions: null,
-  status: 'development',
-  description: 'a package',
-  npm: 'https://www.springernature.com/package/%40springernature%2Fa-package' }]
-*/
-
-packageFinder({
   versions: true,
   filters: ['a']
 })
@@ -185,7 +162,6 @@ $ util-package-finder --help
   Options
     --json, -j          Return results as JSON
     --scope, -s         Set the scope (default: springernature)
-    --registry, -r      Set the registry (default: https://registry.npmjs.org)
     --all, -a           Get all available versions
     --filters, -f       Comma seperated list of name filters
 
@@ -193,7 +169,6 @@ $ util-package-finder --help
     util-package-finder
     util-package-finder -j
     util-package-finder -s springernature
-    util-package-finder -r http://registry.springernature.com
     util-package-finder -a
     util-package-finder -f global,local
     util-package-finder -j -a -f global,local

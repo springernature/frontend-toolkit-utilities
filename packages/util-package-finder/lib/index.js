@@ -6,10 +6,16 @@ const got = require('got');
 const semver = require('semver');
 
 /**
- * API endpoint to default NPM registry
+ * API endpoint to NPM registry
  * @type {String}
  */
-const npmRegistry = 'https://registry.npmjs.org';
+const npmRegistry = 'https://registry.npmjs.org/';
+
+/**
+ * API endpoint to npms.io
+ * @type {String}
+ */
+const npmsEndpoint = 'https://api.npms.io/v2/';
 
 /**
  * Get default function options
@@ -53,7 +59,7 @@ const filterResults = (json, opts) => {
 			return;
 		}
 		const reg = new RegExp(`^@${opts.scope}/(${opts.filters.join('|')})`, 'i');
-		json.objects = json.objects.filter(item => reg.test(item.package.name));
+		json.results = json.results.filter(item => reg.test(item.package.name));
 		resolve(json);
 	});
 };
@@ -61,11 +67,10 @@ const filterResults = (json, opts) => {
 /**
  * Get all versions of each package from registry
  * @param {Object} json
- * @param {String} registry
  * @param {Boolean} versions
  * @return {Promise<Object>}
  */
-const getVersions = (json, registry, versions) => {
+const getVersions = (json, versions) => {
 	return new Promise((resolve, reject) => {
 		const promises = [];
 
@@ -74,13 +79,13 @@ const getVersions = (json, registry, versions) => {
 			return;
 		}
 
-		json.objects
+		json.results
 			.map(n => n.package.name)
 			.forEach(name => {
-				const promise = got(`${registry}/${encodeURIComponent(name)}`)
+				const promise = got(`${npmRegistry}${encodeURIComponent(name)}`)
 					.then(response => JSON.parse(response.body))
 					.then(packageJson => {
-						json.objects
+						json.results
 							.filter(item => {
 								if (item.package.name === packageJson._id) {
 									item.package.versions = Object.keys(packageJson.versions);
@@ -123,7 +128,7 @@ const getStatus = version => {
  */
 const setStatus = json => {
 	return new Promise(resolve => {
-		json.objects
+		json.results
 			.filter(item => {
 				item.package.status = getStatus(item.package.version);
 				return true;
@@ -136,12 +141,12 @@ const setStatus = json => {
  * Get all available packages
  * @return {Promise<Array>}
  */
-module.exports = ({scope = 'springernature', filters = [], registry = npmRegistry, versions = false} = {}) => (
+module.exports = ({scope = 'springernature', filters = [], versions = false} = {}) => (
 	validateOptions({scope: scope, filters: filters})
-		.then(opts => got(`${registry}/-/v1/search?text=scope:${opts.scope}&size=250`))
+		.then(opts => got(`${npmsEndpoint}search?q=scope%3A${opts.scope}&size=250`))
 		.then(response => JSON.parse(response.body))
 		.then(json => filterResults(json, getOptions({scope: scope, filters: filters})))
-		.then(json => getVersions(json, registry, versions))
+		.then(json => getVersions(json, versions))
 		.then(json => setStatus(json))
 		.then(json => _.flow(
 			_.map(item => ({
@@ -152,7 +157,7 @@ module.exports = ({scope = 'springernature', filters = [], registry = npmRegistr
 				description: item.package.description,
 				npm: item.package.links.npm
 			}))
-		)(json.objects))
+		)(json.results))
 		.then(arr => orderBy(arr, item => item.name, ['asc']))
 		.catch(err => {
 			throw err;
