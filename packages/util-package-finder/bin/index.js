@@ -87,8 +87,9 @@ const formatVersions = versions => {
  */
 const printCli = response => {
 	console.log(boxen(
-		chalk.yellow(` ${figures.star} ${chalk.bold(response.length)} packages found ${figures.star} `),
+		chalk.yellow(`${figures.star} ${chalk.bold(response.length)} packages found ${figures.star}`),
 		{
+			padding: 1,
 			margin: {
 				top: 1,
 				bottom: 1
@@ -99,8 +100,11 @@ const printCli = response => {
 	));
 
 	response.forEach(item => {
-		const status = chalk.dim(`[${item.status}]`);
-		console.log(chalk.cyan(`${figures.pointer} ${item.name} ${status} ${chalk.green.bold.dim(item.latest)}`));
+		const status = (item.status === 'deprecated') ? chalk.red.dim(`[${item.status}]`) : chalk.dim(`[${item.status}]`);
+		const name = (item.status === 'deprecated') ? chalk.dim(item.name) : item.name;
+		const icon = (item.status === 'deprecated') ? figures.circle : figures.circleFilled;
+
+		console.log(chalk.cyan(`${icon} ${name} ${status} ${chalk.green.bold.dim(item.latest)}`));
 
 		if (params.versions) {
 			console.log(`  ${chalk.dim(formatVersions(item.versions))}`);
@@ -115,6 +119,7 @@ const printCli = response => {
 packageFinder(params)
 	.then(response => {
 		if (cli.flags.json) {
+			console.log(`\nPackages found: ${response.length}\n`);
 			console.log(response);
 		} else {
 			printCli(response);
