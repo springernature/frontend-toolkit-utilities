@@ -43,6 +43,14 @@ const validateOptions = opts => {
 			reject(new Error(`Filters parameter must be of type \`array\`, found \`${typeof opts.filters}\``));
 		}
 
+		if (typeof opts.versions !== 'boolean') {
+			reject(new Error(`Versions parameter must be of type \`boolean\`, found \`${typeof opts.versions}\``));
+		}
+
+		if (typeof opts.deprecated !== 'boolean') {
+			reject(new Error(`Deprecated parameter must be of type \`boolean\`, found \`${typeof opts.deprecated}\``));
+		}
+
 		resolve(options);
 	});
 };
@@ -180,7 +188,12 @@ module.exports = ({
 	versions = false,
 	deprecated = false
 } = {}) => (
-	validateOptions({scope: scope, filters: filters})
+	validateOptions({
+		scope: scope,
+		filters: filters,
+		versions: versions,
+		deprecated: deprecated
+	})
 		.then(opts => got(getURI(opts.scope, deprecated)))
 		.then(response => JSON.parse(response.body))
 		.then(json => filterResults(json, getOptions({scope: scope, filters: filters})))
