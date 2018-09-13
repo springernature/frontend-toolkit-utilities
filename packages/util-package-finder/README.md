@@ -195,7 +195,7 @@ $ util-package-finder --help
     --scope, -s         Set the scope (default: springernature)
     --all, -a           Get all available versions
     --filters, -f       Comma seperated list of name filters
-	--deprecated, -d    Show deprecated packages
+    --deprecated, -d    Show deprecated packages
 
   Examples
     util-package-finder
@@ -204,7 +204,7 @@ $ util-package-finder --help
     util-package-finder -a
     util-package-finder -f global,local
     util-package-finder -j -a -f global,local
-	util-package-finder -d
+    util-package-finder -d
 ```
 
 ## License
