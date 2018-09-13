@@ -60,6 +60,11 @@ Type: `Boolean`<br/>
 Default: false<br/>
 Get a list of all available versions
 
+#### deprecated
+Type: `Boolean`<br/>
+Default: false<br/>
+Show deprecated packages
+
 ## Examples
 
 ```js
@@ -142,6 +147,31 @@ packageFinder({
   npm: 'https://www.npmjs.com/package/%40springernature%2Fa-package' }]
 */
 
+packageFinder({
+  deprecated: true,
+  filters: ['a']
+})
+  .then(response => {
+    console.log(response);
+  }).catch(err => {
+    console.error(err)
+  });
+
+/*
+[{ name: '@springernature/a-package',
+  latest: '0.1.2',
+  versions: null,
+  status: 'development',
+  description: 'a package',
+  npm: 'https://www.npmjs.com/package/%40springernature%2Fa-package' },
+{ name: '@springernature/a-deprecated-package',
+  latest: '1.0.0',
+  versions: null,
+  status: 'deprecated',
+  description: 'a deprecated package',
+  npm: 'https://www.npmjs.com/package/%40springernature%2Fa-deprecated-package' }]
+*/
+
 ```
 
 ## CLI
@@ -165,6 +195,7 @@ $ util-package-finder --help
     --scope, -s         Set the scope (default: springernature)
     --all, -a           Get all available versions
     --filters, -f       Comma seperated list of name filters
+	--deprecated, -d    Show deprecated packages
 
   Examples
     util-package-finder
@@ -173,6 +204,7 @@ $ util-package-finder --help
     util-package-finder -a
     util-package-finder -f global,local
     util-package-finder -j -a -f global,local
+	util-package-finder -d
 ```
 
 ## License

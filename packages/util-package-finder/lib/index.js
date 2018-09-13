@@ -162,12 +162,26 @@ const setStatus = json => {
 };
 
 /**
+ * Construct the search URI
+ * @return {Promise<Array>}
+ */
+const getURI = (scope, d) => {
+	const deprecated = (d) ? '' : '%20not:deprecated';
+	return `${npmsEndpoint}search?q=scope%3A${scope}${deprecated}&size=250`;
+};
+
+/**
  * Get all available packages
  * @return {Promise<Array>}
  */
-module.exports = ({scope = 'springernature', filters = [], versions = false} = {}) => (
+module.exports = ({
+	scope = 'springernature',
+	filters = [],
+	versions = false,
+	deprecated = false
+} = {}) => (
 	validateOptions({scope: scope, filters: filters})
-		.then(opts => got(`${npmsEndpoint}search?q=scope%3A${opts.scope}&size=250`))
+		.then(opts => got(getURI(opts.scope, deprecated)))
 		.then(response => JSON.parse(response.body))
 		.then(json => filterResults(json, getOptions({scope: scope, filters: filters})))
 		.then(json => getVersions(json, versions))

@@ -17,6 +17,7 @@ const cli = meow(`
 		--scope, -s         Set the scope (default: springernature)
 		--all, -a           Get all available versions
 		--filters, -f       Comma seperated list of name filters
+		--deprecated, -d    Show deprecated packages
 
 	Examples
 		util-package-finder
@@ -25,6 +26,7 @@ const cli = meow(`
 		util-package-finder -a
 		util-package-finder -f global,local
 		util-package-finder -j -a -f global,local
+		util-package-finder -d
 `, {
 	booleanDefault: undefined,
 	flags: {
@@ -46,6 +48,11 @@ const cli = meow(`
 		filters: {
 			type: 'string',
 			alias: 'f'
+		},
+		deprecated: {
+			type: 'boolean',
+			alias: 'd',
+			default: false
 		}
 	}
 });
@@ -53,7 +60,8 @@ const cli = meow(`
 const params = {
 	...cli.flags.scope && {scope: cli.flags.scope},
 	...cli.flags.filters && {filters: cli.flags.filters.split(',')},
-	...cli.flags.all && {versions: cli.flags.all}
+	...cli.flags.all && {versions: cli.flags.all},
+	...cli.flags.deprecated && {deprecated: cli.flags.deprecated}
 };
 
 /**
