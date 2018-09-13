@@ -22,6 +22,7 @@ The status of a package is evaluated by checking the latest version and assignin
 | production | `>= 1.0.0` |
 | development | `>= 0.1.0`, `< 1.0.0` |
 | experimental | `>= 0.0.1`, `< 0.1.0` |
+| deprecated | |
 
 ## Install
 

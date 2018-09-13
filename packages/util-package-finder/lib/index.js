@@ -2,6 +2,7 @@
 
 const _ = require('lodash/fp');
 const orderBy = require('lodash/orderBy');
+const has = require('lodash/has');
 const got = require('got');
 const semver = require('semver');
 
@@ -109,14 +110,17 @@ const getVersions = (json, versions) => {
  * @param {String} version
  * @return {String}
  */
-const getStatus = version => {
-	if (semver.gte(version, '1.0.0')) {
+const getStatus = json => {
+	if (has(json, 'flags.deprecated')) {
+		return 'deprecated';
+	}
+	if (semver.gte(json.package.version, '1.0.0')) {
 		return 'production';
 	}
-	if (semver.gte(version, '0.1.0')) {
+	if (semver.gte(json.package.version, '0.1.0')) {
 		return 'development';
 	}
-	if (semver.gte(version, '0.0.1')) {
+	if (semver.gte(json.package.version, '0.0.1')) {
 		return 'experimental';
 	}
 };
@@ -130,7 +134,7 @@ const setStatus = json => {
 	return new Promise(resolve => {
 		json.results
 			.filter(item => {
-				item.package.status = getStatus(item.package.version);
+				item.package.status = getStatus(item);
 				return true;
 			});
 		resolve(json);
