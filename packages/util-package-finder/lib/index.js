@@ -1,9 +1,9 @@
 'use strict';
 
+const fetch = require('node-fetch');
 const _ = require('lodash/fp');
 const orderBy = require('lodash/orderBy');
 const has = require('lodash/has');
-const got = require('got');
 const semver = require('semver');
 
 /**
@@ -111,8 +111,8 @@ const getVersions = (json, versions) => {
 		json.results
 			.map(n => n.package.name)
 			.forEach(name => {
-				const promise = got(`${npmRegistry}${encodeURIComponent(name)}`)
-					.then(response => JSON.parse(response.body))
+				const promise = fetch(`${npmRegistry}${encodeURIComponent(name)}`)
+					.then(response => response.json())
 					.then(packageJson => {
 						json.results
 							.filter(item => {
@@ -194,8 +194,8 @@ module.exports = ({
 		versions: versions,
 		deprecated: deprecated
 	})
-		.then(opts => got(getURI(opts.scope, deprecated)))
-		.then(response => JSON.parse(response.body))
+		.then(opts => fetch(getURI(opts.scope, deprecated)))
+		.then(response => response.json())
 		.then(json => filterResults(json, getOptions({scope: scope, filters: filters})))
 		.then(json => getVersions(json, versions))
 		.then(json => setStatus(json))
