@@ -1,10 +1,10 @@
 #! /usr/bin/env node
 'use strict';
 
+const boxen = require('boxen');
 const chalk = require('chalk');
 const figures = require('figures');
 const chunk = require('lodash/chunk');
-const orderBy = require('lodash/orderBy');
 const meow = require('meow');
 
 const packageFinder = require('../lib');
@@ -16,18 +16,18 @@ const cli = meow(`
 	Options
 		--json, -j          Return results as JSON
 		--scope, -s         Set the scope (default: springernature)
-		--registry, -r      Set the registry (default: https://registry.npmjs.org)
 		--all, -a           Get all available versions
 		--filters, -f       Comma seperated list of name filters
+		--deprecated, -d    Show deprecated packages
 
 	Examples
 		util-package-finder
 		util-package-finder -j
 		util-package-finder -s springernature
-		util-package-finder -r http://registry.springernature.com
 		util-package-finder -a
 		util-package-finder -f global,local
 		util-package-finder -j -a -f global,local
+		util-package-finder -d
 `, {
 	booleanDefault: undefined,
 	flags: {
@@ -41,11 +41,6 @@ const cli = meow(`
 			alias: 's',
 			default: 'springernature'
 		},
-		registry: {
-			type: 'string',
-			alias: 'r',
-			default: 'https://registry.npmjs.org'
-		},
 		all: {
 			type: 'boolean',
 			alias: 'a',
@@ -54,6 +49,11 @@ const cli = meow(`
 		filters: {
 			type: 'string',
 			alias: 'f'
+		},
+		deprecated: {
+			type: 'boolean',
+			alias: 'd',
+			default: false
 		}
 	}
 });
@@ -61,20 +61,19 @@ const cli = meow(`
 const params = {
 	...cli.flags.scope && {scope: cli.flags.scope},
 	...cli.flags.filters && {filters: cli.flags.filters.split(',')},
-	...cli.flags.registry && {registry: cli.flags.registry},
-	...cli.flags.all && {versions: cli.flags.all}
+	...cli.flags.all && {versions: cli.flags.all},
+	...cli.flags.deprecated && {deprecated: cli.flags.deprecated}
 };
 
 /**
- * Sort the versions in descending order
- * @param {Array} arr
+ * Format the versions into chunks
+ * @param {Array} versions
  * @return {String}
  */
-const sortVersions = arr => {
+const formatVersions = versions => {
 	const list = [];
-	const sorted = orderBy(arr, item => item, ['desc']);
 
-	chunk(sorted, 5).filter(item => {
+	chunk(versions, 5).filter(item => {
 		list.push(item.join(', '));
 		return item;
 	});
@@ -87,14 +86,28 @@ const sortVersions = arr => {
  * @param {Array} response
  */
 const printCli = response => {
-	console.log(chalk.yellow(`\n${figures.star} ${chalk.bold(response.length)} packages found\n`));
+	console.log(boxen(
+		chalk.yellow(`${figures.star} ${chalk.bold(response.length)} packages found ${figures.star}`),
+		{
+			padding: 1,
+			margin: {
+				top: 1,
+				bottom: 1
+			},
+			borderColor: 'yellow',
+			dimBorder: true
+		}
+	));
 
 	response.forEach(item => {
-		const status = chalk.dim(`[${item.status}]`);
-		console.log(chalk.cyan(`${figures.pointer} ${item.name} ${status} ${chalk.green.bold.dim(item.latest)}`));
+		const status = (item.status === 'deprecated') ? chalk.red.dim(`[${item.status}]`) : chalk.dim(`[${item.status}]`);
+		const name = (item.status === 'deprecated') ? chalk.dim(item.name) : item.name;
+		const icon = (item.status === 'deprecated') ? figures.circle : figures.circleFilled;
+
+		console.log(chalk.cyan(`${icon} ${name} ${status} ${chalk.green.bold.dim(item.latest)}`));
 
 		if (params.versions) {
-			console.log(`  ${chalk.dim(sortVersions(item.versions))}`);
+			console.log(`  ${chalk.dim(formatVersions(item.versions))}`);
 		}
 	});
 };
@@ -106,6 +119,7 @@ const printCli = response => {
 packageFinder(params)
 	.then(response => {
 		if (cli.flags.json) {
+			console.log(`\nPackages found: ${response.length}\n`);
 			console.log(response);
 		} else {
 			printCli(response);

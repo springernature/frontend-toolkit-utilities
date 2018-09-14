@@ -113,6 +113,20 @@ describe('Get a list of scoped packages', () => {
 		).rejects.toBeInstanceOf(Error);
 	});
 
+	test('Rejects with error when invalid versions options passed', () => {
+		expect.assertions(1);
+		return expect(
+			getPackages({versions: 'string'})
+		).rejects.toBeInstanceOf(Error);
+	});
+
+	test('Rejects with error when invalid deprecated options passed', () => {
+		expect.assertions(1);
+		return expect(
+			getPackages({deprecated: 'string'})
+		).rejects.toBeInstanceOf(Error);
+	});
+
 	test('Rejects when fetch request does not complete', () => {
 		fetch
 			.mockRejectOnce(new Error('fake error message'));

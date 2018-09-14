@@ -1,15 +1,22 @@
 'use strict';
 
+const fetch = require('node-fetch');
 const _ = require('lodash/fp');
 const orderBy = require('lodash/orderBy');
-const fetch = require('node-fetch');
+const has = require('lodash/has');
 const semver = require('semver');
 
 /**
- * API endpoint to default NPM registry
+ * API endpoint to NPM registry
  * @type {String}
  */
-const npmRegistry = 'https://registry.npmjs.org';
+const npmRegistry = 'https://registry.npmjs.org/';
+
+/**
+ * API endpoint to npms.io
+ * @type {String}
+ */
+const npmsEndpoint = 'https://api.npms.io/v2/';
 
 /**
  * Get default function options
@@ -36,6 +43,14 @@ const validateOptions = opts => {
 			reject(new Error(`Filters parameter must be of type \`array\`, found \`${typeof opts.filters}\``));
 		}
 
+		if (typeof opts.versions !== 'boolean') {
+			reject(new Error(`Versions parameter must be of type \`boolean\`, found \`${typeof opts.versions}\``));
+		}
+
+		if (typeof opts.deprecated !== 'boolean') {
+			reject(new Error(`Deprecated parameter must be of type \`boolean\`, found \`${typeof opts.deprecated}\``));
+		}
+
 		resolve(options);
 	});
 };
@@ -53,19 +68,38 @@ const filterResults = (json, opts) => {
 			return;
 		}
 		const reg = new RegExp(`^@${opts.scope}/(${opts.filters.join('|')})`, 'i');
-		json.objects = json.objects.filter(item => reg.test(item.package.name));
+		json.results = json.results.filter(item => reg.test(item.package.name));
 		resolve(json);
 	});
 };
 
 /**
+ * Check if version number is valid semver
+ * @param {String} version
+ * @return {Boolean}
+ */
+const isValid = version => {
+	return semver.valid(version);
+};
+
+/**
+ * Sorts an array of versions in descending order
+ * @param {Array} versions
+ * @return {Array}
+ */
+const sortVersions = versions => {
+	return Object.keys(versions)
+		.filter(isValid)
+		.sort(semver.rcompare);
+};
+
+/**
  * Get all versions of each package from registry
  * @param {Object} json
- * @param {String} registry
  * @param {Boolean} versions
  * @return {Promise<Object>}
  */
-const getVersions = (json, registry, versions) => {
+const getVersions = (json, versions) => {
 	return new Promise((resolve, reject) => {
 		const promises = [];
 
@@ -74,16 +108,16 @@ const getVersions = (json, registry, versions) => {
 			return;
 		}
 
-		json.objects
+		json.results
 			.map(n => n.package.name)
 			.forEach(name => {
-				const promise = fetch(`${registry}/${encodeURIComponent(name)}`)
+				const promise = fetch(`${npmRegistry}${encodeURIComponent(name)}`)
 					.then(response => response.json())
 					.then(packageJson => {
-						json.objects
+						json.results
 							.filter(item => {
 								if (item.package.name === packageJson._id) {
-									item.package.versions = Object.keys(packageJson.versions);
+									item.package.versions = sortVersions(packageJson.versions);
 								}
 								return true;
 							});
@@ -104,14 +138,17 @@ const getVersions = (json, registry, versions) => {
  * @param {String} version
  * @return {String}
  */
-const getStatus = version => {
-	if (semver.gte(version, '1.0.0')) {
+const getStatus = json => {
+	if (has(json, 'flags.deprecated')) {
+		return 'deprecated';
+	}
+	if (semver.gte(json.package.version, '1.0.0')) {
 		return 'production';
 	}
-	if (semver.gte(version, '0.1.0')) {
+	if (semver.gte(json.package.version, '0.1.0')) {
 		return 'development';
 	}
-	if (semver.gte(version, '0.0.1')) {
+	if (semver.gte(json.package.version, '0.0.1')) {
 		return 'experimental';
 	}
 };
@@ -123,9 +160,9 @@ const getStatus = version => {
  */
 const setStatus = json => {
 	return new Promise(resolve => {
-		json.objects
+		json.results
 			.filter(item => {
-				item.package.status = getStatus(item.package.version);
+				item.package.status = getStatus(item);
 				return true;
 			});
 		resolve(json);
@@ -133,15 +170,34 @@ const setStatus = json => {
 };
 
 /**
+ * Construct the search URI
+ * @return {Promise<Array>}
+ */
+const getURI = (scope, d) => {
+	const deprecated = (d) ? '' : '%20not:deprecated';
+	return `${npmsEndpoint}search?q=scope%3A${scope}${deprecated}&size=250`;
+};
+
+/**
  * Get all available packages
  * @return {Promise<Array>}
  */
-module.exports = ({scope = 'springernature', filters = [], registry = npmRegistry, versions = false} = {}) => (
-	validateOptions({scope: scope, filters: filters})
-		.then(opts => fetch(`${registry}/-/v1/search?text=scope:${opts.scope}&size=250`))
+module.exports = ({
+	scope = 'springernature',
+	filters = [],
+	versions = false,
+	deprecated = false
+} = {}) => (
+	validateOptions({
+		scope: scope,
+		filters: filters,
+		versions: versions,
+		deprecated: deprecated
+	})
+		.then(opts => fetch(getURI(opts.scope, deprecated)))
 		.then(response => response.json())
 		.then(json => filterResults(json, getOptions({scope: scope, filters: filters})))
-		.then(json => getVersions(json, registry, versions))
+		.then(json => getVersions(json, versions))
 		.then(json => setStatus(json))
 		.then(json => _.flow(
 			_.map(item => ({
@@ -152,7 +208,7 @@ module.exports = ({scope = 'springernature', filters = [], registry = npmRegistr
 				description: item.package.description,
 				npm: item.package.links.npm
 			}))
-		)(json.objects))
+		)(json.results))
 		.then(arr => orderBy(arr, item => item.name, ['asc']))
 		.catch(err => {
 			throw err;

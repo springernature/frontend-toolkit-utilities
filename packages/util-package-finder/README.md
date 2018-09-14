@@ -22,6 +22,7 @@ The status of a package is evaluated by checking the latest version and assignin
 | production | `>= 1.0.0` |
 | development | `>= 0.1.0`, `< 1.0.0` |
 | experimental | `>= 0.0.1`, `< 0.1.0` |
+| deprecated | |
 
 ## Install
 
@@ -54,15 +55,15 @@ The scope to search within
 Type: `Array`<br/>
 An array of `strings` that represent package prefixes used within the springernature toolkits
 
-#### registry
-Type: `String`<br/>
-Default: https://registry.npmjs.org<br/>
-Set a custom registry URL
-
 #### versions
 Type: `Boolean`<br/>
 Default: false<br/>
 Get a list of all available versions
+
+#### deprecated
+Type: `Boolean`<br/>
+Default: false<br/>
+Show deprecated packages
 
 ## Examples
 
@@ -128,24 +129,6 @@ packageFinder({
 */
 
 packageFinder({
-  registry: 'http://registry.springernature.com'
-})
-  .then(response => {
-    console.log(response);
-  }).catch(err => {
-    console.error(err)
-  });
-
-/*
-[{ name: '@springernature/a-package',
-  latest: '0.1.2',
-  versions: null,
-  status: 'development',
-  description: 'a package',
-  npm: 'https://www.springernature.com/package/%40springernature%2Fa-package' }]
-*/
-
-packageFinder({
   versions: true,
   filters: ['a']
 })
@@ -162,6 +145,31 @@ packageFinder({
   status: 'development',
   description: 'a package',
   npm: 'https://www.npmjs.com/package/%40springernature%2Fa-package' }]
+*/
+
+packageFinder({
+  deprecated: true,
+  filters: ['a']
+})
+  .then(response => {
+    console.log(response);
+  }).catch(err => {
+    console.error(err)
+  });
+
+/*
+[{ name: '@springernature/a-package',
+  latest: '0.1.2',
+  versions: null,
+  status: 'development',
+  description: 'a package',
+  npm: 'https://www.npmjs.com/package/%40springernature%2Fa-package' },
+{ name: '@springernature/a-deprecated-package',
+  latest: '1.0.0',
+  versions: null,
+  status: 'deprecated',
+  description: 'a deprecated package',
+  npm: 'https://www.npmjs.com/package/%40springernature%2Fa-deprecated-package' }]
 */
 
 ```
@@ -185,18 +193,18 @@ $ util-package-finder --help
   Options
     --json, -j          Return results as JSON
     --scope, -s         Set the scope (default: springernature)
-    --registry, -r      Set the registry (default: https://registry.npmjs.org)
     --all, -a           Get all available versions
     --filters, -f       Comma seperated list of name filters
+    --deprecated, -d    Show deprecated packages
 
   Examples
     util-package-finder
     util-package-finder -j
     util-package-finder -s springernature
-    util-package-finder -r http://registry.springernature.com
     util-package-finder -a
     util-package-finder -f global,local
     util-package-finder -j -a -f global,local
+    util-package-finder -d
 ```
 
 ## License
