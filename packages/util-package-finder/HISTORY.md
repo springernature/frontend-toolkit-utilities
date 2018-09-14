@@ -1,4 +1,9 @@
 # History
 
+## 0.2.0 (2018-09-14)
+    * Replace API under the hood
+	* Remove custom registry option
+	* Add reporting for deprecated packages
+
 ## 0.1.0 (2018-08-21)
     * Release first development version
