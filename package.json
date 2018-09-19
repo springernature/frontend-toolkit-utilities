@@ -21,7 +21,6 @@
     "test": "jest --colors --coverage --silent --passWithNoTests",
     "lint": "npm run lint:js",
     "lint:js": "eslint .",
-    "bootstrap": "lerna bootstrap --hoist",
     "build": "npm run lint && npm run test && npm run validate -- -n",
     "create": "sn-package-create",
     "validate": "sn-package-validate",
