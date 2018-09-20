@@ -28,7 +28,7 @@ notifications:
 
 # Build script
 script:
-  - 'npm run bootstrap && npm run build'
+  - 'lerna bootstrap --hoist && npm run build'
 
 # Auto-publish after script
 after_success:
