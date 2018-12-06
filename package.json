@@ -54,10 +54,5 @@
     "collectCoverageFrom": [
       "packages/**/*.js"
     ]
-  },
-  "dependencies": {
-    "commander": "^2.19.0",
-    "meow": "^5.0.0",
-    "node-cmd": "^3.0.0"
   }
 }
