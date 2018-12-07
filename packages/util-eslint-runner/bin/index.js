@@ -6,11 +6,9 @@ const fs = require('fs');
 const glob = require('glob');
 const program = require('commander');
 
-const file = '.eslintignore';
-const pattern = '**/*.js';
-
 program
 	.option('-n --name [string]', 'NPM script to execute', null)
+	.option('-p --pattern [string]', 'Glob pattern to search', '**/*.js')
 	.parse(process.argv);
 
 /**
@@ -18,7 +16,7 @@ program
  * @param {Object} arg
  */
 const globbing = arg => {
-	glob(pattern, {ignore: arg}, (err, paths) => {
+	glob(program.pattern, {ignore: arg}, (err, paths) => {
 		if (err) {
 			throw err;
 		}
@@ -32,7 +30,7 @@ const globbing = arg => {
 (() => {
 	// Look for an .eslintignore file
 	// Pass as glob ignore array
-	fs.readFile(file, 'utf8', (err, data) => {
+	fs.readFile('.eslintignore', 'utf8', (err, data) => {
 		globbing(err ? [] : data.split('\n'));
 	});
 })();
