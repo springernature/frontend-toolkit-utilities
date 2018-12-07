@@ -11,26 +11,21 @@ program
 	.option('-p --pattern [string]', 'Glob pattern to search', '**/*.js')
 	.parse(process.argv);
 
-/**
- * Search for javascript files
- * @param {Object} arg
- */
-const globbing = arg => {
-	glob(program.pattern, {ignore: arg}, (err, paths) => {
-		if (err) {
-			throw err;
-		}
-		if (paths.length > 0 && program.name) {
-			// If javascript found run script
-			spawn('npm', ['run', program.name], {stdio: 'inherit'});
-		}
-	});
-};
-
 (() => {
 	// Look for an .eslintignore file
 	// Pass as glob ignore array
 	fs.readFile('.eslintignore', 'utf8', (err, data) => {
-		globbing(err ? [] : data.split('\n'));
+		const globSearch = glob(program.pattern, {
+			ignore: err ? [] : data.split('\n')
+		});
+
+		globSearch.on('error', err => {
+			throw err;
+		});
+
+		globSearch.on('match', () => {
+			globSearch.abort();
+			spawn('npm', ['run', ...program.name ? [program.name] : []], {stdio: 'inherit'});
+		});
 	});
 })();
