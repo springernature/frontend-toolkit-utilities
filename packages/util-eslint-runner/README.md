@@ -29,6 +29,10 @@ Options:
   -h, --help             output usage information
 ```
 
+#### `.eslintignore`
+
+ESLint runner will check for an `.eslintignore` file, and ignore any patterns it finds.
+
 ## Example
 
 You always need to specify the `--name` option, otherwise nothing will run on completion. The default search pattern is `**/*.js`, which you can override with the `--pattern` option. Some examples using different options
