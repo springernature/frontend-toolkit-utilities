@@ -1,7 +1,7 @@
 {
   "name": "@springernature/util-eslint-runner",
   "description": "Run ESLint only if Javascript files are found",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "license": "MIT",
   "keywords": [
     "frontend",
