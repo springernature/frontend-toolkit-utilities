@@ -50,7 +50,7 @@ Below is an example set of example scripts from a monorepo `package.json` file:
 
 ```json
 "scripts": {
-  "lint": "util-eslint-runner -n 'lint:js' -p 'packages/**/*.js' && npm run lint:sass",
+  "lint": "util-eslint-runner -n 'lint-js' -p 'packages/**/*.js' && npm run lint-sass",
   "lint-sass": "sass-lint 'packages/**/*.scss'",
   "lint-js": "eslint 'packages/**/*.js'"
 }
