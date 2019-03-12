@@ -35,7 +35,7 @@ Installing `util-package-finder` adds command line exectuables to `./node_module
 ## API
 
 ```js
-const packageFinder = require('util-package-finder');
+const packageFinder = require('@springernature/util-package-finder');
 ```
 
 ### packageFinder({options})
