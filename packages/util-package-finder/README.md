@@ -12,6 +12,7 @@ Get a list of packages and available versions from within an NPM scope. Returns 
 * `status` the status based on the latest version _(see below)_
 * `description` the package description
 * `npm` a link to the package on NPM
+* `date` ISO 8601/W3C Datetime when last published
 
 ### Status
 
@@ -83,13 +84,15 @@ packageFinder()
   versions: null,
   status: 'development',
   description: 'a package',
-  npm: 'https://www.npmjs.com/package/%40springernature%2Fa-package' },
+  npm: 'https://www.npmjs.com/package/%40springernature%2Fa-package',
+  date: '2019-03-08T11:55:38.384Z' },
 { name: '@springernature/b-package',
   latest: '2.0.0',
   versions: null,
   status: 'production',
   description: 'another package',
-  npm: 'https://www.npmjs.com/package/%40springernature%2Fb-package' }]
+  npm: 'https://www.npmjs.com/package/%40springernature%2Fb-package',
+  date: '2019-03-08T11:55:38.384Z'  }]
 */
 
 packageFinder({
@@ -107,7 +110,8 @@ packageFinder({
   versions: null,
   status: 'development',
   description: 'a package',
-  npm: 'https://www.npmjs.com/package/%40springernature%2Fa-package' }]
+  npm: 'https://www.npmjs.com/package/%40springernature%2Fa-package',
+  date: '2019-03-08T11:55:38.384Z'  }]
 */
 
 packageFinder({
@@ -125,7 +129,8 @@ packageFinder({
   versions: null,
   status: 'development',
   description: 'a package',
-  npm: 'https://www.npmjs.com/package/%40acme%2Fa-package' }]
+  npm: 'https://www.npmjs.com/package/%40acme%2Fa-package',
+  date: '2019-03-08T11:55:38.384Z'  }]
 */
 
 packageFinder({
@@ -144,7 +149,8 @@ packageFinder({
   versions: ['0.1.0', '0.1.2'],
   status: 'development',
   description: 'a package',
-  npm: 'https://www.npmjs.com/package/%40springernature%2Fa-package' }]
+  npm: 'https://www.npmjs.com/package/%40springernature%2Fa-package',
+  date: '2019-03-08T11:55:38.384Z'  }]
 */
 
 packageFinder({
@@ -163,13 +169,15 @@ packageFinder({
   versions: null,
   status: 'development',
   description: 'a package',
-  npm: 'https://www.npmjs.com/package/%40springernature%2Fa-package' },
+  npm: 'https://www.npmjs.com/package/%40springernature%2Fa-package',
+  date: '2019-03-08T11:55:38.384Z'  },
 { name: '@springernature/a-deprecated-package',
   latest: '1.0.0',
   versions: null,
   status: 'deprecated',
   description: 'a deprecated package',
-  npm: 'https://www.npmjs.com/package/%40springernature%2Fa-deprecated-package' }]
+  npm: 'https://www.npmjs.com/package/%40springernature%2Fa-deprecated-package',
+  date: '2019-03-08T11:55:38.384Z'  }]
 */
 
 ```
