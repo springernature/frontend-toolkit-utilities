@@ -1,7 +1,7 @@
 {
   "name": "@springernature/util-package-finder",
   "description": "Get a list of packages and available versions from within an NPM scope",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "license": "MIT",
   "keywords": [
     "frontend",
