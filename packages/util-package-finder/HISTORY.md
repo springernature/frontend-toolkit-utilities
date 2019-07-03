@@ -1,5 +1,8 @@
 # History
 
+## 0.2.0 (2019-07-03)
+    * Now returns `date` field in results
+
 ## 0.2.0 (2018-09-14)
     * Replace API under the hood
 	* Remove custom registry option

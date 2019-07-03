@@ -206,7 +206,8 @@ module.exports = ({
 				versions: (versions) ? item.package.versions : null,
 				status: item.package.status,
 				description: item.package.description,
-				npm: item.package.links.npm
+				npm: item.package.links.npm,
+				date: item.package.date
 			}))
 		)(json.results))
 		.then(arr => orderBy(arr, item => item.name, ['asc']))
