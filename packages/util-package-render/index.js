@@ -1,5 +1,6 @@
+const file = require('./utils/file');
 
-const api = {
+const api = async packageRoot => {
 
 };
 

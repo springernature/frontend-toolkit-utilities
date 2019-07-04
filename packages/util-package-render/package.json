@@ -4,7 +4,7 @@
   "description": "Renders a Package that passes SN package validation",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Run tests from the top of the repo please.\" && exit 1"
   },
   "repository": {
     "type": "git",
