@@ -18,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/springernature/frontend-toolkit-utilities/issues"
   },
-  "homepage": "https://github.com/springernature/frontend-toolkit-utilities#readme"
+  "homepage": "https://github.com/springernature/frontend-toolkit-utilities#readme",
+  "dependencies": {
+    "handlebars": "~4.1.2"
+  }
 }
