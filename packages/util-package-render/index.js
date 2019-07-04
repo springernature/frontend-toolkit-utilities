@@ -1,21 +1,33 @@
 const file = require('./utils/file');
 const Handlebars = require('handlebars');
 const path = require('path');
+const rootTemplate = require('./template');
 
 const hbars = async ()  => {
 	console.log(path.resolve(__dirname))
 	// does the hbars magic. template has placeholders for
 	// title script style demo
-	const source = await file.getContent('./views/main.hbs');
-	const template = Handlebars.compile(source);
+	const packageRoot = './';
 
-	const data = {
+	const packageDemoTemplate = await file.getContent(`${packageRoot}/__mocks__/apackage/demo/index.hbs`);
+	const rootSource = rootTemplate(packageDemoTemplate);
+
+	const packageDemoContextContent = await file.getContent(`${packageRoot}/__mocks__/apackage/demo/context.json`);
+	let packageDemoContext;
+	try {
+		packageDemoContext = JSON.parse(packageDemoContextContent);
+	} catch (e) {
+		return console.error(e);
+	}
+	const template = Handlebars.compile(rootSource);
+
+	const context = {
 		title: 'a package demo',
 		script: '// some script',
 		style: '/* css and that */',
-		demo: '<p>interpolated demo content</p>'
+		context: packageDemoContext
 	};
-	result = template(data);
+	result = template(context);
 	return result;
 };
 
