@@ -1,3 +1,3 @@
 const toRun = require('./index');
 
-toRun();
+toRun('./__mocks__/apackage/');

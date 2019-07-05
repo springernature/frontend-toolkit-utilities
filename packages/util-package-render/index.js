@@ -3,13 +3,21 @@ const file = require('./utils/file');
 const rootTemplate = require('./template');
 
 const HBARS_CONTEXT_KEY = 'utilPackageRenderState';
+const ERR_NO_PACKAGE_HBS_FOUND = 'no /demo/index.hbs found for package';
+const ERR_NO_PACKAGE_CONTEXT_FOUND = 'no /demo/context.json found for package';
+const ERR_INVALID_CONTEXT_KEY_NAME = 'invalid as a key name in package demo context, skipping package...';
 
-const hbars = async () => {
-	// does the hbars magic. template has placeholders for
-	// title script style demo
-	const packageRoot = './';
+const hbars = async packageRoot => {
+	// does the hbars magic. template has placeholders for "title" "script" "style"
 
-	const packageTemplate = await file.getContent(`${packageRoot}/__mocks__/apackage/demo/index.hbs`);
+	// first, get the demo template, then pass it into our base template & compile
+	let packageTemplate = await file.getContent(`${packageRoot}/demo/index.hbs`);
+	if (packageTemplate instanceof Error) {
+		// lack of template should not be fatal
+		console.warn(ERR_NO_PACKAGE_HBS_FOUND);
+		packageTemplate = `<!-- ${ERR_NO_PACKAGE_HBS_FOUND} -->`;
+	}
+
 	const fullPageTemplate = rootTemplate(HBARS_CONTEXT_KEY, packageTemplate);
 
 	let compiledPage;
@@ -19,7 +27,13 @@ const hbars = async () => {
 		return console.error(e);
 	}
 
-	const packageContextContent = await file.getContent(`${packageRoot}/__mocks__/apackage/demo/context.json`);
+	// second, grab the demo context JSON, merge it with our context and render
+	let packageContextContent = await file.getContent(`${packageRoot}/demo/context.json`);
+	if (packageContextContent instanceof Error) {
+		// lack of context should not be fatal
+		console.warn(ERR_NO_PACKAGE_CONTEXT_FOUND);
+		packageContextContent = '{}';
+	}
 
 	let packageDemoContext;
 	try {
@@ -29,7 +43,7 @@ const hbars = async () => {
 	}
 
 	if (packageDemoContext.hasOwnProperty(HBARS_CONTEXT_KEY)) {
-		return new Error(`"${HBARS_CONTEXT_KEY}" is invalid as a key name in package demo context, skipping package...`);
+		return new Error(`"${HBARS_CONTEXT_KEY}" ${ERR_INVALID_CONTEXT_KEY_NAME}`);
 	}
 
 	let context = packageDemoContext;
@@ -43,8 +57,14 @@ const hbars = async () => {
 	return result;
 };
 
+const sanitisePath = path => {
+	path = path.replace(/\.+/g, '.'); // fold dots, stop upwards traversal
+	return path.replace(/[^\w\.\/]+/g, ''); // allow alphanumerics hyphen underscore, dots, fwd slash
+};
+
 const api = async packageRoot => {
-	console.log(await hbars());
+	console.log('SANITISED='+sanitisePath(packageRoot))
+	console.log(await hbars(sanitisePath(packageRoot)));
 };
 
 module.exports = api;
