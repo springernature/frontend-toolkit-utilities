@@ -2,13 +2,22 @@ const Handlebars = require('handlebars');
 const file = require('./utils/file');
 const rootTemplate = require('./template');
 
+const HBARS_CONTEXT_KEY = 'utilPackageRenderState';
+
 const hbars = async () => {
 	// does the hbars magic. template has placeholders for
 	// title script style demo
 	const packageRoot = './';
 
 	const packageTemplate = await file.getContent(`${packageRoot}/__mocks__/apackage/demo/index.hbs`);
-	const fullPageTemplate = rootTemplate(packageTemplate);
+	const fullPageTemplate = rootTemplate(HBARS_CONTEXT_KEY, packageTemplate);
+
+	let compiledPage;
+	try {
+		compiledPage = Handlebars.compile(fullPageTemplate);
+	} catch (e) {
+		return console.error(e);
+	}
 
 	const packageContextContent = await file.getContent(`${packageRoot}/__mocks__/apackage/demo/context.json`);
 
@@ -19,21 +28,19 @@ const hbars = async () => {
 		return console.error(e);
 	}
 
-	let compiledFullPageTemplate;
-	try {
-		compiledFullPageTemplate = Handlebars.compile(fullPageTemplate);
-	} catch (e) {
-		return console.error(e);
+	if (packageDemoContext.hasOwnProperty(HBARS_CONTEXT_KEY)) {
+		console.warn(`${HBARS_CONTEXT_KEY} key name not allowed in package demo state`);
+		return false;
 	}
 
-	const context = {
-		title: 'a package demo',
-		script: '// some script',
-		style: '/* css and that */',
-		context: packageDemoContext
+	let context = packageDemoContext;
+	context[HBARS_CONTEXT_KEY] = {
+			title: 'a package demo',
+			script: '// some script',
+			style: '/* css and that */'
 	};
 
-	const result = compiledFullPageTemplate(context);
+	const result = compiledPage(context);
 	return result;
 };
 

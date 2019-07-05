@@ -1,14 +1,14 @@
-module.exports = content => {
+module.exports = (key, content) => {
 	return `<!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>{{title}}</title>
+		<title>{{${key}.title}}</title>
 		<script>
-			{{script}}
+			{{${key}.script}}
 		</script>
 		<style>
-			{{style}}
+			{{${key}.style}}
 		</style>
 	</head>
 	<body>
