@@ -8,10 +8,10 @@ const api = async packageRoot => {
 	if (packageSASS instanceof Error) {
 		// lack of packageSASS should not be fatal
 		console.warn(ERR_NO_PACKAGE_SASS_FOUND);
-		packageSASS = `// ${ERR_NO_PACKAGE_SASS_FOUND}`;
+		packageSASS = `/* ${ERR_NO_PACKAGE_SASS_FOUND} */`;
 	}
 	const result = sass.renderSync({
-		data: 'h1{color:red;}'
+		data: packageSASS
 	});
 
 	return result.css;
