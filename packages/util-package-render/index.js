@@ -8,9 +8,13 @@ const sanitisePath = path => {
 
 const api = async packageRoot => {
 	const path = sanitisePath(packageRoot);
-	console.log('SANITISED=' + path)
-	console.log(await handlebarsHelper(path));
-	console.log(await jsHelper(path));
+	const transpiledPackageJS = await jsHelper(path);
+	console.log('SANITISED PATH=' + path)
+	console.log(await handlebarsHelper({
+		path: path,
+		js: transpiledPackageJS
+	}));
+	console.log();
 };
 
 module.exports = api;

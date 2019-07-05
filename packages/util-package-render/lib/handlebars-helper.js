@@ -7,8 +7,9 @@ const ERR_NO_PACKAGE_HBS_FOUND = 'no /demo/index.hbs found for package';
 const ERR_NO_PACKAGE_CONTEXT_FOUND = 'no /demo/context.json found for package';
 const ERR_INVALID_CONTEXT_KEY_NAME = 'invalid as a key name in package demo context, skipping package...';
 
-const api = async packageRoot => {
+const api = async config => {
 	// does the hbars magic. template has placeholders for "title" "script" "style"
+	const packageRoot = config.path;
 
 	// first, get the demo template, then pass it into our base template & compile
 	let packageTemplate = await file.getContent(`${packageRoot}/demo/index.hbs`);
@@ -49,7 +50,7 @@ const api = async packageRoot => {
 	let context = packageDemoContext;
 	context[HBARS_CONTEXT_KEY] = {
 		title: 'a package demo',
-		script: '// some script',
+		script: config.js,
 		style: '/* css and that */'
 	};
 

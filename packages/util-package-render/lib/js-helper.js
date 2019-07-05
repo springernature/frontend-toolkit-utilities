@@ -11,21 +11,10 @@ const api = async packageRoot => {
 		packageJS = `// ${ERR_NO_PACKAGE_JS_FOUND}`;
 	}
 
-	const babelResult = babel.transform(packageJS, {
-		plugins: [
-		  "asyncGenerators",
-		  "classProperties",
-		  "decorators",
-		  "doExpressions",
-		  "dynamicImport",
-		  "exportExtensions",
-		  "flow",
-		  "functionBind",
-		  "functionSent",
-		  "jsx",
-		  "objectRestSpread",
-		]
+	const babelResult = babel.transformSync(packageJS, {
+		"presets": ["@babel/preset-env"]
 	});
+
 	return babelResult.code;
 };
 
