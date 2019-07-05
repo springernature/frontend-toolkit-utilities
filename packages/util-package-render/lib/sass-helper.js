@@ -1,5 +1,4 @@
-var sass = require('node-sass');
-
+const sass = require('node-sass');
 const file = require('../utils/file');
 
 const ERR_NO_PACKAGE_SASS_FOUND = 'no SASS found for package';

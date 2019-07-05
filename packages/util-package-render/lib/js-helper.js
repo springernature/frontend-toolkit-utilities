@@ -1,4 +1,4 @@
-const babel = require("@babel/core");
+const babel = require('@babel/core');
 const file = require('../utils/file');
 
 const ERR_NO_PACKAGE_JS_FOUND = 'no JS found for package';
@@ -12,7 +12,7 @@ const api = async packageRoot => {
 	}
 
 	const babelResult = babel.transformSync(packageJS, {
-		"presets": ["@babel/preset-env"]
+		presets: ['@babel/preset-env']
 	});
 
 	return babelResult.code;
