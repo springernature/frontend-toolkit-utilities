@@ -1,25 +1,30 @@
-const file = require('./utils/file');
 const Handlebars = require('handlebars');
-const path = require('path');
+const file = require('./utils/file');
 const rootTemplate = require('./template');
 
-const hbars = async ()  => {
-	console.log(path.resolve(__dirname))
+const hbars = async () => {
 	// does the hbars magic. template has placeholders for
 	// title script style demo
 	const packageRoot = './';
 
-	const packageDemoTemplate = await file.getContent(`${packageRoot}/__mocks__/apackage/demo/index.hbs`);
-	const rootSource = rootTemplate(packageDemoTemplate);
+	const packageTemplate = await file.getContent(`${packageRoot}/__mocks__/apackage/demo/index.hbs`);
+	const fullPageTemplate = rootTemplate(packageTemplate);
 
-	const packageDemoContextContent = await file.getContent(`${packageRoot}/__mocks__/apackage/demo/context.json`);
+	const packageContextContent = await file.getContent(`${packageRoot}/__mocks__/apackage/demo/context.json`);
+
 	let packageDemoContext;
 	try {
-		packageDemoContext = JSON.parse(packageDemoContextContent);
+		packageDemoContext = JSON.parse(packageContextContent);
 	} catch (e) {
 		return console.error(e);
 	}
-	const template = Handlebars.compile(rootSource);
+
+	let compiledFullPageTemplate;
+	try {
+		compiledFullPageTemplate = Handlebars.compile(fullPageTemplate);
+	} catch (e) {
+		return console.error(e);
+	}
 
 	const context = {
 		title: 'a package demo',
@@ -27,7 +32,8 @@ const hbars = async ()  => {
 		style: '/* css and that */',
 		context: packageDemoContext
 	};
-	result = template(context);
+
+	const result = compiledFullPageTemplate(context);
 	return result;
 };
 

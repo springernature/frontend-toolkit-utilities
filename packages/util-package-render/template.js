@@ -1,5 +1,5 @@
 module.exports = content => {
-return `<!doctype html>
+	return `<!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
@@ -14,5 +14,5 @@ return `<!doctype html>
 	<body>
 		${content}
 	</body>
-</html>`
+</html>`;
 };
