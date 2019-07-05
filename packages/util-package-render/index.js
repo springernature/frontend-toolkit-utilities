@@ -7,17 +7,46 @@ const sanitisePath = path => {
 	return path.replace(/[^\w\.\/]+/g, ''); // allow alphanumerics hyphen underscore, dots, fwd slash
 };
 
+const installPeerDependencies = async packageJSON => {
+
+	let packages;
+	Object.entries(packageJSON.peerDependencies).forEach((dep) => {
+		packages += dep.join('@') + ' ';
+	});
+
+	const commandTemplate = `npm install ${packages}`;
+	console.log (`want to ${commandTemplate}`)
+
+	//const exec = require('child_process').exec;
+	//child = exec('npm install ffi').stderr.pipe(process.stderr);
+};
+
+
 const api = async packageRoot => {
 	const path = sanitisePath(packageRoot);
+
+	let packageJSON;
+	try {
+		packageJSON = require(`${packageRoot}/package.json`)
+	} catch (e) {
+		console.error(e)
+		return e;
+	}
+
+	if (packageJSON.peerDependencies) {
+		await installPeerDependencies(packageJSON);
+	}
+
 	const transpiledPackageJS = await jsHelper(path);
 	const compiledPackageCSS = await sassHelper(path);
 	console.log('SANITISED PATH=' + path)
+	/*
 	console.log(await handlebarsHelper({
 		path: path,
 		js: transpiledPackageJS,
 		css: compiledPackageCSS
 	}));
-	console.log();
+	*/
 };
 
 module.exports = api;
