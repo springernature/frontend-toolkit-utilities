@@ -29,8 +29,7 @@ const hbars = async () => {
 	}
 
 	if (packageDemoContext.hasOwnProperty(HBARS_CONTEXT_KEY)) {
-		console.warn(`${HBARS_CONTEXT_KEY} key name not allowed in package demo state`);
-		return false;
+		return new Error(`"${HBARS_CONTEXT_KEY}" is invalid as a key name in package demo context, skipping package...`);
 	}
 
 	let context = packageDemoContext;
