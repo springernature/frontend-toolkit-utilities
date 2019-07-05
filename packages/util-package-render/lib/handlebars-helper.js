@@ -42,15 +42,15 @@ const api = async packageRoot => {
 		return console.error(e);
 	}
 
-	if (packageDemoContext.hasOwnProperty(HBARS_CONTEXT_KEY)) {
+	if (Object.prototype.hasOwnProperty.call(packageDemoContext, HBARS_CONTEXT_KEY)) {
 		return new Error(`"${HBARS_CONTEXT_KEY}" ${ERR_INVALID_CONTEXT_KEY_NAME}`);
 	}
 
 	let context = packageDemoContext;
 	context[HBARS_CONTEXT_KEY] = {
-			title: 'a package demo',
-			script: '// some script',
-			style: '/* css and that */'
+		title: 'a package demo',
+		script: '// some script',
+		style: '/* css and that */'
 	};
 
 	const result = compiledPage(context);
