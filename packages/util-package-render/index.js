@@ -1,5 +1,6 @@
 const handlebarsHelper = require('./lib/handlebars-helper');
 const jsHelper = require('./lib/js-helper');
+const sassHelper = require('./lib/sass-helper');
 
 const sanitisePath = path => {
 	path = path.replace(/\.+/g, '.'); // fold dots, stop upwards traversal
@@ -9,10 +10,12 @@ const sanitisePath = path => {
 const api = async packageRoot => {
 	const path = sanitisePath(packageRoot);
 	const transpiledPackageJS = await jsHelper(path);
+	const compiledPackageCSS = await sassHelper(path);
 	console.log('SANITISED PATH=' + path)
 	console.log(await handlebarsHelper({
 		path: path,
-		js: transpiledPackageJS
+		js: transpiledPackageJS,
+		css: compiledPackageCSS
 	}));
 	console.log();
 };

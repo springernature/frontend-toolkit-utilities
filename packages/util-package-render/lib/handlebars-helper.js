@@ -51,7 +51,7 @@ const api = async config => {
 	context[HBARS_CONTEXT_KEY] = {
 		title: 'a package demo',
 		script: config.js,
-		style: '/* css and that */'
+		style: config.css
 	};
 
 	const result = compiledPage(context);
