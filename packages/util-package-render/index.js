@@ -1,35 +1,29 @@
 const handlebarsHelper = require('./lib/handlebars-helper');
 const jsHelper = require('./lib/js-helper');
 const sassHelper = require('./lib/sass-helper');
-
-const sanitisePath = path => {
-	path = path.replace(/\.+/g, '.'); // fold dots, stop upwards traversal
-	return path.replace(/[^\w\.\/]+/g, ''); // allow alphanumerics hyphen underscore, dots, fwd slash
-};
+const file = require('./utils/file');
 
 const installPeerDependencies = async packageJSON => {
-
-	let packages;
-	Object.entries(packageJSON.peerDependencies).forEach((dep) => {
+	let packages = '';
+	Object.entries(packageJSON.peerDependencies).forEach(dep => {
 		packages += dep.join('@') + ' ';
 	});
 
 	const commandTemplate = `npm install ${packages}`;
-	console.log (`want to ${commandTemplate}`)
+	console.log (`-> want to ${commandTemplate}`);
 
 	//const exec = require('child_process').exec;
 	//child = exec('npm install ffi').stderr.pipe(process.stderr);
 };
 
-
 const api = async packageRoot => {
-	const path = sanitisePath(packageRoot);
+	const path = file.sanitisePath(packageRoot);
 
 	let packageJSON;
 	try {
-		packageJSON = require(`${packageRoot}/package.json`)
+		packageJSON = require(`${packageRoot}/package.json`);
 	} catch (e) {
-		console.error(e)
+		console.error(e);
 		return e;
 	}
 
@@ -39,7 +33,6 @@ const api = async packageRoot => {
 
 	const transpiledPackageJS = await jsHelper(path);
 	const compiledPackageCSS = await sassHelper(path);
-	console.log('SANITISED PATH=' + path)
 	/*
 	console.log(await handlebarsHelper({
 		path: path,

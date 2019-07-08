@@ -16,6 +16,13 @@ const api = {
 			content = err;
 		}
 		return content;
+	},
+
+	sanitisePath: str => {
+		// const path2 = file.sanitisePath('azAZ09-_+/.');
+		// console.log(path2)
+		let path = str.replace(/\.+/g, '.'); // fold dots, stop upwards traversal
+		return path.replace(/[^\w-./]+/g, ''); // allow alphanumerics & underscore, hyphen, dot, fwd slash
 	}
 };
 
