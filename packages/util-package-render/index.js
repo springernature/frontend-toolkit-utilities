@@ -17,10 +17,12 @@ const installPeerDependencies = async packageJSON => {
 };
 
 const api = async packageRoot => {
-	const path = file.sanitisePath(packageRoot);
 
+	let path;
 	let packageJSON;
 	try {
+		path = file.sanitisePath(packageRoot);
+		console.log(`PATH=${path}`);
 		packageJSON = require(`${packageRoot}/package.json`);
 	} catch (e) {
 		console.error(e);

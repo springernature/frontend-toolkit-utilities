@@ -19,10 +19,17 @@ const api = {
 	},
 
 	sanitisePath: str => {
-		// const path2 = file.sanitisePath('azAZ09-_+/.');
-		// console.log(path2)
-		let path = str.replace(/\.+/g, '.'); // fold dots, stop upwards traversal
-		return path.replace(/[^\w-./]+/g, ''); // allow alphanumerics & underscore, hyphen, dot, fwd slash
+		if (typeof str !== 'string') {
+			throw new Error('invalid path type');
+		};
+
+		if (str === '') {
+			return '.';
+		};
+
+		let candidate = str.replace(/\.+/g, '.'); // fold dots, stop upwards traversal
+		candidate = candidate.replace(/[^\w-./]+/g, ''); // allow alphanumerics & underscore, hyphen, dot, fwd slash
+		return candidate;
 	}
 };
 
