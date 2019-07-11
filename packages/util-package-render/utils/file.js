@@ -27,7 +27,8 @@ const api = {
 			return '.';
 		}
 
-		let candidate = str.replace(/\.+/g, '.'); // fold dots, stop traversal
+		// fold dots, stop traversal
+		let candidate = str.replace(/\.+/g, '.');
 		// allow alphanumerics & underscore, hyphen, dot, fwd slash
 		candidate = candidate.replace(/[^\w-./]+/g, '');
 		return candidate;
