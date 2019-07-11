@@ -25,7 +25,16 @@ program
 
 		globSearch.on('match', () => {
 			globSearch.abort();
-			spawn('npm', ['run', ...program.name ? [program.name] : []], {stdio: 'inherit'});
+			const childProcess = spawn('npm', ['run', ...program.name ? [program.name] : []], {stdio: 'inherit'});
+
+			// Can an error thrown by the childprocess running the command
+			childProcess.on('exit', (code, signal) => {
+				if (code) {
+					throw new Error(`childProcess exited with code ${code}`);
+				} else if (signal) {
+					throw new Error(`childProcess was killed with signal ${signal}`);
+				}
+			});
 		});
 	});
 })();
