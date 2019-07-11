@@ -20,15 +20,16 @@ const api = {
 
 	sanitisePath: str => {
 		if (typeof str !== 'string') {
-			throw new Error('invalid path type');
-		};
+			throw new TypeError('invalid path type');
+		}
 
 		if (str === '') {
 			return '.';
-		};
+		}
 
-		let candidate = str.replace(/\.+/g, '.'); // fold dots, stop upwards traversal
-		candidate = candidate.replace(/[^\w-./]+/g, ''); // allow alphanumerics & underscore, hyphen, dot, fwd slash
+		let candidate = str.replace(/\.+/g, '.'); // fold dots, stop traversal
+		// allow alphanumerics & underscore, hyphen, dot, fwd slash
+		candidate = candidate.replace(/[^\w-./]+/g, '');
 		return candidate;
 	}
 };

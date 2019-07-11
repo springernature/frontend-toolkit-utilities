@@ -10,14 +10,13 @@ const installPeerDependencies = async packageJSON => {
 	});
 
 	const commandTemplate = `npm install ${packages}`;
-	console.log (`-> want to ${commandTemplate}`);
+	console.log(`-> want to ${commandTemplate}`);
 
 	//const exec = require('child_process').exec;
 	//child = exec('npm install ffi').stderr.pipe(process.stderr);
 };
 
 const api = async packageRoot => {
-
 	let path;
 	let packageJSON;
 	try {
