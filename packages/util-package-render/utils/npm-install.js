@@ -32,12 +32,8 @@ const api = {
 	getValidDepdendencies: (dependencies = {}) => {
 		return Object.entries(dependencies).filter(([pname, pversion]) => {
 			const validationResult = validatePackageName(pname);
-			//pversion += ';';
-			// allowed values for the desired version are very permissive
-			//const semverDangerousRegexp = RegExp('r*', 'g')
-			//const semverDangerous = semverDangerousRegexp.test(pversion);
-			console.log(`testing ${pversion}`)
-			const semverValid = true; // TODO omg
+			// allowed values for the desired version are horribly permissive
+			const semverValid = /^[-\w :/.<>|=~^]+$/.test(pversion);
 			return validationResult.validForNewPackages
 				&& !validationResult.errors
 				&& semverValid;

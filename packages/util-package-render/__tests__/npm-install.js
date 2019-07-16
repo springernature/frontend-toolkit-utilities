@@ -33,5 +33,25 @@ describe('Utility: npm-install', () => {
 		});
 	});
 
+	describe('getValidDepdendencies', () => {
+		test('does not return bad names', async () => {
+			expect.assertions(1);
+			expect(
+				install.getValidDepdendencies(npmVersionRanges.badNames)
+			)
+			.toStrictEqual([]);
+		});
+	});
+
+	describe('getValidDepdendencies', () => {
+		test('does not return bad values', async () => {
+			expect.assertions(1);
+			expect(
+				install.getValidDepdendencies(npmVersionRanges.badValues)
+			)
+			.toStrictEqual([]);
+		});
+	});
+
 
 });
