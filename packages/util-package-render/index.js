@@ -2,19 +2,7 @@ const handlebarsHelper = require('./lib/handlebars-helper');
 const jsHelper = require('./lib/js-helper');
 const sassHelper = require('./lib/sass-helper');
 const file = require('./utils/file');
-
-const installPeerDependencies = async packageJSON => {
-	let packages = '';
-	Object.entries(packageJSON.peerDependencies).forEach(dep => {
-		packages += dep.join('@') + ' ';
-	});
-
-	const commandTemplate = `npm install ${packages}`;
-	console.log(`-> want to ${commandTemplate}`);
-
-	//const exec = require('child_process').exec;
-	//child = exec('npm install ffi').stderr.pipe(process.stderr);
-};
+const npmInstall = require('./utils/npm-install');
 
 const api = async packageRoot => {
 	let path;
@@ -29,7 +17,7 @@ const api = async packageRoot => {
 	}
 
 	if (packageJSON.peerDependencies) {
-		await installPeerDependencies(packageJSON);
+		await npmInstall.peerDependencies(packageJSON);
 	}
 
 	const transpiledPackageJS = await jsHelper(path);
