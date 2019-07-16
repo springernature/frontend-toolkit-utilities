@@ -24,7 +24,7 @@ const api = {
 
 		const validDepdendencies = api.getValidDepdendencies(dependencies);
 		const packageListAsStr = validDepdendencies.map(dep => dep.join('@')).join(' ');
-		const commandTemplate = `npmSS install ${packageListAsStr}`;
+		const commandTemplate = `npmXX install ${packageListAsStr}`;
 		console.log(`installPeerDependencies command: ${commandTemplate}`);
 
 		const child = exec(commandTemplate, cb);
