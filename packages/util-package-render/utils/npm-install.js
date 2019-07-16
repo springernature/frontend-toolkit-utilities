@@ -9,7 +9,7 @@ const semver = require('semver');
 const api = {
 	/**
 	 * Main method which actually installs given depdendencies.
-	 * @param  {dependencies} dependencies={} - an object representing dependencies,
+	 * @param  {dependencies} dependencies={} - a map of dependency names to version ranges,
 	 *  as per https://docs.npmjs.com/files/package.json#dependencies
 	 */
 	dependencies: async (dependencies = {}) => {
@@ -26,19 +26,18 @@ const api = {
 
 	/**
 	 * Filters supplied dependencies, removing invalid depdendencies.
-	 * @param  {dependencies} dependencies={} - an object representing dependencies,
+	 * @param  {dependencies} dependencies={} - a map of dependency names to version ranges,
 	 *  as per https://docs.npmjs.com/files/package.json#dependencies
 	 */
 	getValidDepdendencies: (dependencies = {}) => {
 		return Object.entries(dependencies).filter(([pname, pversion]) => {
 			const validationResult = validatePackageName(pname);
-			pversion += ';';
+			//pversion += ';';
 			// allowed values for the desired version are very permissive
 			//const semverDangerousRegexp = RegExp('r*', 'g')
 			//const semverDangerous = semverDangerousRegexp.test(pversion);
 			console.log(`testing ${pversion}`)
-			const semverValid = semver.valid(semver.coerce(pversion));
-			console.log(semverValid)
+			const semverValid = true; // TODO omg
 			return validationResult.validForNewPackages
 				&& !validationResult.errors
 				&& semverValid;
