@@ -30,8 +30,11 @@ const badValues = Object.assign(...harmlessNames.map((k, i) => ({[k]: badThingsT
 module.exports = {
 	badNames,
 	badValues,
+	oldStyleNPMDependencies: {
+		"eLaBorAtE-paCkAgE-with-mixed-case-and-more-than-214-characters-----------------------------------------------------------------------------------------------------------------------------------------------------------": "0.0.0"
+	},
 
-	npmExampleVersionRanges: {
+	npmExampleDependencies: {
 		foo: '1.0.0 - 2.9999.9999',
 		bar: '>=1.0.2 <2.1.2',
 		baz: '>1.0.2 <=2.3.4',
@@ -46,7 +49,7 @@ module.exports = {
 		dyl: 'file:../dyl'
 	},
 
-	npmExampleVersionRangesAsArray: [
+	npmExampleDependenciesAsArray: [
 		[
 			"foo",
 			"1.0.0 - 2.9999.9999"

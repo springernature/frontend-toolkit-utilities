@@ -33,10 +33,10 @@ const api = {
 		return Object.entries(dependencies).filter(([pname, pversion]) => {
 			const validationResult = validatePackageName(pname);
 			// allowed values for the desired version are horribly permissive
-			const semverValid = /^[-\w :/.<>|=~^]+$/.test(pversion);
+			const versionRangeValid = /^[-\w :/.<>|=~^]+$/.test(pversion);
 			return validationResult.validForNewPackages
 				&& !validationResult.errors
-				&& semverValid;
+				&& versionRangeValid;
 		});
 	},
 

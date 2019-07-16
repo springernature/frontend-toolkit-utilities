@@ -2,7 +2,7 @@
 
 const install = require('../utils/npm-install');
 
-const npmVersionRanges = require('../__mocks__/data/npm-version-ranges');
+const mockDependencies = require('../__mocks__/data/npm-dependencies');
 
 describe('Utility: npm-install', () => {
 	describe('devDependencies', () => {
@@ -27,30 +27,35 @@ describe('Utility: npm-install', () => {
 		test('npmExampleVersionRanges are valid', async () => {
 			expect.assertions(1);
 			expect(
-				install.getValidDepdendencies(npmVersionRanges.npmExampleVersionRanges)
+				install.getValidDepdendencies(mockDependencies.npmExampleDependencies)
 			)
-			.toStrictEqual(npmVersionRanges.npmExampleVersionRangesAsArray);
+			.toStrictEqual(mockDependencies.npmExampleDependenciesAsArray);
 		});
-	});
 
-	describe('getValidDepdendencies', () => {
 		test('does not return bad names', async () => {
 			expect.assertions(1);
 			expect(
-				install.getValidDepdendencies(npmVersionRanges.badNames)
+				install.getValidDepdendencies(mockDependencies.badNames)
 			)
 			.toStrictEqual([]);
 		});
-	});
 
-	describe('getValidDepdendencies', () => {
 		test('does not return bad values', async () => {
 			expect.assertions(1);
 			expect(
-				install.getValidDepdendencies(npmVersionRanges.badValues)
+				install.getValidDepdendencies(mockDependencies.badValues)
 			)
 			.toStrictEqual([]);
 		});
+
+		test('does not return old-style npm package names', async () => {
+			expect.assertions(1);
+			expect(
+				install.getValidDepdendencies(mockDependencies.oldStyleNPMDependencies)
+			)
+			.toStrictEqual([]);
+		});
+
 	});
 
 
