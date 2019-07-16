@@ -22,13 +22,13 @@ const api = async packageRoot => {
 
 	const transpiledPackageJS = await jsHelper(path);
 	const compiledPackageCSS = await sassHelper(path);
-	/*
+
 	console.log(await handlebarsHelper({
 		path: path,
 		js: transpiledPackageJS,
 		css: compiledPackageCSS
 	}));
-	*/
+
 };
 
 module.exports = api;
