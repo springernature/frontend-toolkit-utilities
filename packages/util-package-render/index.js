@@ -20,6 +20,7 @@ const api = async packageRoot => {
 		await npmInstall.peerDependencies(packageJSON);
 	}
 
+	/*
 	const transpiledPackageJS = await jsHelper(path);
 	const compiledPackageCSS = await sassHelper(path);
 
@@ -28,7 +29,7 @@ const api = async packageRoot => {
 		js: transpiledPackageJS,
 		css: compiledPackageCSS
 	}));
-
+	*/
 };
 
 module.exports = api;
