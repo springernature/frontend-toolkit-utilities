@@ -12,6 +12,7 @@ const api = {
 	 * @param  {dependencies} dependencies={} - a map of dependency names to version ranges,
 	 *  as per https://docs.npmjs.com/files/package.json#dependencies
 	 * @returns true on success, else an instanceof Error
+	 * TODO Error type is truthy :(
 	 */
 	dependencies: async (dependencies = {}, cb = (error, stdout, stderr) => {
 		if (error) {
@@ -25,7 +26,7 @@ const api = {
 		const validDepdendencies = api.getValidDepdendencies(dependencies);
 		const packageListAsStr = validDepdendencies.map(dep => dep.join('@')).join(' ');
 		const commandTemplate = `npmXX install ${packageListAsStr}`;
-		console.log(`installPeerDependencies command: ${commandTemplate}`);
+		console.log(`npm-install dependencies command: ${commandTemplate}`);
 
 		const child = exec(commandTemplate, cb);
 		child.on('exit', (code, signal) => {

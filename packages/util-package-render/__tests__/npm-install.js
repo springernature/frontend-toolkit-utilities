@@ -23,6 +23,21 @@ describe('Utility: npm-install', () => {
 		});
 	});
 
+
+	describe('dependencies', () => {
+		test('with one valid dep, makes one child_process.exec call', async () => {
+			const childProcessExecMock = jest.mock('child_process', () => ({ exec: jest.fn() }));
+			expect.assertions(1);
+			await install.dependencies(mockDependencies.oneValidDependency);
+			expect(childProcessExecMock).toHaveBeenCalledTimes(1);
+			childProcessExecMock.mockRestore();
+		});
+	});
+
+
+
+
+
 	describe('devDependencies', () => {
 		test('calls dependencies', async () => {
 			expect.assertions(1);

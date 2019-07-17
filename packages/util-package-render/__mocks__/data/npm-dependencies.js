@@ -7,9 +7,9 @@
 //  yes we should define allow lists, not ban lists, but we are doing both
 //  for the sake of sanity
 const badThingsToPassToBinSh = [
-	'1.0 ;',
+	'1.0;',
 	'"quotes"',
-	'1.0.0 \\ stuff'
+	'1.0.0\\stuff'
 ];
 
 const harmlessNames = [
@@ -32,6 +32,15 @@ module.exports = {
 	badValues,
 	oldStyleNPMDependencies: {
 		"eLaBorAtE-paCkAgE-with-mixed-case-and-more-than-214-characters-----------------------------------------------------------------------------------------------------------------------------------------------------------": "0.0.0"
+	},
+
+	oneValidDependency = {
+		foo: '1.0.0 - 2.9999.9999'
+	},
+
+	twoValidDependencies = {
+		foo: '1.0.0 - 2.9999.9999',
+		bar: '>=1.0.2 <2.1.2'
 	},
 
 	npmExampleDependencies: {
