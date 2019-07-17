@@ -4,6 +4,8 @@ const install = require('../utils/npm-install');
 
 const mockDependencies = require('../__mocks__/data/npm-dependencies');
 
+jest.mock('child_process'); // this MUST be called outside of a describe fn
+
 describe('Utility: npm-install', () => {
 
 	let dependenciesSpy;
@@ -26,17 +28,33 @@ describe('Utility: npm-install', () => {
 
 	describe('dependencies', () => {
 		test('with one valid dep, makes one child_process.exec call', async () => {
-			const childProcessExecMock = jest.mock('child_process', () => ({ exec: jest.fn() }));
-			expect.assertions(1);
+			// node core modules must be explicitly require()d
+			const child_process = require('child_process');
+
+			expect.assertions(2);
 			await install.dependencies(mockDependencies.oneValidDependency);
-			expect(childProcessExecMock).toHaveBeenCalledTimes(1);
-			childProcessExecMock.mockRestore();
+
+			expect(child_process.exec).toHaveBeenCalledWith(
+				'npmXX install foo@1.0.0 - 2.9999.9999',
+				()=>{}
+			);
+			//https://stackoverflow.com/questions/46890218/using-jest-how-can-i-check-that-an-argument-to-a-mocked-function-is-a-function
+			expect(child_process.exec).toHaveBeenCalledTimes(1);
+
+			child_process.mockRestore();
 		});
+
+
 	});
 
-
-
-
+//return fetchData().catch(e => expect(e).toMatch('error'));
+/*
+try {
+    await fetchData();
+  } catch (e) {
+    expect(e).toMatch('error');
+  }
+*/
 
 	describe('devDependencies', () => {
 		test('calls dependencies', async () => {

@@ -1,4 +1,4 @@
-const exec = require('child_process').exec;
+const cp = require('child_process');
 const validatePackageName = require('validate-npm-package-name');
 
 /**
@@ -28,10 +28,12 @@ const api = {
 		const commandTemplate = `npmXX install ${packageListAsStr}`;
 		console.log(`npm-install dependencies command: ${commandTemplate}`);
 
-		const child = exec(commandTemplate, cb);
-		child.on('exit', (code, signal) => {
-			console.log(`child process exited with code ${code} and signal ${signal}`);
-		});
+		if (packageListAsStr && packageListAsStr !== '') { // TODO: why sometimes ''?
+			const child = cp.exec(commandTemplate, cb);
+			child.on('exit', (code, signal) => {
+				console.log(`child process exited with code ${code} and signal ${signal}`);
+			});
+		}
 	},
 
 	/**

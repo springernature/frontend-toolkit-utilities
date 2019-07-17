@@ -34,11 +34,11 @@ module.exports = {
 		"eLaBorAtE-paCkAgE-with-mixed-case-and-more-than-214-characters-----------------------------------------------------------------------------------------------------------------------------------------------------------": "0.0.0"
 	},
 
-	oneValidDependency = {
+	oneValidDependency: {
 		foo: '1.0.0 - 2.9999.9999'
 	},
 
-	twoValidDependencies = {
+	twoValidDependencies: {
 		foo: '1.0.0 - 2.9999.9999',
 		bar: '>=1.0.2 <2.1.2'
 	},
