@@ -38,6 +38,10 @@ module.exports = {
 		foo: '1.0.0 - 2.9999.9999'
 	},
 
+	oneKnownToThrowDependency: {
+		ohno: '666'
+	},
+
 	twoValidDependencies: {
 		foo: '1.0.0 - 2.9999.9999',
 		bar: '>=1.0.2 <2.1.2'

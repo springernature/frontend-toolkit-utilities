@@ -25,7 +25,7 @@ const api = {
 
 		const validDepdendencies = api.getValidDepdendencies(dependencies);
 		const packageListAsStr = validDepdendencies.map(dep => dep.join('@')).join(' ');
-		const commandTemplate = `npmXX install ${packageListAsStr}`;
+		const commandTemplate = `npm install ${packageListAsStr}`;
 		console.log(`npm-install dependencies command: ${commandTemplate}`);
 
 		if (packageListAsStr && packageListAsStr !== '') { // TODO: why sometimes ''?
