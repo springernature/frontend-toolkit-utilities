@@ -1,5 +1,6 @@
 'use strict';
-
+// node core modules must be explicitly require()d to spy on them
+const child_process = require('child_process');
 const install = require('../utils/npm-install');
 
 const mockDependencies = require('../__mocks__/data/npm-dependencies');
@@ -9,12 +10,16 @@ jest.mock('child_process'); // this MUST be called outside of a describe fn
 describe('Utility: npm-install', () => {
 
 	let dependenciesSpy;
+	let consoleLogSpy;
 	beforeEach(() => {
 		dependenciesSpy = jest.spyOn(install, 'dependencies');
+		consoleLogSpy = jest.spyOn(global.console, 'log').mockImplementationOnce(() => {});
 	});
 
 	afterEach(() => {
+		child_process.exec.mockClear();
 		dependenciesSpy.mockRestore();
+		consoleLogSpy.mockRestore();
 	});
 
 	describe('dependencies', () => {
@@ -25,8 +30,6 @@ describe('Utility: npm-install', () => {
 		});
 
 		test('with one valid dep, calls child_process.exec once with correct args', async () => {
-			// node core modules must be explicitly require()d
-			const child_process = require('child_process');
 			expect.assertions(2);
 			await install.dependencies(mockDependencies.oneValidDependency);
 			expect(child_process.exec).toHaveBeenCalledWith(
@@ -34,12 +37,9 @@ describe('Utility: npm-install', () => {
 				expect.any(Function)
 			);
 			expect(child_process.exec).toHaveBeenCalledTimes(1);
-			child_process.exec.mockClear();
 		});
 
 		test('with two valid dep, calls child_process.exec once with correct args', async () => {
-			// node core modules must be explicitly require()d
-			const child_process = require('child_process');
 			expect.assertions(2);
 			await install.dependencies(mockDependencies.twoValidDependencies);
 			expect(child_process.exec).toHaveBeenCalledWith(
@@ -47,8 +47,21 @@ describe('Utility: npm-install', () => {
 				expect.any(Function)
 			);
 			expect(child_process.exec).toHaveBeenCalledTimes(1);
-			child_process.exec.mockClear();
 		});
+
+		test('callback is used, and calls console.log on success', async () => {
+			const callbackMock = jest.fn();
+			expect.assertions(4);
+			await install.dependencies(mockDependencies.oneValidDependency, callbackMock);
+			expect(child_process.exec).toHaveBeenCalledWith(
+				'npmXX install foo@1.0.0 - 2.9999.9999',
+				expect.any(Function)
+			);
+			expect(child_process.exec).toHaveBeenCalledTimes(1);
+			expect(callbackMock).toHaveBeenCalledTimes(1);
+			expect(consoleLogSpy).toHaveBeenCalledTimes(1);
+		});
+
 	});
 
 
