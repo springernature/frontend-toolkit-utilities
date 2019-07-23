@@ -24,7 +24,7 @@ describe('Utility: npm-install', () => {
 			expect(dependenciesSpy).toHaveBeenCalledTimes(1);
 		});
 
-		test('with one valid dep, makes one child_process.exec call', async () => {
+		test('with one valid dep, calls child_process.exec once with correct args', async () => {
 			// node core modules must be explicitly require()d
 			const child_process = require('child_process');
 			expect.assertions(2);
@@ -37,7 +37,7 @@ describe('Utility: npm-install', () => {
 			child_process.exec.mockClear();
 		});
 
-		test('with two valid dep, makes one child_process.exec call', async () => {
+		test('with two valid dep, calls child_process.exec once with correct args', async () => {
 			// node core modules must be explicitly require()d
 			const child_process = require('child_process');
 			expect.assertions(2);
@@ -96,10 +96,10 @@ try {
 
 		test('does not return bad values', () => {
 			expect.assertions(1);
-				expect(
-					install.getValidDepdendencies(mockDependencies.badValues)
-				)
-				.toStrictEqual([]);
+			expect(
+				install.getValidDepdendencies(mockDependencies.badValues)
+			)
+			.toStrictEqual([]);
 			});
 
 		test('does not return old-style npm package names', () => {
