@@ -23,29 +23,34 @@ describe('Utility: npm-install', () => {
 			await install.dependencies();
 			expect(dependenciesSpy).toHaveBeenCalledTimes(1);
 		});
-	});
 
-
-	describe('dependencies', () => {
 		test('with one valid dep, makes one child_process.exec call', async () => {
 			// node core modules must be explicitly require()d
 			const child_process = require('child_process');
-
 			expect.assertions(2);
 			await install.dependencies(mockDependencies.oneValidDependency);
-
 			expect(child_process.exec).toHaveBeenCalledWith(
 				'npmXX install foo@1.0.0 - 2.9999.9999',
-				()=>{}
+				expect.any(Function)
 			);
-			//https://stackoverflow.com/questions/46890218/using-jest-how-can-i-check-that-an-argument-to-a-mocked-function-is-a-function
 			expect(child_process.exec).toHaveBeenCalledTimes(1);
-
-			child_process.mockRestore();
+			child_process.exec.mockClear();
 		});
 
-
+		test('with two valid dep, makes one child_process.exec call', async () => {
+			// node core modules must be explicitly require()d
+			const child_process = require('child_process');
+			expect.assertions(2);
+			await install.dependencies(mockDependencies.twoValidDependencies);
+			expect(child_process.exec).toHaveBeenCalledWith(
+				'npmXX install foo@1.0.0 - 2.9999.9999 bar@>=1.0.2 <2.1.2',
+				expect.any(Function)
+			);
+			expect(child_process.exec).toHaveBeenCalledTimes(1);
+			child_process.exec.mockClear();
+		});
 	});
+
 
 //return fetchData().catch(e => expect(e).toMatch('error'));
 /*
