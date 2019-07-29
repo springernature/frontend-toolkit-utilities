@@ -22,7 +22,7 @@ function getFileList(json, filePaths = []) {
 
 function getExtendedFileList(name) {
 	return new Promise((resolve, reject) => {
-		getRemoteFile(`https://unpkg.com/${name}/?meta`, name)
+		getRemoteFile(`https://unpkg.com/${name}/?meta`)
 			.then(html => {
 				const fileList = getFileList(JSON.parse(html).files);
 				resolve(fileList);
@@ -31,4 +31,4 @@ function getExtendedFileList(name) {
 	});
 }
 
-export default getExtendedFileList;
+module.exports = getExtendedFileList;
