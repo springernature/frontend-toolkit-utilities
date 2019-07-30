@@ -1,13 +1,15 @@
 /**
  * Package Extender
  * Check if a package needs extending & extend
+ * Remote - package being extended
+ * Local - package that extends the remote
  */
 'use strict';
 
 const path = require('path');
 
-const getExtendedFileList = require('./utils/_get-extended-file-list');
-const mergeExtendedPackage = require('./utils/_merge-extended-package');
+const getRemoteFileList = require('./utils/_get-remote-file-list');
+const mergePackages = require('./utils/_merge-packages');
 
 /**
  * Get package extension names and versions
@@ -15,15 +17,15 @@ const mergeExtendedPackage = require('./utils/_merge-extended-package');
  * @param {String} packageScope npm scope
  * @return {Object}
  */
-const getPackageToExtend = (packageJsonPath, packageScope) => {
+const getPackageExtensionDetails = (packageJsonPath, packageScope) => {
 	const scope = packageScope || 'springernature';
 	const linkToPackageJson = path.resolve(packageJsonPath || '.', 'package.json');
 	const packageJson = require(linkToPackageJson);
 
 	if (packageJson.extendsPackage) {
 		return {
-			packageToExtend: `@${scope}/${packageJson.extendsPackage}`,
-			packageExtendedAs: `@${scope}/${packageJson.name}@${packageJson.version}`
+			remotePackage: `@${scope}/${packageJson.extendsPackage}`,
+			localPackage: `@${scope}/${packageJson.name}@${packageJson.version}`
 		};
 	}
 
@@ -33,17 +35,18 @@ const getPackageToExtend = (packageJsonPath, packageScope) => {
 /**
  * Extend a package
  * @param {String} packageJsonPath path to the package.json
- * @param {String} packageToExtend package and version being extended
+ * @param {String} remotePackage package and version being extended
+ * @param {String} localPackage package and version that extends remote
  * @param {String} outputDirectory output directory for extended package
  * @return {Promise<Object>}
  */
-const extendPackage = (packageJsonPath, packageToExtend, packageExtendedAs, outputDirectory) => {
+const extendPackage = (packageJsonPath, remotePackage, localPackage, outputDirectory) => {
 	return new Promise((resolve, reject) => {
-		getExtendedFileList(packageToExtend)
-			.then(extendedFileList => {
-				mergeExtendedPackage(extendedFileList, packageJsonPath, packageToExtend, outputDirectory)
+		getRemoteFileList(remotePackage)
+			.then(remoteFileList => {
+				mergePackages(remoteFileList, packageJsonPath, remotePackage, outputDirectory)
 					.then(() => {
-						console.log(`success: ${packageToExtend} extended as ${packageExtendedAs}`);
+						console.log(`success: ${remotePackage} extended as ${localPackage}`);
 						resolve();
 					}).catch(err => reject(err));
 			}).catch(err => reject(err));
@@ -51,6 +54,6 @@ const extendPackage = (packageJsonPath, packageToExtend, packageExtendedAs, outp
 };
 
 module.exports = {
-	getPackageToExtend,
+	getPackageExtensionDetails,
 	extendPackage
 };

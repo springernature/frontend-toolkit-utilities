@@ -1,7 +1,7 @@
 /**
  * _get-remote-file.js
  * Get the contents of a remote file
- * Used to get package contents from https://unpkg.com/
+ * Used to get package contents from CDN
  * HTTPS only
  */
 'use strict';
