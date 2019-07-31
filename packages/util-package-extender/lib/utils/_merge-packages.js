@@ -20,7 +20,7 @@ const getRemoteFile = require('./_get-remote-file');
 function mergePackages(remoteFileList, packageJsonPath, remotePackage, outputDirectory) {
 	return new Promise((resolve, reject) => {
 		const promises = [];
-		const outputPath = path.resolve(outputDirectory);
+		const outputPath = (outputDirectory) ? path.resolve(outputDirectory) : null;
 		const defaultPath = path.resolve(path.dirname(packageJsonPath));
 		const extendToDirectory = outputDirectory && (outputPath !== defaultPath);
 
@@ -47,7 +47,7 @@ function mergePackages(remoteFileList, packageJsonPath, remotePackage, outputDir
 				if (extendToDirectory) {
 					try {
 						fs.copySync(filePath, path.resolve(outputPath, filePath));
-						console.log(`success: copying '${filePath}' to '${outputDirectory}'`);
+						console.log(`info: copying '${filePath}' to '${outputDirectory}'`);
 					} catch (err) {
 						reject(err);
 					}
@@ -62,7 +62,7 @@ function mergePackages(remoteFileList, packageJsonPath, remotePackage, outputDir
 						const outputFilePath = (extendToDirectory) ? path.resolve(outputPath, filePath) : filePath;
 						fs.ensureDirSync(path.dirname(outputFilePath));
 						fs.writeFileSync(outputFilePath, data);
-						console.log(`success: merging '${file}' from '${remotePackage}'`);
+						console.log(`info: merging '${file}' from '${remotePackage}'`);
 					}).catch(err => {
 						console.log(`fail: accessing https://cdn.jsdelivr.net/npm/${remotePackage}${file}`);
 						reject(err);
