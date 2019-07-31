@@ -28,7 +28,7 @@ function mergePackages(remoteFileList, packageJsonPath, remotePackage, outputDir
 		if (extendToDirectory) {
 			try {
 				fs.ensureDirSync(outputPath);
-				console.log(`info: extending package to ${outputDirectory}`);
+				console.log(`info: extending package into folder '${outputDirectory}'`);
 			} catch (err) {
 				reject(err);
 			}
@@ -47,12 +47,12 @@ function mergePackages(remoteFileList, packageJsonPath, remotePackage, outputDir
 				if (extendToDirectory) {
 					try {
 						fs.copySync(filePath, path.resolve(outputPath, filePath));
-						console.log(`info: copying '${filePath}' to '${outputDirectory}'`);
+						console.log(`info: copying '${filePath}' from local package`);
 					} catch (err) {
 						reject(err);
 					}
 				} else {
-					console.log(`info: local copy of '${filePath}' found`);
+					console.log(`info: found '${filePath}' in local package`);
 				}
 			} catch (err) {
 				// File does not exist in local package directory
