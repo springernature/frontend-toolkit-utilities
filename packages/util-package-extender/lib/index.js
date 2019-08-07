@@ -7,7 +7,6 @@
 'use strict';
 
 const path = require('path');
-const performance = require('perf_hooks').performance;
 
 const findUp = require('find-up');
 const gitignoreGlobs = require('gitignore-globs');
@@ -30,7 +29,7 @@ function getPackageExtensionDetails(packageJsonPath, packageScope) {
 	if (packageJson.extendsPackage) {
 		return {
 			remotePackage: `@${scope}/${packageJson.extendsPackage}`,
-			localPackage: `@${scope}/${packageJson.name}@${packageJson.version}`
+			localPackage: `${packageJson.name}@${packageJson.version}`
 		};
 	}
 
@@ -72,12 +71,8 @@ async function extendPackage(packageJsonPath, remotePackage, localPackage, outpu
 	const gitignorePath = await findUp('.gitignore');
 	const remoteFileList = await getRemoteFileList(remotePackage);
 	const localFileList = await getLocalFileList(packageJsonPath, gitignorePath);
-	console.log(localFileList);
-	// console.log(remoteFileList);
-	var t0 = performance.now();
-	// await mergePackages(remoteFileList, packageJsonPath, remotePackage, outputDirectory);
-	var t1 = performance.now();
-	console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.")
+	const filteredRemoteFileList = remoteFileList.filter(el => !localFileList.includes(el));
+	await mergePackages({local: localFileList, remote: filteredRemoteFileList}, packageJsonPath, remotePackage, outputDirectory);
 	console.log(`success: ${remotePackage} extended as ${localPackage}`);
 }
 

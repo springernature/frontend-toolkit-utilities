@@ -9,7 +9,7 @@ const getRemoteFile = require('./_get-remote-file');
 
 // Loop through package contents
 // Return list of all files found
-function getFileList(json, filePaths = [], buildPath = '/') {
+function getFileList(json, filePaths = [], buildPath = '') {
 	json.forEach(file => {
 		if (file.type === 'file') {
 			filePaths.push(`${buildPath}${file.name}`);
