@@ -1,6 +1,6 @@
 /**
  * _get-remote-file-list.js
- * Get list of files from the package dependency
+ * Get list of files from the remote package
  * https://github.com/jsdelivr/data.jsdelivr.com#list-package-files
  */
 'use strict';
@@ -21,15 +21,9 @@ function getFileList(json, filePaths = [], buildPath = '/') {
 	return filePaths;
 }
 
-function getRemoteFileList(name) {
-	return new Promise((resolve, reject) => {
-		getRemoteFile(`https://data.jsdelivr.com/v1/package/npm/${name}`)
-			.then(html => {
-				const fileList = getFileList(JSON.parse(html).files);
-				resolve(fileList);
-			})
-			.catch(err => reject(err));
-	});
+async function getRemoteFileList(name) {
+	const html = await getRemoteFile(`https://data.jsdelivr.com/v1/package/npm/${name}`);
+	return getFileList(JSON.parse(html).files);
 }
 
 module.exports = getRemoteFileList;

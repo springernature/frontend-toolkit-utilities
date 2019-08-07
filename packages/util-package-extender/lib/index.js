@@ -7,6 +7,11 @@
 'use strict';
 
 const path = require('path');
+const performance = require('perf_hooks').performance;
+
+const findUp = require('find-up');
+const gitignoreGlobs = require('gitignore-globs');
+const glob = require('glob');
 
 const getRemoteFileList = require('./utils/_get-remote-file-list');
 const mergePackages = require('./utils/_merge-packages');
@@ -17,7 +22,7 @@ const mergePackages = require('./utils/_merge-packages');
  * @param {String} packageScope npm scope
  * @return {Object}
  */
-const getPackageExtensionDetails = (packageJsonPath, packageScope) => {
+function getPackageExtensionDetails(packageJsonPath, packageScope) {
 	const scope = packageScope || 'springernature';
 	const linkToPackageJson = path.resolve(packageJsonPath || '.', 'package.json');
 	const packageJson = require(linkToPackageJson);
@@ -30,7 +35,30 @@ const getPackageExtensionDetails = (packageJsonPath, packageScope) => {
 	}
 
 	return null;
-};
+}
+
+/**
+ * Get list of files from the local package
+ * @param {String} packageJsonPath path to the package.json
+ * @param {String} gitignorePath path to the closest .gitignore
+ * @return {Array}
+ */
+function getLocalFileList(packageJsonPath, gitignorePath) {
+	return new Promise((resolve, reject) => {
+		glob(`${packageJsonPath}/**/*`, {
+			dot: true,
+			nodir: true,
+			absolute: true,
+			ignore: gitignoreGlobs(gitignorePath)
+		}, (error, files) => {
+			if (error) {
+				reject(error);
+				return;
+			}
+			resolve(files.map(item => path.relative(packageJsonPath, item)));
+		});
+	});
+}
 
 /**
  * Extend a package
@@ -40,18 +68,18 @@ const getPackageExtensionDetails = (packageJsonPath, packageScope) => {
  * @param {String} outputDirectory output directory for extended package
  * @return {Promise<Object>}
  */
-const extendPackage = (packageJsonPath, remotePackage, localPackage, outputDirectory) => {
-	return new Promise((resolve, reject) => {
-		getRemoteFileList(remotePackage)
-			.then(remoteFileList => {
-				mergePackages(remoteFileList, packageJsonPath, remotePackage, outputDirectory)
-					.then(() => {
-						console.log(`success: ${remotePackage} extended as ${localPackage}`);
-						resolve();
-					}).catch(err => reject(err));
-			}).catch(err => reject(err));
-	});
-};
+async function extendPackage(packageJsonPath, remotePackage, localPackage, outputDirectory) {
+	const gitignorePath = await findUp('.gitignore');
+	const remoteFileList = await getRemoteFileList(remotePackage);
+	const localFileList = await getLocalFileList(packageJsonPath, gitignorePath);
+	console.log(localFileList);
+	// console.log(remoteFileList);
+	var t0 = performance.now();
+	// await mergePackages(remoteFileList, packageJsonPath, remotePackage, outputDirectory);
+	var t1 = performance.now();
+	console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.")
+	console.log(`success: ${remotePackage} extended as ${localPackage}`);
+}
 
 module.exports = {
 	getPackageExtensionDetails,
