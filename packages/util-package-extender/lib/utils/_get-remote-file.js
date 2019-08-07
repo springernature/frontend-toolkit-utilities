@@ -63,18 +63,13 @@ function generateErrorMessage(error) {
  * @param {String} url the request
  * @return {Promise<Object>}
  */
-function getRemoteFile(url) {
-	return new Promise((resolve, reject) => {
-		(async () => {
-			try {
-				const response = await got(url, config);
-				resolve(response.body);
-			} catch (error) {
-				console.log(`fail: requesting ${url}`);
-				reject(new Error(`${generateErrorMessage(error)}`));
-			}
-		})();
-	});
+async function getRemoteFile(url) {
+	try {
+		const response = await got(url, config);
+		return response.body;
+	} catch (error) {
+		throw new Error(`${generateErrorMessage(error)}`);
+	}
 }
 
 module.exports = getRemoteFile;
