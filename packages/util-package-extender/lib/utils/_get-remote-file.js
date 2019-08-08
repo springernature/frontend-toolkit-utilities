@@ -2,7 +2,6 @@
  * _get-remote-file.js
  * Get the contents of a remote file
  * Used to get package contents from CDN
- * HTTPS only
  */
 'use strict';
 
@@ -41,6 +40,7 @@ const config = {
 
 /**
  * Generate an error message based on error type
+ * @private
  * @param {Object} error the error object from the request
  * @return {String}
  */

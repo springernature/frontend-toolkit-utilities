@@ -9,31 +9,40 @@ const path = require('path');
 const fs = require('fs-extra');
 const getRemoteFile = require('./_get-remote-file');
 
-// Copy file to outputDirectory if set
-async function mergeLocalFile(filePath, outputPath, extendToDirectory) {
-	if (extendToDirectory) {
-		try {
-			await fs.copy(filePath, path.resolve(outputPath, filePath));
-			console.log(`info: copying '${filePath}' from local package`);
-		} catch (err) {
-			console.log(`fail: problem copying '${filePath}' from local package`);
-			throw err;
-		}
-	} else {
-		console.log(`info: found '${filePath}' in local package`);
+/**
+ * Copy local file to outputDirectory
+ * @private
+ * @param {String} file name of the local file
+ * @param {String} sourcePath path to the local file
+ * @param {String} destinationPath output path of the file
+ * @return {Promise<Object>}
+ */
+async function mergeLocalFile(file, sourcePath, destinationPath) {
+	try {
+		await fs.copy(sourcePath, destinationPath);
+		console.log(`info: copying '${file}' from local package`);
+	} catch (err) {
+		console.log(`fail: problem copying '${file}' from local package`);
+		throw err;
 	}
 }
 
-// Merge file from the remote package
-async function mergeRemoteFile(file, remotePackage, outputFilePath) {
+/**
+ * Merge file from the remote package
+ * @private
+ * @param {String} file name of the local file
+ * @param {String} remotePackage name of the package on NPM
+ * @param {String} destinationPath output path of the file
+ * @return {Promise<Object>}
+ */
+async function mergeRemoteFile(file, remotePackage, destinationPath) {
 	try {
 		const data = await getRemoteFile(`https://cdn.jsdelivr.net/npm/${remotePackage}/${file}`);
-		await fs.ensureDir(path.dirname(outputFilePath));
-		await fs.writeFile(outputFilePath, data);
+		await fs.ensureDir(path.dirname(destinationPath));
+		await fs.writeFile(destinationPath, data);
 		console.log(`info: merging '${file}' from '${remotePackage}'`);
 	} catch (err) {
-		// any of above 3 could fail, identify?
-		console.log(`fail: accessing https://cdn.jsdelivr.net/npm/${remotePackage}${file}`);
+		console.log(`fail: problem copying '${file}' from '${remotePackage}'`);
 		throw err;
 	}
 }
@@ -41,34 +50,42 @@ async function mergeRemoteFile(file, remotePackage, outputFilePath) {
 /**
  * Merge two packages together
  * @param {Object} fileList list of files from local and remote package
- * @param {String} packageJsonPath path to the package.json
+ * @param {String} packageJsonPath path to the local package.json
  * @param {String} remotePackage package and version being extended
  * @param {String} outputDirectory output directory for extended package, optional
  * @return {Promise<Object>}
  */
 async function mergePackages(fileList, packageJsonPath, remotePackage, outputDirectory) {
-	const outputPath = (outputDirectory) ? path.resolve(outputDirectory) : null;
 	const defaultPath = path.resolve(path.dirname(packageJsonPath));
+	const outputPath = (outputDirectory) ? path.resolve(outputDirectory) : defaultPath;
 	const extendToDirectory = outputDirectory && (outputPath !== defaultPath);
 
-	// Make sure that the outputDirectory exists
+	let mergeAllLocalFiles = [];
+	let mergeAllRemoteFiles = [];
+
 	if (extendToDirectory) {
+		// Make sure that the outputDirectory exists
 		fs.ensureDirSync(outputPath);
 		console.log(`info: extending package into folder '${path.resolve(outputDirectory)}'`);
+
+		// Copy local files to outputDirectory
+		mergeAllLocalFiles = fileList.local.map(file => {
+			const sourcePath = path.join(packageJsonPath, file);
+			const destinationPath = path.resolve(outputPath, file);
+			return mergeLocalFile(file, sourcePath, destinationPath);
+		});
 	}
 
-	const mergeAllLocalFiles = fileList.local.map(file => {
-		const filePath = path.join(packageJsonPath, file);
-		return mergeLocalFile(filePath, outputPath, extendToDirectory);
+	// Copy remote files to either
+	// outputDirectory or local package
+	mergeAllRemoteFiles = fileList.remote.map(file => {
+		const destinationPath = (extendToDirectory) ?
+			path.resolve(outputPath, file) :
+			path.join(packageJsonPath, file);
+		return mergeRemoteFile(file, remotePackage, destinationPath);
 	});
 
-	const mergeAllRemoteFiles = fileList.remote.map(file => {
-		const filePath = path.join(packageJsonPath, file);
-		const outputFilePath = (extendToDirectory) ? path.resolve(outputPath, filePath) : filePath;
-		return mergeRemoteFile(file, remotePackage, outputFilePath);
-	});
-
-	// Merge both the local and remote files
+	// Complete when all files are merged
 	await Promise.all([...mergeAllLocalFiles, ...mergeAllRemoteFiles]);
 }
 
