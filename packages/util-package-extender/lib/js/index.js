@@ -8,9 +8,9 @@
 
 const path = require('path');
 
-const getLocalFileList = require('./utils/_get-local-file-list');
-const getRemoteFileList = require('./utils/_get-remote-file-list');
-const mergePackages = require('./utils/_merge-packages');
+const getLocalFileList = require('./_utils/_get-local-file-list');
+const getRemoteFileList = require('./_utils/_get-remote-file-list');
+const mergePackages = require('./_utils/_merge-packages');
 
 /**
  * Remove file paths from remote file list

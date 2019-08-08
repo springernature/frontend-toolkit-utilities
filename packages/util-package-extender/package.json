@@ -17,7 +17,8 @@
     "fs-extra": "^8.1.0",
     "gitignore-globs": "^0.1.1",
     "glob": "^7.1.4",
-    "got": "^9.6.0"
+    "got": "^9.6.0",
+    "nock": "^10.0.6"
   },
   "extendsPackage": "global-context@2.6.0"
 }

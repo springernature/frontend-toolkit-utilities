@@ -5,7 +5,6 @@
 'use strict';
 
 const path = require('path');
-
 const findUp = require('find-up');
 const gitignoreGlobs = require('gitignore-globs');
 const glob = require('glob');
