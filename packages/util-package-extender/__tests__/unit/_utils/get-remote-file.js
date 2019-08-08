@@ -30,7 +30,7 @@ describe('Getting contents of a remote file from a URL', () => {
 		).rejects.toBeInstanceOf(Error);
 	});
 
-	test('Rejects when https.get errors', async () => {
+	test('Rejects when error from `got`', async () => {
 		nock('https://www.example.com')
 			.get('/failure')
 			.replyWithError(new Error());
