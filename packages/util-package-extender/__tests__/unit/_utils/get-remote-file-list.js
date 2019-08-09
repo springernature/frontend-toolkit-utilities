@@ -9,14 +9,14 @@ jest.mock('../../../lib/js/_utils/_get-remote-file');
 const getRemoteFileList = require('../../../lib/js/_utils/_get-remote-file-list');
 
 const fileList = [
-	"topLevelFileA.ext",
-	"topLevelFileB.ext",
-	"topLevelDirA/secondLevelDirA/fileA.ext",
-	"topLevelDirA/secondLevelDirA/fileB.ext",
-	"topLevelDirA/fileA.ext",
-	"topLevelDirA/secondLevelDirB/fileA.ext",
-	"topLevelDirB/fileA.ext",
-	"topLevelFileC.ext"
+	'topLevelFileA.ext',
+	'topLevelFileB.ext',
+	'topLevelDirA/secondLevelDirA/fileA.ext',
+	'topLevelDirA/secondLevelDirA/fileB.ext',
+	'topLevelDirA/fileA.ext',
+	'topLevelDirA/secondLevelDirB/fileA.ext',
+	'topLevelDirB/fileA.ext',
+	'topLevelFileC.ext'
 ];
 
 describe('Get an array of file paths from a `JSON as Text` response', () => {

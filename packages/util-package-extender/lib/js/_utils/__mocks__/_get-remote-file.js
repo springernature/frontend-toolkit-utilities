@@ -4,7 +4,7 @@
  */
 'use strict';
 
-const results = require('./filesystem.json');
+const results = require('./remote-filesystem.json');
 
 function getRemoteFile(url) {
 	return new Promise((resolve, reject) => {

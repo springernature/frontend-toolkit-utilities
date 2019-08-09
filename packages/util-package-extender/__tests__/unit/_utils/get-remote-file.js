@@ -41,6 +41,17 @@ describe('Getting contents of a remote file from a URL', () => {
 		).rejects.toBeInstanceOf(Error);
 	});
 
+	test('Rejects when error from Unsupported Protocol', async () => {
+		nock('c:/www.example.com')
+			.get('/failure')
+			.replyWithError(new Error());
+
+		expect.assertions(1);
+		await expect(
+			getRemoteFile('c:/www.example.com/failure')
+		).rejects.toBeInstanceOf(Error);
+	});
+
 	afterEach(() => {
 		nock.cleanAll();
 	});
