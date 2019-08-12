@@ -8,15 +8,26 @@ const validatePackageName = require('validate-npm-package-name');
  * @module npm-install
  */
 
+/**
+ * Maximum length of a package version range string. Arbitrary value chosen for sanity.
+ */
 const VERSION_RANGE_MAXLENGTH = 50;
 
-const api = {
+/**
+ * A package.json represented as a JavaScript Object
+ * @typedef {Object.<string, string>} PackageJSON
+ */
+/**
+ * A map? of package names to version ranges represented as a JavaScript Object
+* @typedef {Object.<string, string>} Dependencies
+ */
+
+module.exports = {
 	/**
 	 * Main method which actually installs given depdendencies.
-	 * @param  {dependencies} dependencies={} - a map of dependency names to version ranges,
+	 * @param  {Dependencies} dependencies={} - a map of dependency names to version ranges,
 	 *  as per https://docs.npmjs.com/files/package.json#dependencies
 	 * @returns true on success, else an instanceof Error
-	 * TODO Error type is truthy :(
 	 */
 	dependencies: async (dependencies = {}, cb = (error, stdout, stderr) => {
 		if (error) {
@@ -31,7 +42,7 @@ const api = {
 		const commandTemplate = `npm install ${packageListAsStr}`;
 		console.log(`npm-install dependencies command: ${commandTemplate}`);
 
-		if (packageListAsStr && packageListAsStr !== '') { // TODO: why sometimes ''?
+		if (packageListAsStr && packageListAsStr !== '') {
 			const child = cp.exec(commandTemplate, cb);
 			child.on('exit', (code, signal) => {
 				console.log(`child process exited with code ${code} and signal ${signal}`);
@@ -41,13 +52,14 @@ const api = {
 
 	/**
 	 * Filters supplied dependencies, removing invalid depdendencies.
-	 * @param  {dependencies} dependencies={} - a map of dependency names to version ranges,
+	 * @param  {Dependencies} dependencies={} - a map of dependency names to version ranges,
 	 *  as per https://docs.npmjs.com/files/package.json#dependencies
+	 * @returns {Dependencies} a map of valid dependency names to version ranges
 	 */
 	getValidDepdendencies: (dependencies = {}) => {
 		return Object.entries(dependencies).filter(([pname, pversion]) => {
 			const validationResult = validatePackageName(pname);
-			// allowed values for the desired version are horribly permissive
+			// allowed values for the desired version are *very* permissive
 			const versionRangeValid = /^[-\w :/.<>|=~^]+$/.test(pversion) &&
 				pversion.length <= VERSION_RANGE_MAXLENGTH;
 			return validationResult.validForNewPackages &&
@@ -58,20 +70,16 @@ const api = {
 
 	/**
 	 * Helper to install just the devDependencies given a parsed package.json
-	 * @param  {packageJSON} packageJSON={}
+	 * @param  {PackageJSON} packageJSON={}
 	 */
 	devDependencies: async (packageJSON = {}, cb) => api.dependencies(packageJSON.devDependencies, cb),
 
 	/**
 	 * Helper to install just the peerDependencies given a parsed package.json
-	 * @param  {packageJSON} packageJSON={}
+	 * @param  {PackageJSON} packageJSON={}
 	 */
 	peerDependencies: async (packageJSON = {}, cb) => api.dependencies(packageJSON.peerDependencies, cb),
 
-	/**
-	 * Maximum length of a package range value. Arbitrary, here for sanity.
-	 */
+	/** Maximum permitted length of a package version range string */
 	VERSION_RANGE_MAXLENGTH: VERSION_RANGE_MAXLENGTH
 };
-
-module.exports = api;
