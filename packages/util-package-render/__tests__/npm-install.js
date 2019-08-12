@@ -73,7 +73,7 @@ describe('Utility: npm-install', () => {
 				}
 			});
 			expect.assertions(4);
-			const result = await install.dependencies(mockDependencies.oneKnownToThrowDependency, callbackMock);
+			await install.dependencies(mockDependencies.oneKnownToThrowDependency, callbackMock);
 			expect(child_process.exec).toHaveBeenCalledWith(
 				'npm install ohno@666',
 				expect.any(Function)

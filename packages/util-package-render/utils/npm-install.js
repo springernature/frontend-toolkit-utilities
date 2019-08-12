@@ -24,8 +24,7 @@ const api = {
 		}
 		console.log(`stdout: ${stdout}`);
 		console.log(`stderr: ${stderr}`);
-		}) => {
-
+	}) => {
 		const validDepdendencies = api.getValidDepdendencies(dependencies);
 		const packageListAsStr = validDepdendencies.map(dep => dep.join('@')).join(' ');
 		const commandTemplate = `npm install ${packageListAsStr}`;
@@ -48,11 +47,11 @@ const api = {
 		return Object.entries(dependencies).filter(([pname, pversion]) => {
 			const validationResult = validatePackageName(pname);
 			// allowed values for the desired version are horribly permissive
-			const versionRangeValid = /^[-\w :/.<>|=~^]+$/.test(pversion)
-				&& pversion.length <= VERSION_RANGE_MAXLENGTH;
-			return validationResult.validForNewPackages
-				&& !validationResult.errors
-				&& versionRangeValid;
+			const versionRangeValid = /^[-\w :/.<>|=~^]+$/.test(pversion) &&
+				pversion.length <= VERSION_RANGE_MAXLENGTH;
+			return validationResult.validForNewPackages &&
+				!validationResult.errors &&
+				versionRangeValid;
 		});
 	},
 
@@ -69,9 +68,9 @@ const api = {
 	peerDependencies: async (packageJSON = {}, cb) => api.dependencies(packageJSON.peerDependencies, cb),
 
 	/**
-	 * Maximum length of a package range value
+	 * Maximum length of a package range value. Arbitrary, here for sanity.
 	 */
 	VERSION_RANGE_MAXLENGTH: VERSION_RANGE_MAXLENGTH
-}
+};
 
 module.exports = api;
