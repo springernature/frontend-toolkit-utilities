@@ -14,11 +14,11 @@ const validatePackageName = require('validate-npm-package-name');
 const VERSION_RANGE_MAXLENGTH = 50;
 
 /**
- * A package.json represented as a JavaScript Object
+ * A Object representing a JSON.parse-d package.json.
  * @typedef {Object.<string, string>} PackageJSON
  */
 /**
- * A map? of package names to version ranges represented as a JavaScript Object
+ * An Object mapping package names to version ranges.
 * @typedef {Object.<string, string>} Dependencies
  */
 
@@ -37,7 +37,7 @@ module.exports = {
 		console.log(`stdout: ${stdout}`);
 		console.log(`stderr: ${stderr}`);
 	}) => {
-		const validDepdendencies = api.getValidDepdendencies(dependencies);
+		const validDepdendencies = module.exports.getValidDepdendencies(dependencies);
 		const packageListAsStr = validDepdendencies.map(dep => dep.join('@')).join(' ');
 		const commandTemplate = `npm install ${packageListAsStr}`;
 		console.log(`npm-install dependencies command: ${commandTemplate}`);
@@ -72,13 +72,13 @@ module.exports = {
 	 * Helper to install just the devDependencies given a parsed package.json
 	 * @param  {PackageJSON} packageJSON={}
 	 */
-	devDependencies: async (packageJSON = {}, cb) => api.dependencies(packageJSON.devDependencies, cb),
+	devDependencies: async (packageJSON = {}, cb) => module.exports.dependencies(packageJSON.devDependencies, cb),
 
 	/**
 	 * Helper to install just the peerDependencies given a parsed package.json
 	 * @param  {PackageJSON} packageJSON={}
 	 */
-	peerDependencies: async (packageJSON = {}, cb) => api.dependencies(packageJSON.peerDependencies, cb),
+	peerDependencies: async (packageJSON = {}, cb) => module.exports.dependencies(packageJSON.peerDependencies, cb),
 
 	/** Maximum permitted length of a package version range string */
 	VERSION_RANGE_MAXLENGTH: VERSION_RANGE_MAXLENGTH
