@@ -25,11 +25,17 @@ describe('Utility: npm-install', () => {
 		consoleErrorSpy.mockRestore();
 	});
 
-	describe('dependencies', () => {
+	describe('dependencies()', () => {
 		test('calls getValidDepdendencies', async () => {
 			expect.assertions(1);
 			await install.dependencies();
 			expect(dependenciesSpy).toHaveBeenCalledTimes(1);
+		});
+
+		test('with no dependencies, returns an error', async () => {
+			expect.assertions(1);
+			const result = await install.dependencies({});
+			expect(result instanceof Error).toStrictEqual(true);
 		});
 
 		test('with one valid dep, calls child_process.exec once with correct args', async () => {

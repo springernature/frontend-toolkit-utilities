@@ -42,12 +42,15 @@ module.exports = {
 		const commandTemplate = `npm install ${packageListAsStr}`;
 		console.log(`npm-install dependencies command: ${commandTemplate}`);
 
-		if (packageListAsStr && packageListAsStr !== '') {
-			const child = cp.exec(commandTemplate, cb);
-			child.on('exit', (code, signal) => {
-				console.log(`child process exited with code ${code} and signal ${signal}`);
-			});
-		}
+		if (!packageListAsStr || packageListAsStr === '') {
+			return new Error('invalid package list');
+		};
+
+		const child = cp.exec(commandTemplate, cb);
+		child.on('exit', (code, signal) => {
+			console.log(`child process exited with code ${code} and signal ${signal}`);
+		});
+
 	},
 
 	/**
