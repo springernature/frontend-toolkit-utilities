@@ -9,16 +9,19 @@ const knownToThrowEntry = Object.entries(mockDependencies.oneKnownToThrowDepende
 const knownToThrowPackage = knownToThrowEntry[0] + '@' + knownToThrowEntry[1];
 
 childProcess.exec = jest.fn((command, cb) => {
-	if (command === `npm install ${knownToThrowPackage}`) {
-		// known-bad package which should throw
-		cb(
-			'An error message from child_process mock',
-			'contents of stdout from child_process mock',
-			'contents of stderr from child_process mock'
-		);
-	} else {
-		cb();
+	if (typeof cb === 'function') {
+		if (command === `npm install ${knownToThrowPackage}`) {
+			// known-bad package which should throw
+			cb(
+				'An error message from child_process mock',
+				'contents of stdout from child_process mock',
+				'contents of stderr from child_process mock'
+			);
+		} else {
+			cb();
+		}
 	}
+
 	return {
 		on: jest.fn()
 	};

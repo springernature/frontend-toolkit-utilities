@@ -43,7 +43,7 @@ describe('Utility: npm-install', () => {
 			await install.dependencies(mockDependencies.oneValidDependency);
 			expect(child_process.exec).toHaveBeenCalledWith(
 				'npm install foo@1.0.0 - 2.9999.9999',
-				expect.any(Function)
+				undefined
 			);
 			expect(child_process.exec).toHaveBeenCalledTimes(1);
 		});
@@ -53,7 +53,7 @@ describe('Utility: npm-install', () => {
 			await install.dependencies(mockDependencies.twoValidDependencies);
 			expect(child_process.exec).toHaveBeenCalledWith(
 				'npm install foo@1.0.0 - 2.9999.9999 bar@>=1.0.2 <2.1.2',
-				expect.any(Function)
+				undefined
 			);
 			expect(child_process.exec).toHaveBeenCalledTimes(1);
 		});

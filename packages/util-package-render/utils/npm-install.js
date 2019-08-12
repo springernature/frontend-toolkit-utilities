@@ -22,6 +22,18 @@ const VERSION_RANGE_MAXLENGTH = 50;
 * @typedef {Object.<string, string>} Dependencies
  */
 
+ /*
+
+cb = (error, stdout, stderr) => {
+		if (error) {
+			console.error(`exec error: ${error}`);
+			return error;
+		}
+		console.log(`stdout: ${stdout}`);
+		console.log(`stderr: ${stderr}`);
+	}
+ */
+
 module.exports = {
 	/**
 	 * Main method which actually installs given depdendencies.
@@ -29,14 +41,7 @@ module.exports = {
 	 *  as per https://docs.npmjs.com/files/package.json#dependencies
 	 * @returns true on success, else an instanceof Error
 	 */
-	dependencies: async (dependencies = {}, cb = (error, stdout, stderr) => {
-		if (error) {
-			console.error(`exec error: ${error}`);
-			return error;
-		}
-		console.log(`stdout: ${stdout}`);
-		console.log(`stderr: ${stderr}`);
-	}) => {
+	dependencies: async (dependencies = {}, cb) => {
 		const validDepdendencies = module.exports.getValidDepdendencies(dependencies);
 		const packageListAsStr = validDepdendencies.map(dep => dep.join('@')).join(' ');
 		const commandTemplate = `npm install ${packageListAsStr}`;
