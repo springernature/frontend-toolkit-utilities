@@ -1,5 +1,4 @@
 'use strict';
-
 // https://docs.npmjs.com/files/package.json#dependencies
 // the valid version ranges npm accepts are... eurgh. just, urgh.
 

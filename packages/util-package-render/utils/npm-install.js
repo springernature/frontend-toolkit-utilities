@@ -1,3 +1,4 @@
+'use strict';
 const cp = require('child_process');
 const validatePackageName = require('validate-npm-package-name');
 

@@ -1,5 +1,6 @@
 'use strict';
-const mockDependencies = require('data/npm-dependencies');
+const mockDependencies = require('./data/npm-dependencies');
+
 const childProcess = jest.genMockFromModule('child_process');
 
 // in node, returns a <ChildProcess>
