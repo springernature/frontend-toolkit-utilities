@@ -85,6 +85,15 @@ describe('Utility: npm-install', () => {
 			);
 		});
 
+		test('does not return package range values > VERSION_RANGE_MAXLENGTH', () => {
+			expect.assertions(1);
+			expect(
+				install.getValidDepdendencies({
+					foo: '1'.repeat(install.VERSION_RANGE_MAXLENGTH + 1)
+				}))
+				.toStrictEqual([]);
+		});
+
 	});
 
 

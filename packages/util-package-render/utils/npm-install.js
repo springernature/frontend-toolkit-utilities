@@ -6,6 +6,9 @@ const validatePackageName = require('validate-npm-package-name');
  * The preferred way to install deps dynamically is via the shell & "npm" command.
  * @module npm-install
  */
+
+const VERSION_RANGE_MAXLENGTH = 50;
+
 const api = {
 	/**
 	 * Main method which actually installs given depdendencies.
@@ -45,7 +48,8 @@ const api = {
 		return Object.entries(dependencies).filter(([pname, pversion]) => {
 			const validationResult = validatePackageName(pname);
 			// allowed values for the desired version are horribly permissive
-			const versionRangeValid = /^[-\w :/.<>|=~^]+$/.test(pversion);
+			const versionRangeValid = /^[-\w :/.<>|=~^]+$/.test(pversion)
+				&& pversion.length <= VERSION_RANGE_MAXLENGTH;
 			return validationResult.validForNewPackages
 				&& !validationResult.errors
 				&& versionRangeValid;
@@ -63,6 +67,11 @@ const api = {
 	 * @param  {packageJSON} packageJSON={}
 	 */
 	peerDependencies: async (packageJSON = {}, cb) => api.dependencies(packageJSON.peerDependencies, cb),
+
+	/**
+	 * Maximum length of a package range value
+	 */
+	VERSION_RANGE_MAXLENGTH: VERSION_RANGE_MAXLENGTH
 }
 
 module.exports = api;
