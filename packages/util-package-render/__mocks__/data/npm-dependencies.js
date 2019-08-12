@@ -5,23 +5,26 @@
 
 // things we really don't want passed to /bin.sh
 //  yes we should define allow lists, not ban lists, but we are doing both
-//  for the sake of sanity
+//  because mistakes happen
 const badThingsToPassToBinSh = [
 	'1.0;',
 	'"quotes"',
-	'1.0.0\\stuff'
+	'1.0.0\\stuff',
+	'*.js'
 ];
 
 const harmlessNames = [
 	'a',
 	'b',
-	'c'
+	'c',
+	'd'
 ];
 
 const harmlessValues = [
 	'1',
 	'2',
-	'3'
+	'3',
+	'4'
 ];
 
 const badNames = Object.assign(...badThingsToPassToBinSh.map((k, i) => ({[k]: harmlessValues[i]})));
