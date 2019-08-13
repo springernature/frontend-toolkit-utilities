@@ -18,7 +18,7 @@ const VERSION_RANGE_MAXLENGTH = 50;
  * @typedef {Object.<string, string>} PackageJSON
  */
 /**
- * An Object mapping package names to version ranges.
+ * An Object mapping package names to version ranges, as per https://docs.npmjs.com/files/package.json#dependencies
 * @typedef {Object.<string, string>} Dependencies
  */
 
@@ -37,8 +37,7 @@ cb = (error, stdout, stderr) => {
 module.exports = {
 	/**
 	 * Main method which actually installs given depdendencies.
-	 * @param  {Dependencies} dependencies={} - a map of dependency names to version ranges,
-	 *  as per https://docs.npmjs.com/files/package.json#dependencies
+	 * @param  {Dependencies} dependencies={}
 	 * @returns true on success, else an instanceof Error
 	 */
 	dependencies: async (dependencies = {}, cb) => {
@@ -60,9 +59,8 @@ module.exports = {
 
 	/**
 	 * Filters supplied dependencies, removing invalid depdendencies.
-	 * @param  {Dependencies} dependencies={} - a map of dependency names to version ranges,
-	 *  as per https://docs.npmjs.com/files/package.json#dependencies
-	 * @returns {Dependencies} a map of valid dependency names to version ranges
+	 * @param  {Dependencies} dependencies={}
+	 * @returns {Dependencies} valid dependencies
 	 */
 	getValidDepdendencies: (dependencies = {}) => {
 		return Object.entries(dependencies).filter(([pname, pversion]) => {
