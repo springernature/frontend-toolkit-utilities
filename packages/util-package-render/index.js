@@ -17,7 +17,8 @@ const api = async packageRoot => {
 	}
 
 	if (packageJSON.peerDependencies) {
-		await npmInstall.peerDependencies(packageJSON);
+		const installResult = await npmInstall.peerDependencies(packageJSON);
+		console.log(`INSTALL RESULT: ${installResult}`);
 	}
 
 	/*

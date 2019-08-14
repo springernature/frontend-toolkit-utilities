@@ -38,23 +38,38 @@ module.exports = {
 	/**
 	 * Main method which actually installs given depdendencies.
 	 * @param  {Dependencies} dependencies={}
-	 * @returns true on success, else an instanceof Error
+	 * @returns {Promise} true on success, else an instanceof Error
 	 */
 	dependencies: async (dependencies = {}, cb) => {
+
 		const validDepdendencies = module.exports.getValidDepdendencies(dependencies);
 		const packageListAsStr = validDepdendencies.map(dep => dep.join('@')).join(' ');
-		const commandTemplate = `npm install ${packageListAsStr}`;
-		console.log(`npm-install dependencies command: ${commandTemplate}`);
+		const shellCommand = `npm install ${packageListAsStr}`;
+		console.log(`npm-install dependencies command: ${shellCommand}`);
 
 		if (!packageListAsStr || packageListAsStr === '') {
-			return new Error('invalid package list');
+			throw new Error('invalid package list');
 		};
 
-		const child = cp.exec(commandTemplate, cb);
-		child.on('exit', (code, signal) => {
-			console.log(`child process exited with code ${code} and signal ${signal}`);
-		});
 
+		const execResult = await new Promise((resolve, reject) => {
+			const child = cp.exec(shellCommand, cb);
+			child.on('exit', (code, signal) => {
+				console.log(`child process exited with code ${code} and signal ${signal}`);
+				if (code === 0) {
+					resolve('this should be the result of stdout')
+				}
+				reject(new Error('this should be the result of stderr'));
+			});
+			// on error ... ?
+		});
+		/*
+		if (execResult instanceof Error) {
+			throw execResult;
+		}
+
+		return execResult;
+		*/
 	},
 
 	/**
@@ -74,6 +89,8 @@ module.exports = {
 		});
 	},
 
+	/* TODO  method for installing dependencies form aa package JSON, rename existing method
+	and call it literalDependencies? rawDependencies? */
 	/**
 	 * Helper to install just the devDependencies given a parsed package.json
 	 * @param  {PackageJSON} packageJSON={}

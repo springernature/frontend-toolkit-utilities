@@ -29,6 +29,10 @@ const harmlessValues = [
 const badNames = Object.assign(...badThingsToPassToBinSh.map((k, i) => ({[k]: harmlessValues[i]})));
 const badValues = Object.assign(...harmlessNames.map((k, i) => ({[k]: badThingsToPassToBinSh[i]})));
 
+const oneValidDependency = {
+	foo: '1.0.0 - 2.9999.9999'
+};
+
 module.exports = {
 	badNames,
 	badValues,
@@ -36,9 +40,7 @@ module.exports = {
 		'eLaBorAtE-paCkAgE-with-mixed-case-and-more-than-214-characters-----------------------------------------------------------------------------------------------------------------------------------------------------------': '0.0.0'
 	},
 
-	oneValidDependency: {
-		foo: '1.0.0 - 2.9999.9999'
-	},
+	oneValidDependency: oneValidDependency,
 
 	oneKnownToThrowDependency: {
 		ohno: '666'
@@ -62,6 +64,11 @@ module.exports = {
 		thr: '3.3.x',
 		lat: 'latest',
 		dyl: 'file:../dyl'
+	},
+
+	packageJSON: {
+		devDependencies: oneValidDependency,
+		peerDependencies: oneValidDependency
 	}
 
 };

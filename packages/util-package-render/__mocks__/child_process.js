@@ -23,7 +23,11 @@ childProcess.exec = jest.fn((command, cb) => {
 	}
 
 	return {
-		on: jest.fn()
+		on: jest.fn((eventNameStr, cb) => {
+			const code = 0;
+			const signal = 'bat signal';
+			cb(code, signal);
+		})
 	};
 });
 module.exports = childProcess;
