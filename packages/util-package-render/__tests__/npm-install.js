@@ -10,33 +10,33 @@ jest.mock('child_process'); // this MUST be called outside of a describe fn
 
 describe('Utility: npm-install', () => {
 
-	let dependenciesSpy;
+	let dependenciesObjectSpy;
 	let consoleLogSpy;
 	let consoleErrorSpy;
 	beforeEach(() => {
-		dependenciesSpy = jest.spyOn(install, 'dependencies');
+		dependenciesObjectSpy = jest.spyOn(install, 'dependenciesObject');
 		consoleLogSpy = jest.spyOn(global.console, 'log').mockImplementationOnce(() => {});
 		consoleErrorSpy = jest.spyOn(global.console, 'error').mockImplementationOnce(() => {});
 	});
 
 	afterEach(() => {
 		child_process.exec.mockClear();
-		dependenciesSpy.mockRestore();
+		dependenciesObjectSpy.mockRestore();
 		consoleLogSpy.mockRestore();
 		consoleErrorSpy.mockRestore();
 	});
 
-	describe('dependencies()', () => {
+	describe('dependenciesObject()', () => {
 		test('calls getValidDepdendencies', async () => {
-			await install.dependencies(mockDependencies.oneValidDependency);
+			await install.dependenciesObject(mockDependencies.oneValidDependency);
 			expect.assertions(1);
-			expect(dependenciesSpy).toHaveBeenCalledTimes(1);
+			expect(dependenciesObjectSpy).toHaveBeenCalledTimes(1);
 		});
 
 		test('with no dependencies, returns an error', async () => {
 			let result;
 			try {
-				result = await install.dependencies({});
+				result = await install.dependenciesObject({});
 			} catch (error) {
 				result = error;
 			}
@@ -45,7 +45,7 @@ describe('Utility: npm-install', () => {
 		});
 
 		test('with one valid dep, calls child_process.exec once with correct args', async () => {
-			await install.dependencies(mockDependencies.oneValidDependency);
+			await install.dependenciesObject(mockDependencies.oneValidDependency);
 			expect.assertions(2);
 			expect(child_process.exec).toHaveBeenCalledWith(
 				'npm install foo@1.0.0 - 2.9999.9999',
@@ -55,7 +55,7 @@ describe('Utility: npm-install', () => {
 		});
 
 		test('with two valid deps, calls child_process.exec once with correct args', async () => {
-			await install.dependencies(mockDependencies.twoValidDependencies);
+			await install.dependenciesObject(mockDependencies.twoValidDependencies);
 			expect.assertions(2);
 			expect(child_process.exec).toHaveBeenCalledWith(
 				'npm install foo@1.0.0 - 2.9999.9999 bar@>=1.0.2 <2.1.2',
@@ -66,7 +66,7 @@ describe('Utility: npm-install', () => {
 
 		test('callback is used, and calls console.log on success', async () => {
 			const callbackMock = jest.fn();
-			await install.dependencies(mockDependencies.oneValidDependency, callbackMock);
+			await install.dependenciesObject(mockDependencies.oneValidDependency, callbackMock);
 			expect.assertions(4);
 			expect(child_process.exec).toHaveBeenCalledWith(
 				'npm install foo@1.0.0 - 2.9999.9999',
@@ -84,7 +84,7 @@ describe('Utility: npm-install', () => {
 					return error;
 				}
 			});
-			await install.dependencies(mockDependencies.oneKnownToThrowDependency, callbackMock);
+			await install.dependenciesObject(mockDependencies.oneKnownToThrowDependency, callbackMock);
 			expect.assertions(4);
 			const knownToThrowEntry = Object.entries(mockDependencies.oneKnownToThrowDependency)[0];
 			const knownToThrowPackage = knownToThrowEntry[0] + '@' + knownToThrowEntry[1];
@@ -98,73 +98,47 @@ describe('Utility: npm-install', () => {
 				'callbackMock error: An error message from child_process mock'
 			);
 		});
-
-		test('does not return package range values > VERSION_RANGE_MAXLENGTH', () => {
-			expect.assertions(1);
-			expect(
-				install.getValidDepdendencies({
-					foo: '1'.repeat(install.VERSION_RANGE_MAXLENGTH + 1)
-				}))
-				.toStrictEqual([]);
-		});
-
-		test('does return package range values === VERSION_RANGE_MAXLENGTH', () => {
-			expect.assertions(1);
-			expect(
-				install.getValidDepdendencies({
-					foo: '1'.repeat(install.VERSION_RANGE_MAXLENGTH)
-				}))
-				.toStrictEqual([[
-					'foo',
-					'1'.repeat(install.VERSION_RANGE_MAXLENGTH)
-				]]);
-		});
-
-		test('does return package range values < VERSION_RANGE_MAXLENGTH', () => {
-			expect.assertions(1);
-			expect(
-				install.getValidDepdendencies({
-					foo: '1'.repeat(install.VERSION_RANGE_MAXLENGTH - 1)
-				}))
-				.toStrictEqual([[
-					'foo',
-					'1'.repeat(install.VERSION_RANGE_MAXLENGTH - 1)
-				]]);
-		});
-
 	});
 
-	describe('devDependencies', () => {
-		test('calls dependencies', async () => {
+	describe('dependencies()', () => {
+		test('calls dependenciesObjectSpy', async () => {
 			expect.assertions(1);
 			await install.devDependencies(mockDependencies.packageJSON);
-			expect(dependenciesSpy).toHaveBeenCalledTimes(1);
+			expect(dependenciesObjectSpy).toHaveBeenCalledTimes(1);
 		});
 	});
 
-	describe('peerDependencies', () => {
-		test('calls dependencies', async () => {
+	describe('devDependencies()', () => {
+		test('calls dependenciesObjectSpy', async () => {
+			expect.assertions(1);
+			await install.devDependencies(mockDependencies.packageJSON);
+			expect(dependenciesObjectSpy).toHaveBeenCalledTimes(1);
+		});
+	});
+
+	describe('peerDependencies()', () => {
+		test('calls dependenciesObjectSpy', async () => {
 			expect.assertions(1);
 			await install.peerDependencies(mockDependencies.packageJSON);
-			expect(dependenciesSpy).toHaveBeenCalledTimes(1);
+			expect(dependenciesObjectSpy).toHaveBeenCalledTimes(1);
 		});
 	});
 
-	describe('getValidDepdendencies', () => {
+	describe('getValidDepdendencies()', () => {
 		test('npmExampleVersionRanges are valid', () => {
 			expect.assertions(1);
 			expect(
 				install.getValidDepdendencies(mockDependencies.npmExampleDependencies)
-				)
-				.toStrictEqual(Object.entries(mockDependencies.npmExampleDependencies));
+			)
+			.toStrictEqual(Object.entries(mockDependencies.npmExampleDependencies));
 		});
 
 		test('does not return bad names', () => {
 			expect.assertions(1);
 			expect(
 				install.getValidDepdendencies(mockDependencies.badNames)
-				)
-				.toStrictEqual([]);
+			)
+			.toStrictEqual([]);
 		});
 
 		test('does not return bad values', () => {
@@ -182,5 +156,39 @@ describe('Utility: npm-install', () => {
 			)
 			.toStrictEqual([]);
 		});
+
+		test('does not return package range values > VERSION_RANGE_MAXLENGTH', () => {
+			expect.assertions(1);
+			expect(
+				install.getValidDepdendencies({
+					foo: '1'.repeat(install.VERSION_RANGE_MAXLENGTH + 1)
+			}))
+			.toStrictEqual([]);
+		});
+
+		test('does return package range values === VERSION_RANGE_MAXLENGTH', () => {
+			expect.assertions(1);
+			expect(
+				install.getValidDepdendencies({
+					foo: '1'.repeat(install.VERSION_RANGE_MAXLENGTH)
+			}))
+			.toStrictEqual([[
+				'foo',
+				'1'.repeat(install.VERSION_RANGE_MAXLENGTH)
+			]]);
+		});
+
+		test('does return package range values < VERSION_RANGE_MAXLENGTH', () => {
+			expect.assertions(1);
+			expect(
+				install.getValidDepdendencies({
+					foo: '1'.repeat(install.VERSION_RANGE_MAXLENGTH - 1)
+			}))
+			.toStrictEqual([[
+				'foo',
+				'1'.repeat(install.VERSION_RANGE_MAXLENGTH - 1)
+			]]);
+		});
+
 	});
 });

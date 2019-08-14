@@ -67,6 +67,7 @@ module.exports = {
 	},
 
 	packageJSON: {
+		dependencies: oneValidDependency,
 		devDependencies: oneValidDependency,
 		peerDependencies: oneValidDependency
 	}

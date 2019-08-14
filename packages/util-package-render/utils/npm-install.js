@@ -40,7 +40,7 @@ module.exports = {
 	 * @param  {Dependencies} dependencies={}
 	 * @returns {Promise} true on success, else an instanceof Error
 	 */
-	dependencies: async (dependencies = {}, cb) => {
+	dependenciesObject: async (dependencies = {}, cb) => {
 
 		const validDepdendencies = module.exports.getValidDepdendencies(dependencies);
 		const packageListAsStr = validDepdendencies.map(dep => dep.join('@')).join(' ');
@@ -89,19 +89,23 @@ module.exports = {
 		});
 	},
 
-	/* TODO  method for installing dependencies form aa package JSON, rename existing method
-	and call it literalDependencies? rawDependencies? */
+	/**
+	 * Helper to install just the dependencies given a parsed package.json
+	 * @param  {PackageJSON} packageJSON={}
+	 */
+	dependencies: async (packageJSON = {}, cb) => module.exports.dependenciesObject(packageJSON.dependencies, cb),
+
 	/**
 	 * Helper to install just the devDependencies given a parsed package.json
 	 * @param  {PackageJSON} packageJSON={}
 	 */
-	devDependencies: async (packageJSON = {}, cb) => module.exports.dependencies(packageJSON.devDependencies, cb),
+	devDependencies: async (packageJSON = {}, cb) => module.exports.dependenciesObject(packageJSON.devDependencies, cb),
 
 	/**
 	 * Helper to install just the peerDependencies given a parsed package.json
 	 * @param  {PackageJSON} packageJSON={}
 	 */
-	peerDependencies: async (packageJSON = {}, cb) => module.exports.dependencies(packageJSON.peerDependencies, cb),
+	peerDependencies: async (packageJSON = {}, cb) => module.exports.dependenciesObject(packageJSON.peerDependencies, cb),
 
 	/** Maximum permitted length of a package version range string */
 	VERSION_RANGE_MAXLENGTH: VERSION_RANGE_MAXLENGTH
