@@ -3,8 +3,8 @@ const cp = require('child_process');
 const validatePackageName = require('validate-npm-package-name');
 
 /**
- * Helper for dynamically installing node dependencies via NPM.
- * The preferred way to install deps dynamically is via the shell & "npm" command.
+ * The preferred way to install NPM dependencies dynamically is via the shell & "npm i" command.
+ * This package provides a wrapper around that functionality.
  * @module npm-install
  */
 
@@ -38,7 +38,8 @@ module.exports = {
 	/**
 	 * Main method which actually installs given depdendencies.
 	 * @param  {Dependencies} dependencies={}
-	 * @returns {Promise} true on success, else an instanceof Error
+	 * @returns {Promise} resolves with "npm install" command stdout data.
+	 * @throws {Error} message is contents of "npm install" command stderr, or some other operational error.
 	 */
 	dependenciesObject: async (dependencies = {}, cb) => {
 
@@ -63,13 +64,6 @@ module.exports = {
 			});
 			// on error ... ?
 		});
-		/*
-		if (execResult instanceof Error) {
-			throw execResult;
-		}
-
-		return execResult;
-		*/
 	},
 
 	/**
@@ -90,19 +84,19 @@ module.exports = {
 	},
 
 	/**
-	 * Helper to install just the dependencies given a parsed package.json
+	 * Helper to install just the dependencies in a parsed package.json
 	 * @param  {PackageJSON} packageJSON={}
 	 */
 	dependencies: async (packageJSON = {}, cb) => module.exports.dependenciesObject(packageJSON.dependencies, cb),
 
 	/**
-	 * Helper to install just the devDependencies given a parsed package.json
+	 * Helper to install just the devDependencies in a parsed package.json
 	 * @param  {PackageJSON} packageJSON={}
 	 */
 	devDependencies: async (packageJSON = {}, cb) => module.exports.dependenciesObject(packageJSON.devDependencies, cb),
 
 	/**
-	 * Helper to install just the peerDependencies given a parsed package.json
+	 * Helper to install just the peerDependencies in a parsed package.json
 	 * @param  {PackageJSON} packageJSON={}
 	 */
 	peerDependencies: async (packageJSON = {}, cb) => module.exports.dependenciesObject(packageJSON.peerDependencies, cb),

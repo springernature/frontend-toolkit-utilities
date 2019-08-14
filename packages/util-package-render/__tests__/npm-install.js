@@ -1,15 +1,16 @@
 'use strict';
+// to test just this file:
 // ./node_modules/jest/bin/jest.js --colors packages/util-package-render/__tests__/npm-install.js
-// node core modules must be explicitly require()d to spy on them
+
+// Jest gotcha 1: node core modules must be explicitly require()d to spy on them
 const child_process = require('child_process');
 const install = require('../utils/npm-install');
 
 const mockDependencies = require('../__mocks__/data/npm-dependencies');
 
-jest.mock('child_process'); // this MUST be called outside of a describe fn
+jest.mock('child_process'); // Jest gotcha 2: this MUST be called outside of a describe fn
 
 describe('Utility: npm-install', () => {
-
 	let dependenciesObjectSpy;
 	let consoleLogSpy;
 	let consoleErrorSpy;
