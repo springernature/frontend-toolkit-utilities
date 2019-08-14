@@ -159,7 +159,7 @@ try {
 			expect(
 				install.getValidDepdendencies(mockDependencies.npmExampleDependencies)
 				)
-				.toStrictEqual(mockDependencies.npmExampleDependenciesAsArray);
+				.toStrictEqual(Object.entries(mockDependencies.npmExampleDependencies));
 		});
 
 		test('does not return bad names', () => {
