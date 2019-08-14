@@ -29,7 +29,8 @@ describe('Utility: npm-install', () => {
 
 	describe('dependenciesObject()', () => {
 		test('calls getValidDepdendencies', async () => {
-			await install.dependenciesObject(mockDependencies.oneValidDependency);
+			const t = await install.dependenciesObject(mockDependencies.oneValidDependency);
+			console.log(t)
 			expect.assertions(1);
 			expect(dependenciesObjectSpy).toHaveBeenCalledTimes(1);
 		});

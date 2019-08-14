@@ -43,24 +43,40 @@ module.exports = {
 	dependenciesObject: async (dependencies = {}, cb) => {
 		const validDepdendencies = module.exports.getValidDepdendencies(dependencies);
 		const packageListAsStr = validDepdendencies.map(dep => dep.join('@')).join(' ');
-		const shellCommand = `npm install ${packageListAsStr}`;
-		console.log(`npm-install dependencies command: ${shellCommand}`);
+		console.log(`npm-install packageListAsStr: ${packageListAsStr}`);
 
 		if (!packageListAsStr || packageListAsStr === '') {
 			throw new Error('invalid package list');
 		}
 
-		await new Promise((resolve, reject) => {
-			const child = cp.exec(shellCommand, cb);
-			child.on('exit', (code, signal) => {
-				console.log(`child process exited with code ${code} and signal ${signal}`);
-				if (code === 0) {
-					resolve('this should be the result of stdout');
-				}
-				reject(new Error('this should be the result of stderr'));
+		const spawnPromiseResolution = await new Promise((resolve, reject) => {
+			const child = cp.spawn('npm', ['install', packageListAsStr]);
+			let childStdout = '';
+			child.stdout.on('data', chunk => {
+				childStdout += chunk;
 			});
-			// on error ... ?
+
+			let childStderr = '';
+			child.stderr.on('data', chunk => {
+				childStderr += chunk;
+			});
+
+			child.on('error', err => {
+				// e.g. npm not installed
+				reject(err);
+			});
+
+			child.on('exit', exitCode => {
+				console.log(`child process exited with code ${exitCode}`);
+				if (exitCode === 0) {
+					console.log('resolving')
+					resolve(childStdout);
+				}
+				// e.g. no network
+				reject(new Error(`child process exited with code ${exitCode}, stderr: ${childStderr}`));
+			});
 		});
+		return spawnPromiseResolution;
 	},
 
 	/**

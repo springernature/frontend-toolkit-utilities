@@ -24,6 +24,12 @@ childProcess.exec = jest.fn((command, cb) => {
 
 	return {
 		on: jest.fn((eventNameStr, cb) => {
+			if (eventNameStr === 'error') {
+				return new Error('a mock error')
+			}
+			if (eventNameStr === 'data') {
+				return 'some stdout'
+			}
 			const code = 0;
 			const signal = 'bat signal';
 			cb(code, signal);
