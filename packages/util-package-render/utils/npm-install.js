@@ -22,8 +22,7 @@ const VERSION_RANGE_MAXLENGTH = 50;
 * @typedef {Object.<string, string>} Dependencies
  */
 
- /*
-
+/*
 cb = (error, stdout, stderr) => {
 		if (error) {
 			console.error(`exec error: ${error}`);
@@ -42,7 +41,6 @@ module.exports = {
 	 * @throws {Error} message is contents of "npm install" command stderr, or some other operational error.
 	 */
 	dependenciesObject: async (dependencies = {}, cb) => {
-
 		const validDepdendencies = module.exports.getValidDepdendencies(dependencies);
 		const packageListAsStr = validDepdendencies.map(dep => dep.join('@')).join(' ');
 		const shellCommand = `npm install ${packageListAsStr}`;
@@ -50,15 +48,14 @@ module.exports = {
 
 		if (!packageListAsStr || packageListAsStr === '') {
 			throw new Error('invalid package list');
-		};
+		}
 
-
-		const execResult = await new Promise((resolve, reject) => {
+		await new Promise((resolve, reject) => {
 			const child = cp.exec(shellCommand, cb);
 			child.on('exit', (code, signal) => {
 				console.log(`child process exited with code ${code} and signal ${signal}`);
 				if (code === 0) {
-					resolve('this should be the result of stdout')
+					resolve('this should be the result of stdout');
 				}
 				reject(new Error('this should be the result of stderr'));
 			});
