@@ -28,35 +28,35 @@ describe('Utility: npm-install', () => {
 
 	describe('dependencies()', () => {
 		test('calls getValidDepdendencies', async () => {
-			expect.assertions(1);
 			await install.dependencies(mockDependencies.oneValidDependency);
+			expect.assertions(1);
 			expect(dependenciesSpy).toHaveBeenCalledTimes(1);
 		});
 
 		test('with no dependencies, returns an error', async () => {
-			expect.assertions(1);
 			let result;
 			try {
 				result = await install.dependencies({});
 			} catch (error) {
 				result = error;
 			}
+			expect.assertions(1);
 			expect(result instanceof Error).toStrictEqual(true);
 		});
 
 		test('with one valid dep, calls child_process.exec once with correct args', async () => {
-			expect.assertions(2);
 			await install.dependencies(mockDependencies.oneValidDependency);
+			expect.assertions(2);
 			expect(child_process.exec).toHaveBeenCalledWith(
 				'npm install foo@1.0.0 - 2.9999.9999',
 				undefined
 			);
 			expect(child_process.exec).toHaveBeenCalledTimes(1);
 		});
-/*
-		test('with two valid dep, calls child_process.exec once with correct args', async () => {
-			expect.assertions(2);
+
+		test('with two valid deps, calls child_process.exec once with correct args', async () => {
 			await install.dependencies(mockDependencies.twoValidDependencies);
+			expect.assertions(2);
 			expect(child_process.exec).toHaveBeenCalledWith(
 				'npm install foo@1.0.0 - 2.9999.9999 bar@>=1.0.2 <2.1.2',
 				undefined
@@ -66,15 +66,15 @@ describe('Utility: npm-install', () => {
 
 		test('callback is used, and calls console.log on success', async () => {
 			const callbackMock = jest.fn();
-			expect.assertions(4);
 			await install.dependencies(mockDependencies.oneValidDependency, callbackMock);
+			expect.assertions(4);
 			expect(child_process.exec).toHaveBeenCalledWith(
 				'npm install foo@1.0.0 - 2.9999.9999',
 				expect.any(Function)
 			);
 			expect(child_process.exec).toHaveBeenCalledTimes(1);
 			expect(callbackMock).toHaveBeenCalledTimes(1);
-			expect(consoleLogSpy).toHaveBeenCalledTimes(1);
+			expect(consoleLogSpy).toHaveBeenCalledTimes(2);
 		});
 
 		test('callback is used, and calls console.error on error', async () => {
@@ -84,10 +84,12 @@ describe('Utility: npm-install', () => {
 					return error;
 				}
 			});
-			expect.assertions(4);
 			await install.dependencies(mockDependencies.oneKnownToThrowDependency, callbackMock);
+			expect.assertions(4);
+			const knownToThrowEntry = Object.entries(mockDependencies.oneKnownToThrowDependency)[0];
+			const knownToThrowPackage = knownToThrowEntry[0] + '@' + knownToThrowEntry[1];
 			expect(child_process.exec).toHaveBeenCalledWith(
-				'npm install ohno@666',
+				`npm install ${knownToThrowPackage}`,
 				expect.any(Function)
 			);
 			expect(child_process.exec).toHaveBeenCalledTimes(1);
@@ -129,19 +131,8 @@ describe('Utility: npm-install', () => {
 					'1'.repeat(install.VERSION_RANGE_MAXLENGTH - 1)
 				]]);
 		});
-*/
+
 	});
-
-
-
-//return fetchData().catch(e => expect(e).toMatch('error'));
-/*
-try {
-    await fetchData();
-  } catch (e) {
-    expect(e).toMatch('error');
-  }
-*/
 
 	describe('devDependencies', () => {
 		test('calls dependencies', async () => {
