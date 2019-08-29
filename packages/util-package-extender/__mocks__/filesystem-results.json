@@ -1,0 +1,27 @@
+{
+  "local": [
+    "topLevelFileA.ext",
+    "topLevelFileD.ext",
+    "topLevelDirA/fileB.ext",
+    "topLevelDirB/fileA.ext",
+    "topLevelDirA/secondLevelDirA/fileB.ext",
+    "topLevelDirA/secondLevelDirB/fileB.ext"
+  ],
+  "remote": [
+    "topLevelFileA.ext",
+    "topLevelFileB.ext",
+    "topLevelDirA/secondLevelDirA/fileA.ext",
+    "topLevelDirA/secondLevelDirA/fileB.ext",
+    "topLevelDirA/fileA.ext",
+    "topLevelDirA/secondLevelDirB/fileA.ext",
+    "topLevelDirB/fileA.ext",
+    "topLevelFileC.ext"
+  ],
+  "merged": [
+    "topLevelFileB.ext",
+    "topLevelDirA/secondLevelDirA/fileA.ext",
+    "topLevelDirA/fileA.ext",
+    "topLevelDirA/secondLevelDirB/fileA.ext",
+    "topLevelFileC.ext"
+  ]
+}

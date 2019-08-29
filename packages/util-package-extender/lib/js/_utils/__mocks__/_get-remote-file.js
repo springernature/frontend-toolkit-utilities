@@ -4,15 +4,13 @@
  */
 'use strict';
 
-const results = require('./remote-filesystem.json');
+const results = require('../../../../__mocks__/remote-filesystem.json');
 
-function getRemoteFile(url) {
+module.exports = jest.fn().mockImplementation(url => {
 	return new Promise((resolve, reject) => {
 		if (url.includes('success')) {
 			resolve(JSON.stringify(results));
 		}
-		reject(reject(new Error('error')));
+		reject(new Error('error'));
 	});
-}
-
-module.exports = getRemoteFile;
+});

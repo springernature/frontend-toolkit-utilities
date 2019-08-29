@@ -6,8 +6,6 @@
  */
 'use strict';
 
-const path = require('path');
-
 const getLocalFileList = require('./_utils/_get-local-file-list');
 const getRemoteFileList = require('./_utils/_get-remote-file-list');
 const mergePackages = require('./_utils/_merge-packages');
@@ -24,22 +22,17 @@ function filterRemoteFileList(remoteFileList, localFileList) {
 
 /**
  * Get local and remote package names and versions
- * @param {String} packageJsonPath path to the package.json, default: current dir
+ * @param {Object} packageJson package.json file as object
  * @param {String} packageScope npm scope, default: springernature
  * @return {Object||Null}
  */
-function getPackageExtensionDetails(packageJsonPath = '.', packageScope = 'springernature') {
-	const linkToPackageJson = path.resolve(packageJsonPath, 'package.json');
-	const packageJson = require(linkToPackageJson);
-
+function getPackageExtensionDetails(packageJson, packageScope = 'springernature') {
 	if (packageJson.extendsPackage) {
 		return {
 			remotePackage: `@${packageScope}/${packageJson.extendsPackage}`,
 			localPackage: `${packageJson.name}@${packageJson.version}`
 		};
 	}
-
-	return null;
 }
 
 /**
