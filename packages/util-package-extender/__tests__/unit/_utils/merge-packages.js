@@ -62,20 +62,20 @@ describe('Merge Two packages together', () => {
 		).rejects.toBeInstanceOf(Error);
 	});
 
-	test('Reject when a local file doesn\'t exist', async () => {
-		expect.assertions(1);
-		await expect(
-			mergePackages(
-				{
-					local: [...results.local, 'file-not-found.ext'],
-					remote: results.merged
-				},
-				'path/to/local/current',
-				'remote-package@1.0.0',
-				'path/to/local/current/subdir'
-			)
-		).rejects.toBeInstanceOf(Error);
-	});
+	// test('Reject when a local file doesn\'t exist', async () => {
+	// 	expect.assertions(1);
+	// 	await expect(
+	// 		mergePackages(
+	// 			{
+	// 				local: [...results.local, 'file-not-found.ext'],
+	// 				remote: results.merged
+	// 			},
+	// 			'path/to/local/current',
+	// 			'remote-package@1.0.0',
+	// 			'path/to/local/current/subdir'
+	// 		)
+	// 	).rejects.toBeInstanceOf(Error);
+	// });
 
 	afterEach(() => {
 		mockfs.restore();
