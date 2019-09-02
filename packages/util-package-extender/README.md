@@ -15,9 +15,9 @@ This should be run from within the repository of the local package, and requires
 
 ```json
 {
-	"name": "brand-package",
-	"version": "1.0.0",
-	"extendsPackage": "global-package@2.0.0"
+  "name": "brand-package",
+  "version": "1.0.0",
+  "extendsPackage": "global-package@2.0.0"
 }
 ```
 
@@ -106,26 +106,26 @@ const packageExtensionDetails = extender.getPackageExtensionDetails(obj);
 // Merge in place
 // --------------
 if (packageExtensionDetails) {
-	extender.extendPackage(
-		'.',
-		packageExtensionDetails.remotePackage,
-		packageExtensionDetails.localPackage
-	)
-		.then(() => {console.log('success')})
-		.catch(err => {console.error(err)});
+    extender.extendPackage(
+        '.',
+        packageExtensionDetails.remotePackage,
+        packageExtensionDetails.localPackage
+    )
+    .then(() => {console.log('success')})
+    .catch(err => {console.error(err)});
 }
 
 // Merge into output directory (./demo)
 // ------------------------------------
 if (packageExtensionDetails) {
-	extender.extendPackage(
-		'.',
-		packageExtensionDetails.remotePackage,
-		packageExtensionDetails.localPackage,
-		'./demo'
-	)
-		.then(() => {console.log('success')})
-		.catch(err => {console.error(err)});
+    extender.extendPackage(
+        '.',
+        packageExtensionDetails.remotePackage,
+        packageExtensionDetails.localPackage,
+        './demo'
+    )
+    .then(() => {console.log('success')})
+    .catch(err => {console.error(err)});
 }
 ```
 
