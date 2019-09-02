@@ -96,6 +96,7 @@ Default: null
 
 Directory in which to store the merged files. Defaults to merging in place with the local files.
 
+#### Example
 
 ```javascript
 const extender = require('@springernature/util-package-extender');
