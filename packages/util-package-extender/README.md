@@ -15,9 +15,9 @@ This should be run from within the repository of the local package, and requires
 
 ```json
 {
-	name: 'brand-package',
-	version: '1.0.0',
-	extendsPackage: 'global-package@2.0.0'
+	"name": "brand-package",
+	"version": "1.0.0",
+	"extendsPackage": "global-package@2.0.0"
 }
 ```
 
