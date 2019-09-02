@@ -24,7 +24,7 @@ function filterRemoteFileList(remoteFileList, localFileList) {
  * Get local and remote package names and versions
  * @param {Object} packageJson package.json file as object
  * @param {String} packageScope npm scope, default: springernature
- * @return {Object||Null}
+ * @return {Object||Undefined}
  */
 function getPackageExtensionDetails(packageJson, packageScope = 'springernature') {
 	if (packageJson.extendsPackage) {
