@@ -48,7 +48,6 @@ function generateErrorMessage(error) {
 	switch (error.name) {
 		case 'RequestError':
 			return `request failed with ${error.code}`;
-		case 'ParseError':
 		case 'HTTPError':
 		case 'MaxRedirectsError':
 			return `${error.statusCode} (${error.statusMessage})`;
@@ -61,11 +60,12 @@ function generateErrorMessage(error) {
  * Get contents of a file from a URL
  * Retry on failure <maxRetry>
  * @param {String} url the request
+ * @param {Object} options got configuration, default: config
  * @return {Promise<Object>}
  */
-async function getRemoteFile(url) {
+async function getRemoteFile(url, options = config) {
 	try {
-		const response = await got(url, config);
+		const response = await got(url, options);
 		return response.body;
 	} catch (error) {
 		throw new Error(`${generateErrorMessage(error)}`);

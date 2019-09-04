@@ -8,8 +8,14 @@ const nock = require('nock');
 const getRemoteFile = require('../../../lib/js/_utils/_get-remote-file');
 
 describe('Getting contents of a remote file from a URL', () => {
+	afterEach(() => {
+		nock.restore();
+		nock.cleanAll();
+	});
+
 	test('resolves with contents of a file', async () => {
 		nock('https://www.example.com')
+			.persist()
 			.get('/success')
 			.reply(200, 'domain matched');
 
@@ -19,8 +25,9 @@ describe('Getting contents of a remote file from a URL', () => {
 		).resolves.toEqual('domain matched');
 	});
 
-	test('Rejects when file not found', async () => {
+	test('Rejects when url not found', async () => {
 		nock('https://www.example.com')
+			.persist()
 			.get('/notfound')
 			.reply(404);
 
@@ -30,29 +37,27 @@ describe('Getting contents of a remote file from a URL', () => {
 		).rejects.toBeInstanceOf(Error);
 	});
 
-	test('Rejects when error from `got`', async () => {
-		nock('https://www.example.com')
-			.get('/failure')
-			.replyWithError(new Error());
+	test('Rejects when error in url', async () => {
+		nock('https://www.example.test')
+			.persist()
+			.get('/requestfail')
+			.replyWithError({name: 'RequestError', code: 'ENOTFOUND'});
 
 		expect.assertions(1);
 		await expect(
-			getRemoteFile('https://www.example.com/failure')
+			getRemoteFile('https://www.example.test/requestfail')
 		).rejects.toBeInstanceOf(Error);
 	});
 
 	test('Rejects when error from Unsupported Protocol', async () => {
 		nock('c:/www.example.com')
-			.get('/failure')
+			.persist()
+			.get('/uproc')
 			.replyWithError(new Error());
 
 		expect.assertions(1);
 		await expect(
-			getRemoteFile('c:/www.example.com/failure')
+			getRemoteFile('c:/www.example.com/uproc')
 		).rejects.toBeInstanceOf(Error);
-	});
-
-	afterEach(() => {
-		nock.cleanAll();
 	});
 });
