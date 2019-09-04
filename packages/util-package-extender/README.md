@@ -9,7 +9,7 @@ This helper allows you to extend one Component Package (remote) with another (lo
 **Remote Package** - package being extended, published to NPM  
 **Local Package** - package that extends the remote
 
-![example package extension](example.gif)
+![example package extension](img/example.gif)
 
 This should be run from within the repository of the local package, and requires the local package to have a `package.json` file with the fields `name`, `version`, `extendsPackage`. The last of these should define the name and version of the remote package in the format `package-name@version`. For example:
 
