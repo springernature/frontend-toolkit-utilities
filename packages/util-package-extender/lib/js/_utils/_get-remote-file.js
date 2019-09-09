@@ -47,12 +47,12 @@ const config = {
 function generateErrorMessage(error) {
 	switch (error.name) {
 		case 'RequestError':
-			return `request failed with ${error.code}`;
+			return `Request failed with ${error.code}`;
 		case 'HTTPError':
 		case 'MaxRedirectsError':
 			return `${error.statusCode} (${error.statusMessage})`;
 		default:
-			return `Uh-oh Something went wrong`;
+			return `Unhandled error of type ${error.name}`;
 	}
 }
 
