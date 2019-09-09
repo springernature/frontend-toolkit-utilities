@@ -1,0 +1,26 @@
+{
+  "name": "@springernature/util-package-extender",
+  "version": "0.0.1",
+  "description": "Extends a component package by merging with the package it extends",
+  "author": "Springer Nature",
+  "license": "MIT",
+  "main": "./lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/springernature/frontend-toolkit-utilities.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "find-up": "^4.1.0",
+    "fs-extra": "^8.1.0",
+    "gitignore-globs": "^0.1.1",
+    "glob": "^7.1.4",
+    "got": "^9.6.0"
+  },
+  "devDependencies": {
+    "mock-fs": "^4.10.1",
+    "nock": "^10.0.6"
+  }
+}
