@@ -68,7 +68,7 @@ async function getRemoteFile(url, options = config) {
 		const response = await got(url, options);
 		return response.body;
 	} catch (error) {
-		throw new Error(`${generateErrorMessage(error)}`);
+		throw new Error(generateErrorMessage(error));
 	}
 }
 
