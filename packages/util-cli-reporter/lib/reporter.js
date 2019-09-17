@@ -66,8 +66,11 @@ function configureOutput(type, description, message, comment) {
  * @param {String} comment additional comment (optional)
  */
 report.info = (description, message, comment = null) => {
-	const output = configureOutput('info', description, message, comment);
-	console.log(cleanWhitespace(output));
+	console.log(
+		cleanWhitespace(
+			configureOutput('info', description, message, comment)
+		)
+	);
 };
 
 /**
@@ -78,8 +81,11 @@ report.info = (description, message, comment = null) => {
  * @param {String} comment additional comment (optional)
  */
 report.success = (description, message, comment = null) => {
-	const output = configureOutput('success', description, message, comment);
-	console.log(cleanWhitespace(output));
+	console.log(
+		cleanWhitespace(
+			configureOutput('success', description, message, comment)
+		)
+	);
 };
 
 /**
@@ -90,8 +96,11 @@ report.success = (description, message, comment = null) => {
  * @param {String} comment additional comment (optional)
  */
 report.fail = (description, message, comment = null) => {
-	const output = configureOutput('fail', description, message, comment);
-	console.log(cleanWhitespace(output));
+	console.log(
+		cleanWhitespace(
+			configureOutput('fail', description, message, comment)
+		)
+	);
 };
 
 /**
@@ -100,8 +109,11 @@ report.fail = (description, message, comment = null) => {
  * @param {String} string the title text to output
  */
 report.title = string => {
-	const output = configureTitle(string);
-	console.log(cleanWhitespace(output));
+	console.log(
+		cleanWhitespace(
+			configureTitle(string)
+		)
+	);
 };
 
 module.exports = report;
