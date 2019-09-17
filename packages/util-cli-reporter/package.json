@@ -1,0 +1,19 @@
+{
+  "name": "@springernature/util-cli-reporter",
+  "version": "0.0.1",
+  "description": "Standardised CLI Logging",
+  "author": "Alex Kilgour",
+  "license": "MIT",
+  "main": "./lib/reporter.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/springernature/frontend-toolkit-utilities.git"
+  },
+  "homepage": "https://github.com/springernature/frontend-toolkit-utilities/tree/master/packages/util-cli-reporter#readme",
+  "dependencies": {
+    "chalk": "^2.4.2"
+  },
+  "devDependencies": {
+    "strip-ansi": "5.2.0"
+  }
+}
