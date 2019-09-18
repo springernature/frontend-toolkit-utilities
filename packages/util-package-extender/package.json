@@ -11,6 +11,7 @@
   },
   "homepage": "https://github.com/springernature/frontend-toolkit-utilities/tree/master/packages/util-package-extender#readme",
   "dependencies": {
+    "@springernature/util-cli-reporter": "0.0.1",
     "find-up": "^4.1.0",
     "fs-extra": "^8.1.0",
     "gitignore-globs": "^0.1.1",

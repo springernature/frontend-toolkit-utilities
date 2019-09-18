@@ -15,7 +15,7 @@
   ],
   "author": "Springer Nature",
   "scripts": {
-    "test": "jest --colors --coverage --silent --passWithNoTests",
+    "test": "jest --colors --coverage --passWithNoTests",
     "lint": "npm run lint:js",
     "lint:js": "eslint .",
     "build": "npm run lint && npm run test && npm run validate -- -n",

@@ -6,6 +6,8 @@
  */
 'use strict';
 
+const reporter = require('@springernature/util-cli-reporter');
+
 const getLocalFileList = require('./_utils/_get-local-file-list');
 const getRemoteFileList = require('./_utils/_get-remote-file-list');
 const mergePackages = require('./_utils/_merge-packages');
@@ -47,6 +49,9 @@ async function extendPackage(packageJsonPath, remotePackage, localPackage, outpu
 	const remoteFileList = await getRemoteFileList(remotePackage);
 	const localFileList = await getLocalFileList(packageJsonPath);
 	const filteredRemoteFileList = filterRemoteFileList(remoteFileList, localFileList);
+
+	reporter.title(`extend ${remotePackage} as ${localPackage}`);
+
 	await mergePackages(
 		{
 			local: localFileList,
@@ -56,7 +61,8 @@ async function extendPackage(packageJsonPath, remotePackage, localPackage, outpu
 		remotePackage,
 		outputDirectory
 	);
-	console.log(`success: ${remotePackage} extended as ${localPackage}`);
+
+	reporter.success('extended', remotePackage, `as ${localPackage}`);
 }
 
 module.exports = {
