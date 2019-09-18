@@ -2,7 +2,7 @@
 
 [![NPM version][badge-npm]][info-npm]
 [![Node version][badge-node]][info-node]
-![LGPL 3.0 licensed][badge-license]
+![MIT License][badge-license]
 
 As of `ESLint v5` a breaking behaviour change ([8b7c6ea](https://github.com/eslint/eslint/commit/8b7c6eaed39e8506dba1aa6e57b1d0e2fdc351c3)) was introduced where a fatal error is thrown if any file pattern returns no files. We would like to use a generic linting implementation on all our component monorepos without having to turn JS linting on/off depending on the presence of Javascript.
 
