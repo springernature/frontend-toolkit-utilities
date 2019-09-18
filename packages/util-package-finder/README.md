@@ -2,7 +2,7 @@
 
 [![NPM version][badge-npm]][info-npm]
 [![Node version][badge-node]][info-node]
-![LGPL 3.0 licensed][badge-license]
+![MIT License][badge-license]
 
 Get a list of packages and available versions from within an NPM scope. Returns the following information about a package:
 
@@ -75,7 +75,7 @@ packageFinder()
   .then(response => {
     console.log(response);
   }).catch(err => {
-    console.error(err)
+    console.error(err);
   });
 
 /*
@@ -101,7 +101,7 @@ packageFinder({
   .then(response => {
     console.log(response);
   }).catch(err => {
-    console.error(err)
+    console.error(err);
   });
 
 /*
@@ -120,7 +120,7 @@ packageFinder({
   .then(response => {
     console.log(response);
   }).catch(err => {
-    console.error(err)
+    console.error(err);
   });
 
 /*
@@ -140,7 +140,7 @@ packageFinder({
   .then(response => {
     console.log(response);
   }).catch(err => {
-    console.error(err)
+    console.error(err);
   });
 
 /*
@@ -160,7 +160,7 @@ packageFinder({
   .then(response => {
     console.log(response);
   }).catch(err => {
-    console.error(err)
+    console.error(err);
   });
 
 /*

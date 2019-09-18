@@ -1,5 +1,5 @@
 /**
- * __tests__/unit/_utils/get-local-file-list.js
+ * __tests__/unit/lib/js/_utils/get-local-file-list.test.js
  * Test: lib/js/_utils/_get-local-file-list.js
  */
 'use strict';
@@ -8,7 +8,7 @@ jest.mock('find-up');
 jest.mock('gitignore-globs');
 jest.mock('glob');
 
-const getLocalFileList = require('../../../lib/js/_utils/_get-local-file-list');
+const getLocalFileList = require('../../../../../lib/js/_utils/_get-local-file-list');
 
 const fileList = [
 	'topLevelFileA.ext',
