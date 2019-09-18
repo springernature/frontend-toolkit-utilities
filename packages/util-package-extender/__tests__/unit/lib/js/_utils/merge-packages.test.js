@@ -1,17 +1,17 @@
 /**
- * __tests__/unit/_utils/merge-packages.js
+ * __tests__/unit/lib/js/_utils/merge-packages.js
  * Test: lib/js/_utils/_merge-packages.js
  */
 'use strict';
 
-const mockfs = require('../../../__mocks__/fs');
+const mockfs = require('../../../../../__mocks__/fs');
 const MOCK_PACKAGES = mockfs.__fsMockFiles();
 
 jest.mock('@springernature/util-cli-reporter');
-jest.mock('../../../lib/js/_utils/_get-remote-file');
+jest.mock('../../../../../lib/js/_utils/_get-remote-file');
 
-const mergePackages = require('../../../lib/js/_utils/_merge-packages');
-const results = require('../../../__mocks__/filesystem-results');
+const mergePackages = require('../../../../../lib/js/_utils/_merge-packages');
+const results = require('../../../../../__mocks__/filesystem-results');
 
 describe('Fail to merge Two packages together', () => {
 	beforeEach(() => {

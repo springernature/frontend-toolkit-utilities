@@ -1,12 +1,12 @@
 /**
- * __tests__/unit/_utils/get-remote-file-list.js
+ * __tests__/unit/lib/js/_utils/get-remote-file-list.js
  * Test: lib/js/_utils/_get-remote-file-list.js
  */
 'use strict';
 
-jest.mock('../../../lib/js/_utils/_get-remote-file');
+jest.mock('../../../../../lib/js/_utils/_get-remote-file');
 
-const getRemoteFileList = require('../../../lib/js/_utils/_get-remote-file-list');
+const getRemoteFileList = require('../../../../../lib/js/_utils/_get-remote-file-list');
 
 const fileList = [
 	'topLevelFileA.ext',

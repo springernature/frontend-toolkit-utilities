@@ -1,15 +1,15 @@
 /**
- * __tests__/unit/index.js
+ * __tests__/unit/lib/js/index.js
  * Test: lib/js/index.js
  */
 'use strict';
 
-const mergePackages = require('../../lib/js/_utils/_merge-packages');
-const packageExtender = require('../../lib/js/index');
+const mergePackages = require('../../../../lib/js/_utils/_merge-packages');
+const packageExtender = require('../../../../lib/js/index');
 
 jest.mock('@springernature/util-cli-reporter');
 
-const results = require('../../__mocks__/filesystem-results.json');
+const results = require('../../../../__mocks__/filesystem-results.json');
 
 // Valid config for getPackageExtensionDetails
 const extensionConfig = {
@@ -23,9 +23,9 @@ const extensionConfigCustom = {
 	localPackage: 'brand-package@1.0.0'
 };
 
-jest.mock('../../lib/js/_utils/_get-local-file-list');
-jest.mock('../../lib/js/_utils/_get-remote-file-list');
-jest.mock('../../lib/js/_utils/_merge-packages');
+jest.mock('../../../../lib/js/_utils/_get-local-file-list');
+jest.mock('../../../../lib/js/_utils/_get-remote-file-list');
+jest.mock('../../../../lib/js/_utils/_merge-packages');
 
 // Valid package extension
 jest.mock('./valid-extend/package.json', () => ({

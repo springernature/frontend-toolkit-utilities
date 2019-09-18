@@ -1,11 +1,11 @@
 /**
- * __tests__/unit/reporter.js
- * Test: lib/reporter.js
+ * __tests__/unit/lib/js/reporter.js
+ * Test: lib/js/reporter.js
  */
 'use strict';
 
 const stripAnsi = require('strip-ansi');
-const reporter = require('../../lib/reporter');
+const reporter = require('../../../../lib/js/reporter');
 
 describe('Reporter Basics', () => {
 	test('exports `reporter` as an object', () => {

@@ -1,11 +1,11 @@
 /**
- * __tests__/unit/_utils/get-remote-file.js
+ * __tests__/unit/lib/js/_utils/get-remote-file.js
  * Test: lib/js/_utils/_get-remote-file.js
  */
 'use strict';
 
 const nock = require('nock');
-const getRemoteFile = require('../../../lib/js/_utils/_get-remote-file');
+const getRemoteFile = require('../../../../../lib/js/_utils/_get-remote-file');
 
 jest.mock('@springernature/util-cli-reporter');
 

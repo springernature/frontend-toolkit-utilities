@@ -7,7 +7,7 @@ const figures = require('figures');
 const chunk = require('lodash/chunk');
 const meow = require('meow');
 
-const packageFinder = require('../lib');
+const packageFinder = require('../lib/js');
 
 const cli = meow(`
 	Usage

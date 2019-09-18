@@ -4,7 +4,7 @@
   "description": "Standardised CLI Logging",
   "author": "Alex Kilgour",
   "license": "MIT",
-  "main": "./lib/reporter.js",
+  "main": "./lib/js/reporter.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/springernature/frontend-toolkit-utilities.git"

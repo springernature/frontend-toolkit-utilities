@@ -1,14 +1,18 @@
+/**
+ * __tests__/unit/lib/js/index.js
+ * Test: lib/js/index.js
+ */
 'use strict';
 
 const fetch = require('jest-fetch-mock');
 
 jest.setMock('node-fetch', fetch);
 
-const getPackages = require('../../../lib');
-const mockSearchResults = require('../../../__mocks__/mock-search.json');
-const mockPackageResults = require('../../../__mocks__/mock-package.json');
-const mockResponse = require('../../../__mocks__/mock-response.json');
-const mockResponseVersions = require('../../../__mocks__/mock-response-versions.json');
+const getPackages = require('../../../../lib/js');
+const mockSearchResults = require('../../../../__mocks__/mock-search.json');
+const mockPackageResults = require('../../../../__mocks__/mock-package.json');
+const mockResponse = require('../../../../__mocks__/mock-response.json');
+const mockResponseVersions = require('../../../../__mocks__/mock-response-versions.json');
 
 // Public object returning the task
 describe('Get a list of scoped packages', () => {

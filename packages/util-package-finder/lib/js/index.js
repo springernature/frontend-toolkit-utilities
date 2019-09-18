@@ -1,3 +1,7 @@
+/**
+ * Package Finder
+ * Search for packages within the NPM registry
+ */
 'use strict';
 
 const fetch = require('node-fetch');
