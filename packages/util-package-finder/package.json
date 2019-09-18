@@ -16,6 +16,11 @@
     "node": ">=8"
   },
   "main": "./lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/springernature/frontend-toolkit-utilities.git"
+  },
+  "homepage": "https://github.com/springernature/frontend-toolkit-utilities/tree/master/packages/util-package-finder#readme",
   "bin": {
     "util-package-finder": "./bin/index.js"
   },
