@@ -75,7 +75,7 @@ packageFinder()
   .then(response => {
     console.log(response);
   }).catch(err => {
-    console.error(err)
+    console.error(err);
   });
 
 /*
@@ -101,7 +101,7 @@ packageFinder({
   .then(response => {
     console.log(response);
   }).catch(err => {
-    console.error(err)
+    console.error(err);
   });
 
 /*
@@ -120,7 +120,7 @@ packageFinder({
   .then(response => {
     console.log(response);
   }).catch(err => {
-    console.error(err)
+    console.error(err);
   });
 
 /*
@@ -140,7 +140,7 @@ packageFinder({
   .then(response => {
     console.log(response);
   }).catch(err => {
-    console.error(err)
+    console.error(err);
   });
 
 /*
@@ -160,7 +160,7 @@ packageFinder({
   .then(response => {
     console.log(response);
   }).catch(err => {
-    console.error(err)
+    console.error(err);
   });
 
 /*

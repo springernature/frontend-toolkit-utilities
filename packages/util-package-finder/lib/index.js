@@ -20,7 +20,8 @@ const npmsEndpoint = 'https://api.npms.io/v2/';
 
 /**
  * Get default function options
- * @param {Object} opts
+ * @private
+ * @param {Object} opts search options
  * @return {Promise<Object>}
  */
 const getOptions = opts => {
@@ -32,7 +33,8 @@ const getOptions = opts => {
 
 /**
  * Validate default function options
- * @param {Object} opts
+ * @private
+ * @param {Object} opts search options
  * @return {Promise<Object>}
  */
 const validateOptions = opts => {
@@ -57,8 +59,9 @@ const validateOptions = opts => {
 
 /**
  * Filter package results by name
- * @param {Object} json
- * @param {Object} opts
+ * @private
+ * @param {Object} json search results
+ * @param {Object} opts search options
  * @return {Promise<Object>}
  */
 const filterResults = (json, opts) => {
@@ -75,7 +78,8 @@ const filterResults = (json, opts) => {
 
 /**
  * Check if version number is valid semver
- * @param {String} version
+ * @private
+ * @param {String} version single version number
  * @return {Boolean}
  */
 const isValid = version => {
@@ -84,7 +88,8 @@ const isValid = version => {
 
 /**
  * Sorts an array of versions in descending order
- * @param {Array} versions
+ * @private
+ * @param {Object} versions all versions as json
  * @return {Array}
  */
 const sortVersions = versions => {
@@ -95,8 +100,9 @@ const sortVersions = versions => {
 
 /**
  * Get all versions of each package from registry
- * @param {Object} json
- * @param {Boolean} versions
+ * @private
+ * @param {Object} json search results
+ * @param {Boolean} versions show versions
  * @return {Promise<Object>}
  */
 const getVersions = (json, versions) => {
@@ -135,7 +141,8 @@ const getVersions = (json, versions) => {
 
 /**
  * Get status of package
- * @param {String} version
+ * @private
+ * @param {Object} json package details
  * @return {String}
  */
 const getStatus = json => {
@@ -155,7 +162,8 @@ const getStatus = json => {
 
 /**
  * Set status of package based on latest version
- * @param {Object} json
+ * @private
+ * @param {Object} json search results
  * @return {String}
  */
 const setStatus = json => {
@@ -171,6 +179,9 @@ const setStatus = json => {
 
 /**
  * Construct the search URI
+ * @private
+ * @param {String} scope NPM scope to search under
+ * @param {Boolean} d show deprecated packages
  * @return {Promise<Array>}
  */
 const getURI = (scope, d) => {
@@ -180,6 +191,7 @@ const getURI = (scope, d) => {
 
 /**
  * Get all available packages
+ * @param {Object} defaults
  * @return {Promise<Array>}
  */
 module.exports = ({
