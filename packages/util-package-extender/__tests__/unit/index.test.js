@@ -7,6 +7,8 @@
 const mergePackages = require('../../lib/js/_utils/_merge-packages');
 const packageExtender = require('../../lib/js/index');
 
+jest.mock('@springernature/util-cli-reporter');
+
 const results = require('../../__mocks__/filesystem-results.json');
 
 // Valid config for getPackageExtensionDetails
