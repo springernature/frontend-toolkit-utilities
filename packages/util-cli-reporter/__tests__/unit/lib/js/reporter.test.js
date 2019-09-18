@@ -1,5 +1,5 @@
 /**
- * __tests__/unit/lib/js/reporter.js
+ * __tests__/unit/lib/js/reporter.test.js
  * Test: lib/js/reporter.js
  */
 'use strict';

@@ -1,5 +1,5 @@
 /**
- * __tests__/unit/lib/js/index.js
+ * __tests__/unit/lib/js/index.test.js
  * Test: lib/js/index.js
  */
 'use strict';

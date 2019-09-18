@@ -1,5 +1,5 @@
 /**
- * __tests__/unit/lib/js/_utils/merge-packages.js
+ * __tests__/unit/lib/js/_utils/merge-packages.test.js
  * Test: lib/js/_utils/_merge-packages.js
  */
 'use strict';

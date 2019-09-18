@@ -1,5 +1,5 @@
 /**
- * __tests__/unit/lib/js/_utils/get-remote-file.js
+ * __tests__/unit/lib/js/_utils/get-remote-file.test.js
  * Test: lib/js/_utils/_get-remote-file.js
  */
 'use strict';
