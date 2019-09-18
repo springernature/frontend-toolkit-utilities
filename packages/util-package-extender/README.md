@@ -2,7 +2,7 @@
 
 [![NPM version][badge-npm]][info-npm]
 [![Node version][badge-node]][info-node]
-![LGPL 3.0 licensed][badge-license]
+![MIT License][badge-license]
 
 This helper allows you to extend one Component Package (remote) with another (local). The helper merges files from the remote package with files from the local, ignoring any files in the remote that already exist at the local level.
 

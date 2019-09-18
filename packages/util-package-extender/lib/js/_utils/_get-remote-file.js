@@ -5,6 +5,7 @@
  */
 'use strict';
 
+const reporter = require('@springernature/util-cli-reporter');
 const got = require('got');
 
 // Number of times to retry request
@@ -30,9 +31,9 @@ const config = {
 	hooks: {
 		beforeRetry: [
 			(options, error, retryCount) => {
-				console.log(`fail: requesting ${options.href}`);
-				console.log(`info: ${generateErrorMessage(error)}`);
-				console.log(`info: retrying (${retryCount}/${maxRetry})`);
+				reporter.fail('request', options.href);
+				reporter.info('error', generateErrorMessage(error));
+				reporter.info('retrying', `(${retryCount}/${maxRetry})`);
 			}
 		]
 	}

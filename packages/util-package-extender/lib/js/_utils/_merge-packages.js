@@ -6,6 +6,7 @@
 'use strict';
 
 const path = require('path');
+const reporter = require('@springernature/util-cli-reporter');
 const fs = require('fs-extra');
 const getRemoteFile = require('./_get-remote-file');
 
@@ -20,9 +21,9 @@ const getRemoteFile = require('./_get-remote-file');
 async function mergeLocalFile(file, sourcePath, destinationPath) {
 	try {
 		await fs.copy(sourcePath, destinationPath);
-		console.log(`info: copying '${file}' from local package`);
+		reporter.info('copying', file, 'from local package');
 	} catch (err) {
-		console.log(`fail: problem copying '${file}' from local package`);
+		reporter.fail('error', `copying ${file}`, 'from local package');
 		throw err;
 	}
 }
@@ -40,9 +41,9 @@ async function mergeRemoteFile(file, remotePackage, destinationPath) {
 		const data = await getRemoteFile(`https://cdn.jsdelivr.net/npm/${remotePackage}/${file}`);
 		await fs.ensureDir(path.dirname(destinationPath));
 		await fs.writeFile(destinationPath, data);
-		console.log(`info: merging '${file}' from '${remotePackage}'`);
+		reporter.info('merging', file, `from '${remotePackage}'`);
 	} catch (err) {
-		console.log(`fail: problem copying '${file}' from '${remotePackage}'`);
+		reporter.fail('error', `copying ${file}`, `from '${remotePackage}'`);
 		throw err;
 	}
 }
@@ -66,7 +67,7 @@ async function mergePackages(fileList, packageJsonPath, remotePackage, outputDir
 	if (extendToDirectory) {
 		// Make sure that the outputDirectory exists
 		fs.ensureDirSync(outputPath);
-		console.log(`info: extending package into folder '${path.resolve(outputDirectory)}'`);
+		reporter.info('extending package', `into '${path.resolve(outputDirectory)}'`);
 
 		// Copy local files to outputDirectory
 		mergeAllLocalFiles = fileList.local.map(file => {
