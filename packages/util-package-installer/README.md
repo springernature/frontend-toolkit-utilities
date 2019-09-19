@@ -35,7 +35,7 @@ const packageJSON = require('./path/to/package.json');
 
 ## Docs
 
-[JSDocs are in this repo](docs/).
+[JSDocs are in this repo](docs/module-npm-install.html/).
 
 ## License
 
