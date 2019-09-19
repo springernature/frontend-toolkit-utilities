@@ -3,9 +3,6 @@
   "version": "0.1.0",
   "description": "Dynamically installs npm dependencies",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Run tests from the top of the repo please.\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/springernature/frontend-toolkit-utilities.git"
@@ -19,6 +16,12 @@
     "url": "https://github.com/springernature/frontend-toolkit-utilities/issues"
   },
   "homepage": "https://github.com/springernature/frontend-toolkit-utilities#readme",
+  "files": [
+    "index.js"
+  ],
+  "scripts": {
+    "test": "echo \"Run tests from the top of the repo please.\" && exit 1"
+  },
   "dependencies": {
     "validate-npm-package-name": "^3.0.0"
   }
