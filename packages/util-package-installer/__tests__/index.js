@@ -4,7 +4,7 @@
 
 // Jest gotcha 1: node core modules must be explicitly require()d to spy on them
 const child_process = require('child_process');
-const install = require('../utils/npm-install');
+const install = require('../index');
 
 const mockDependencies = require('../__mocks__/data/npm-dependencies');
 
