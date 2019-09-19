@@ -22,17 +22,6 @@ const VERSION_RANGE_MAXLENGTH = 50;
 * @typedef {Object.<string, string>} Dependencies
  */
 
-/*
-cb = (error, stdout, stderr) => {
-		if (error) {
-			console.error(`exec error: ${error}`);
-			return error;
-		}
-		console.log(`stdout: ${stdout}`);
-		console.log(`stderr: ${stderr}`);
-	}
- */
-
 module.exports = {
 	/**
 	 * Main method which actually installs given depdendencies.
@@ -40,7 +29,7 @@ module.exports = {
 	 * @returns {Promise} resolves with "npm install" command stdout data.
 	 * @throws {Error} message is contents of "npm install" command stderr, or some other operational error.
 	 */
-	dependenciesObject: async (dependencies = {}, cb) => {
+	dependenciesObject: async (dependencies = {}) => {
 		const validDepdendencies = module.exports.getValidDepdendencies(dependencies);
 		const packageListAsStr = validDepdendencies.map(dep => dep.join('@')).join(' ');
 		console.log(`npm-install packageListAsStr: ${packageListAsStr}`);
@@ -67,9 +56,9 @@ module.exports = {
 			});
 
 			child.on('exit', exitCode => {
-				console.log(`child process exited with code ${exitCode}`);
+				//console.log(`child process exited with code ${exitCode}`);
 				if (exitCode === 0) {
-					console.log('resolving')
+					//console.log('resolving')
 					resolve(childStdout);
 				}
 				// e.g. no network
@@ -100,19 +89,19 @@ module.exports = {
 	 * Helper to install just the dependencies in a parsed package.json
 	 * @param  {PackageJSON} packageJSON={}
 	 */
-	dependencies: async (packageJSON = {}, cb) => module.exports.dependenciesObject(packageJSON.dependencies, cb),
+	dependencies: async (packageJSON = {}) => module.exports.dependenciesObject(packageJSON.dependencies),
 
 	/**
 	 * Helper to install just the devDependencies in a parsed package.json
 	 * @param  {PackageJSON} packageJSON={}
 	 */
-	devDependencies: async (packageJSON = {}, cb) => module.exports.dependenciesObject(packageJSON.devDependencies, cb),
+	devDependencies: async (packageJSON = {}) => module.exports.dependenciesObject(packageJSON.devDependencies),
 
 	/**
 	 * Helper to install just the peerDependencies in a parsed package.json
 	 * @param  {PackageJSON} packageJSON={}
 	 */
-	peerDependencies: async (packageJSON = {}, cb) => module.exports.dependenciesObject(packageJSON.peerDependencies, cb),
+	peerDependencies: async (packageJSON = {}) => module.exports.dependenciesObject(packageJSON.peerDependencies),
 
 	/** Maximum permitted length of a package version range string */
 	VERSION_RANGE_MAXLENGTH: VERSION_RANGE_MAXLENGTH

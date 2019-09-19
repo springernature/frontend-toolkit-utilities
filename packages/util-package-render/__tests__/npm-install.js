@@ -12,19 +12,19 @@ jest.mock('child_process'); // Jest gotcha 2: this MUST be called outside of a d
 
 describe('Utility: npm-install', () => {
 	let dependenciesObjectSpy;
-	let consoleLogSpy;
-	let consoleErrorSpy;
+//	let consoleLogSpy;
+//	let consoleErrorSpy;
 	beforeEach(() => {
 		dependenciesObjectSpy = jest.spyOn(install, 'dependenciesObject');
-		consoleLogSpy = jest.spyOn(global.console, 'log').mockImplementationOnce(() => {});
-		consoleErrorSpy = jest.spyOn(global.console, 'error').mockImplementationOnce(() => {});
+//		consoleLogSpy = jest.spyOn(global.console, 'log').mockImplementationOnce(() => {});
+//		consoleErrorSpy = jest.spyOn(global.console, 'error').mockImplementationOnce(() => {});
 	});
 
 	afterEach(() => {
 		child_process.spawn.mockClear();
 		dependenciesObjectSpy.mockRestore();
-		consoleLogSpy.mockRestore();
-		consoleErrorSpy.mockRestore();
+//		consoleLogSpy.mockRestore();
+//		consoleErrorSpy.mockRestore();
 	});
 
 	describe('dependenciesObject()', () => {
@@ -34,7 +34,7 @@ describe('Utility: npm-install', () => {
 			expect(dependenciesObjectSpy).toHaveBeenCalledTimes(1);
 		});
 
-	test('with no dependencies, returns an error', async () => {
+		test('with no dependencies, returns an error', async () => {
 			let result;
 			try {
 				result = await install.dependenciesObject({});
@@ -62,22 +62,8 @@ describe('Utility: npm-install', () => {
 			);
 			expect(child_process.spawn).toHaveBeenCalledTimes(1);
 		});
-	});
-});
-/*
-		test('callback is used, and calls console.log on success', async () => {
-			const callbackMock = jest.fn();
-			await install.dependenciesObject(mockDependencies.oneValidDependency, callbackMock);
-			expect.assertions(4);
-			expect(child_process.exec).toHaveBeenCalledWith(
-				'npm install foo@1.0.0 - 2.9999.9999',
-				expect.any(Function)
-			);
-			expect(child_process.exec).toHaveBeenCalledTimes(1);
-			expect(callbackMock).toHaveBeenCalledTimes(1);
-			expect(consoleLogSpy).toHaveBeenCalledTimes(2);
-		});
 
+		/*
 		test('callback is used, and calls console.error on error', async () => {
 			const callbackMock = jest.fn((error, stdout, stderr) => {
 				if (error) {
@@ -99,6 +85,7 @@ describe('Utility: npm-install', () => {
 				'callbackMock error: An error message from child_process mock'
 			);
 		});
+		*/
 	});
 
 	describe('dependencies()', () => {
@@ -193,4 +180,3 @@ describe('Utility: npm-install', () => {
 
 	});
 });
-*/
