@@ -21,7 +21,7 @@ describe('Utility: npm-install', () => {
 	});
 
 	afterEach(() => {
-		child_process.exec.mockClear();
+		child_process.spawn.mockClear();
 		dependenciesObjectSpy.mockRestore();
 		consoleLogSpy.mockRestore();
 		consoleErrorSpy.mockRestore();
@@ -53,19 +53,18 @@ describe('Utility: npm-install', () => {
 			);
 			expect(child_process.spawn).toHaveBeenCalledTimes(1);
 		});
-	});
-});
-/*
+
 		test('with two valid deps, calls child_process.exec once with correct args', async () => {
 			await install.dependenciesObject(mockDependencies.twoValidDependencies);
 			expect.assertions(2);
-			expect(child_process.exec).toHaveBeenCalledWith(
-				'npm install foo@1.0.0 - 2.9999.9999 bar@>=1.0.2 <2.1.2',
-				undefined
+			expect(child_process.spawn).toHaveBeenCalledWith(
+				'npm', ['install', 'foo@1.0.0 - 2.9999.9999 bar@>=1.0.2 <2.1.2']
 			);
-			expect(child_process.exec).toHaveBeenCalledTimes(1);
+			expect(child_process.spawn).toHaveBeenCalledTimes(1);
 		});
-
+	});
+});
+/*
 		test('callback is used, and calls console.log on success', async () => {
 			const callbackMock = jest.fn();
 			await install.dependenciesObject(mockDependencies.oneValidDependency, callbackMock);
