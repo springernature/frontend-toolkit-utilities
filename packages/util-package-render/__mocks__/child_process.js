@@ -37,6 +37,7 @@ childProcess.exec = jest.fn((command, cb) => {
 		})
 	};
 });
+// end TODO
 
 const stdStream = {
 		on: (eventName, data) => {

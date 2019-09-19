@@ -63,6 +63,42 @@ describe('Utility: npm-install', () => {
 			expect(child_process.spawn).toHaveBeenCalledTimes(1);
 		});
 
+		test('with one valid dep, and spawn has an operational error, returns an error', async () => {
+			const oldCPSpawn = child_process.spawn;
+			child_process.spawn = jest.fn((command, arArgs) => {
+				const stdStream = {
+					on: (eventName, data) => {
+						return 'stdStream on result data'
+					}
+				};
+				const mockedAPI = {
+					_listeners: {}, // stash listeners here for later calling
+					stdout: stdStream,
+					stderr: stdStream,
+					on: (eventType, cb) => mockedAPI._listeners[eventType] = cb // eventType 'error' or 'exit
+				};
+
+				process.nextTick(() => {
+					if (mockedAPI._listeners && mockedAPI._listeners.exit && mockedAPI._listeners.error) {
+						mockedAPI._listeners.error(new Error('an operational error'))
+						mockedAPI._listeners.exit(1)
+					}
+				});
+
+				return mockedAPI;
+			});
+			let result;
+			try {
+				result = await install.dependenciesObject(mockDependencies.oneValidDependency);
+			} catch (error) {
+				result = error;
+			}
+
+			expect.assertions(1);
+			expect(result instanceof Error).toStrictEqual(true);
+			child_process.spawn = oldCPSpawn;
+		});
+
 		/*
 		test('callback is used, and calls console.error on error', async () => {
 			const callbackMock = jest.fn((error, stdout, stderr) => {
