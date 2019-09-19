@@ -3,8 +3,12 @@
 // the valid version ranges npm accepts are... eurgh. just, urgh.
 
 // things we really don't want passed to /bin.sh
-//  yes we should define allow lists, not ban lists, but we are doing both
-//  because mistakes happen
+//  1) yes we should define allow lists, not ban lists, but we are doing both
+//		because mistakes happen
+//  2) shell expansion etc. tests _should_ now be redundant after refactoring the code
+//		from using child_process.exec to child_process.spawn...
+//		but these tests are quick to run, and no harm double-checking.
+
 const badThingsToPassToBinSh = [
 	'1.0;',
 	'"quotes"',

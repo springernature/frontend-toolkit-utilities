@@ -11,9 +11,9 @@ const api = async packageRoot => {
 		path = file.sanitisePath(packageRoot);
 		console.log(`PATH=${path}`);
 		packageJSON = require(`${packageRoot}/package.json`);
-	} catch (e) {
-		console.error(e);
-		return e;
+	} catch (error) {
+		console.error(error);
+		return error;
 	}
 
 	if (packageJSON.peerDependencies) {

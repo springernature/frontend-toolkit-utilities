@@ -180,7 +180,7 @@ describe('Utility: npm-install', () => {
 		test('does not return old-style npm package names', () => {
 			expect.assertions(1);
 			expect(
-					install.getValidDepdendencies(mockDependencies.oldStyleNPMDependencies)
+				install.getValidDepdendencies(mockDependencies.oldStyleNPMDependencies)
 			)
 			.toStrictEqual([]);
 		});

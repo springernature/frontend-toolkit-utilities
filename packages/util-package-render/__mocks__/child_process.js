@@ -53,6 +53,7 @@ childProcess.spawn = jest.fn(() => { // (command, arArgs)
 		on: (eventType, cb) => mockedAPI._listeners[eventType] = cb // eventType 'error' or 'exit
 	};
 
+	// simulate spawn eventually finishing, then emitting an exit event with code 0 (success)
 	process.nextTick(() => {
 		if (mockedAPI._listeners && mockedAPI._listeners.exit) {
 			mockedAPI._listeners.exit(0);
