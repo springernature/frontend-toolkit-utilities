@@ -9,22 +9,23 @@ const install = require('../utils/npm-install');
 const mockDependencies = require('../__mocks__/data/npm-dependencies');
 
 jest.mock('child_process'); // Jest gotcha 2: this MUST be called outside of a describe fn
+console.log = jest.fn(); // silence log output from module under test
 
 describe('Utility: npm-install', () => {
 	let dependenciesObjectSpy;
-//	let consoleLogSpy;
-//	let consoleErrorSpy;
+	// let consoleLogSpy;
+	// let consoleErrorSpy;
 	beforeEach(() => {
 		dependenciesObjectSpy = jest.spyOn(install, 'dependenciesObject');
-//		consoleLogSpy = jest.spyOn(global.console, 'log').mockImplementationOnce(() => {});
-//		consoleErrorSpy = jest.spyOn(global.console, 'error').mockImplementationOnce(() => {});
+		// consoleLogSpy = jest.spyOn(global.console, 'log').mockImplementationOnce(() => {});
+		// consoleErrorSpy = jest.spyOn(global.console, 'error').mockImplementationOnce(() => {});
 	});
 
 	afterEach(() => {
 		child_process.spawn.mockClear();
 		dependenciesObjectSpy.mockRestore();
-//		consoleLogSpy.mockRestore();
-//		consoleErrorSpy.mockRestore();
+		// consoleLogSpy.mockRestore();
+		// consoleErrorSpy.mockRestore();
 	});
 
 	describe('dependenciesObject()', () => {
@@ -42,6 +43,7 @@ describe('Utility: npm-install', () => {
 				result = error;
 			}
 			expect.assertions(1);
+			//console.log(result)
 			expect(result instanceof Error).toStrictEqual(true);
 		});
 
@@ -64,6 +66,7 @@ describe('Utility: npm-install', () => {
 		});
 
 		test('with one valid dep, and spawn has an operational error, returns an error', async () => {
+			// re-mock the mock, this should be done in a more DRY manner
 			const oldCPSpawn = child_process.spawn;
 			child_process.spawn = jest.fn((command, arArgs) => {
 				const stdStream = {
@@ -87,6 +90,7 @@ describe('Utility: npm-install', () => {
 
 				return mockedAPI;
 			});
+
 			let result;
 			try {
 				result = await install.dependenciesObject(mockDependencies.oneValidDependency);

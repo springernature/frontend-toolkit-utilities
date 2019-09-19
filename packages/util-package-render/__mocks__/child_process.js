@@ -26,10 +26,10 @@ childProcess.exec = jest.fn((command, cb) => {
 	return {
 		on: jest.fn((eventNameStr, cb) => {
 			if (eventNameStr === 'error') {
-				return new Error('a mock error')
+				return new Error('a mock error');
 			}
 			if (eventNameStr === 'data') {
-				return 'some stdout'
+				return 'some stdout';
 			}
 			const code = 0;
 			const signal = 'bat signal';
@@ -40,12 +40,12 @@ childProcess.exec = jest.fn((command, cb) => {
 // end TODO
 
 const stdStream = {
-		on: (eventName, data) => {
-			return 'stdStream on result data'
-		}
+	on: () => { // (eventName, data)
+		return 'stdStream on result data';
+	}
 };
 
-childProcess.spawn = jest.fn((command, arArgs) => {
+childProcess.spawn = jest.fn(() => { // (command, arArgs)
 	const mockedAPI = {
 		_listeners: {}, // stash listeners here for later calling
 		stdout: stdStream,
@@ -55,7 +55,7 @@ childProcess.spawn = jest.fn((command, arArgs) => {
 
 	process.nextTick(() => {
 		if (mockedAPI._listeners && mockedAPI._listeners.exit) {
-			mockedAPI._listeners.exit(0)
+			mockedAPI._listeners.exit(0);
 		}
 	});
 

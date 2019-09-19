@@ -40,25 +40,17 @@ module.exports = {
 
 		const spawnPromiseResolution = await new Promise((resolve, reject) => {
 			const child = cp.spawn('npm', ['install', packageListAsStr]);
+
 			let childStdout = '';
-			child.stdout.on('data', chunk => {
-				childStdout += chunk;
-			});
+			child.stdout.on('data', chunk => childStdout += chunk);
 
 			let childStderr = '';
-			child.stderr.on('data', chunk => {
-				childStderr += chunk;
-			});
+			child.stderr.on('data', chunk => childStderr += chunk);
 
-			child.on('error', err => {
-				// e.g. npm not installed
-				reject(err);
-			});
+			child.on('error', err => reject(err)); // e.g. npm not installed
 
 			child.on('exit', exitCode => {
-				//console.log(`child process exited with code ${exitCode}`);
 				if (exitCode === 0) {
-					//console.log('resolving')
 					resolve(childStdout);
 				}
 				// e.g. no network
