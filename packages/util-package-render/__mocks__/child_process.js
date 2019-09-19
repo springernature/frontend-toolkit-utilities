@@ -8,6 +8,7 @@ const childProcess = jest.genMockFromModule('child_process');
 const knownToThrowEntry = Object.entries(mockDependencies.oneKnownToThrowDependency)[0];
 const knownToThrowPackage = knownToThrowEntry[0] + '@' + knownToThrowEntry[1];
 
+// TODO rm this
 childProcess.exec = jest.fn((command, cb) => {
 	if (typeof cb === 'function') {
 		if (command === `npm install ${knownToThrowPackage}`) {
