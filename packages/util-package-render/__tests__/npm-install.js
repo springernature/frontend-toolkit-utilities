@@ -131,7 +131,7 @@ describe('Utility: npm-install', () => {
 	describe('dependencies()', () => {
 		test('calls dependenciesObjectSpy', async () => {
 			expect.assertions(1);
-			await install.devDependencies(mockDependencies.packageJSON);
+			await install.dependencies(mockDependencies.packageJSON);
 			expect(dependenciesObjectSpy).toHaveBeenCalledTimes(1);
 		});
 	});
