@@ -36,4 +36,28 @@ childProcess.exec = jest.fn((command, cb) => {
 		})
 	};
 });
+
+const stdStream = {
+		on: (eventName, data) => {
+			return 'stdStream on result data'
+		}
+};
+
+childProcess.spawn = jest.fn((command, arArgs) => {
+	const mockedAPI = {
+		_listeners: {}, // stash listeners here for later calling
+		stdout: stdStream,
+		stderr: stdStream,
+		on: (eventType, cb) => mockedAPI._listeners[eventType] = cb // eventType 'error' or 'exit
+	};
+
+	process.nextTick(() => {
+		if (mockedAPI._listeners && mockedAPI._listeners.exit) {
+			mockedAPI._listeners.exit(0)
+		}
+	});
+
+	return mockedAPI;
+});
+
 module.exports = childProcess;
