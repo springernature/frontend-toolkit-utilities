@@ -6,7 +6,7 @@ language: node_js
 env:
   global:
     - CHANGED_FILES=$(git diff --name-only $TRAVIS_COMMIT_RANGE)
-    - NODE_OPTIONS="--max-old-space-size=8192"
+    - NODE_OPTIONS=--max-old-space-size=8192
 
 # cache the node modules
 cache:
