@@ -1,6 +1,6 @@
 'use strict';
 // to test just this file:
-// ./node_modules/jest/bin/jest.js --colors packages/util-package-render/__tests__/npm-install.js
+// ./node_modules/jest/bin/jest.js --colors packages/util-package-installer/__tests__/index.js
 
 // Jest gotcha 1: node core modules must be explicitly require()d to spy on them
 const child_process = require('child_process');
@@ -122,6 +122,22 @@ describe('Utility: npm-install', () => {
 	});
 
 	describe('getValidDepdendencies()', () => {
+		test('if passed nothing returns an empty array', () => {
+			expect.assertions(1);
+			expect(
+				install.getValidDepdendencies()
+			)
+			.toStrictEqual([]);
+		});
+
+		test('if passed an empty object returns an empty array', () => {
+			expect.assertions(1);
+			expect(
+				install.getValidDepdendencies({})
+			)
+			.toStrictEqual([]);
+		});
+
 		test('npmExampleVersionRanges are valid', () => {
 			expect.assertions(1);
 			expect(
