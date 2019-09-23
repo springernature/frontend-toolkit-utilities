@@ -18,7 +18,7 @@
     "test": "jest --colors --coverage --passWithNoTests",
     "lint": "npm run lint:js",
     "lint:js": "eslint .",
-    "build": "npm run lint && npm run test && npm run validate -- -n",
+    "build": "npm config set loglevel verbose && npm run lint && npm run test && npm run validate -- -n",
     "create": "sn-package-create",
     "validate": "sn-package-validate",
     "publish": "sn-package-publish"
