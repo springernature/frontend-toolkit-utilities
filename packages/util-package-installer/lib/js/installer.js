@@ -5,7 +5,7 @@ const validatePackageName = require('validate-npm-package-name');
 /**
  * The preferred way to install NPM dependencies dynamically is via the shell & "npm i" command.
  * This package provides a wrapper around that functionality.
- * @module util-package-insteller
+ * @module util-package-installer
  */
 
 /**

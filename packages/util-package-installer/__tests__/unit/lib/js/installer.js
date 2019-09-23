@@ -1,12 +1,12 @@
 'use strict';
-// to test just this file:
-// ./node_modules/jest/bin/jest.js --colors packages/util-package-installer/__tests__/index.js
+// to run just these tests:
+// ./node_modules/jest/bin/jest.js --colors packages/util-package-installer/__tests__/unit/lib/js/installer.js
 
 // Jest gotcha 1: node core modules must be explicitly require()d to spy on them
 const child_process = require('child_process');
-const install = require('../index');
+const install = require('../../../../lib/js/installer');
 
-const mockDependencies = require('../__mocks__/data/npm-dependencies');
+const mockDependencies = require('../../../../__mocks__/data/npm-dependencies');
 
 jest.mock('child_process'); // Jest gotcha 2: this MUST be called outside of a describe fn
 console.log = jest.fn(); // silence log output from module under test
