@@ -11,7 +11,7 @@ const mockDependencies = require('../__mocks__/data/npm-dependencies');
 jest.mock('child_process'); // Jest gotcha 2: this MUST be called outside of a describe fn
 console.log = jest.fn(); // silence log output from module under test
 
-describe('Utility: npm-install', () => {
+describe('util-package-installer', () => {
 	let dependenciesObjectSpy;
 	beforeEach(() => {
 		dependenciesObjectSpy = jest.spyOn(install, 'dependenciesObject');
