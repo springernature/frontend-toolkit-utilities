@@ -52,6 +52,9 @@
     "testRegex": "__tests__/.*\\.js$",
     "collectCoverageFrom": [
       "packages/**/*.js"
+    ],
+    "coveragePathIgnorePatterns": [
+      "docs/"
     ]
   }
 }
