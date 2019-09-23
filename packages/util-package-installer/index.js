@@ -42,10 +42,10 @@ module.exports = {
 			const child = cp.spawn('npm', ['install', packageListAsStr]);
 
 			let childStdout = '';
-			child.stdout.on('data', chunk => childStdout += chunk);
+			child.stdout.on('data', chunk => childStdout += chunk); // eslint-disable-line no-return-assign
 
 			let childStderr = '';
-			child.stderr.on('data', chunk => childStderr += chunk);
+			child.stderr.on('data', chunk => childStderr += chunk); // eslint-disable-line no-return-assign
 
 			child.on('error', err => reject(err)); // e.g. npm not installed
 
