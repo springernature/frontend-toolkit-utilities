@@ -13,19 +13,13 @@ console.log = jest.fn(); // silence log output from module under test
 
 describe('Utility: npm-install', () => {
 	let dependenciesObjectSpy;
-	// let consoleLogSpy;
-	// let consoleErrorSpy;
 	beforeEach(() => {
 		dependenciesObjectSpy = jest.spyOn(install, 'dependenciesObject');
-		// consoleLogSpy = jest.spyOn(global.console, 'log').mockImplementationOnce(() => {});
-		// consoleErrorSpy = jest.spyOn(global.console, 'error').mockImplementationOnce(() => {});
 	});
 
 	afterEach(() => {
 		child_process.spawn.mockClear();
 		dependenciesObjectSpy.mockRestore();
-		// consoleLogSpy.mockRestore();
-		// consoleErrorSpy.mockRestore();
 	});
 
 	describe('dependenciesObject()', () => {
@@ -43,7 +37,6 @@ describe('Utility: npm-install', () => {
 				result = error;
 			}
 			expect.assertions(1);
-			//console.log(result)
 			expect(result instanceof Error).toStrictEqual(true);
 		});
 
@@ -102,30 +95,6 @@ describe('Utility: npm-install', () => {
 			expect(result instanceof Error).toStrictEqual(true);
 			child_process.spawn = oldCPSpawn;
 		});
-
-		/*
-		test('callback is used, and calls console.error on error', async () => {
-			const callbackMock = jest.fn((error, stdout, stderr) => {
-				if (error) {
-					console.error(`callbackMock error: ${error}`);
-					return error;
-				}
-			});
-			await install.dependenciesObject(mockDependencies.oneKnownToThrowDependency, callbackMock);
-			expect.assertions(4);
-			const knownToThrowEntry = Object.entries(mockDependencies.oneKnownToThrowDependency)[0];
-			const knownToThrowPackage = knownToThrowEntry[0] + '@' + knownToThrowEntry[1];
-			expect(child_process.exec).toHaveBeenCalledWith(
-				`npm install ${knownToThrowPackage}`,
-				expect.any(Function)
-			);
-			expect(child_process.exec).toHaveBeenCalledTimes(1);
-			expect(callbackMock).toHaveBeenCalledTimes(1);
-			expect(consoleErrorSpy).toHaveBeenCalledWith(
-				'callbackMock error: An error message from child_process mock'
-			);
-		});
-		*/
 	});
 
 	describe('dependencies()', () => {

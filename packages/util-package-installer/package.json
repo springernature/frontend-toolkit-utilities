@@ -20,7 +20,7 @@
     "index.js"
   ],
   "scripts": {
-    "test": "echo \"Run tests from the top of the repo please.\" && exit 1"
+    "test": "echo \"Run tests from the repository root please.\" && exit 1"
   },
   "dependencies": {
     "validate-npm-package-name": "^3.0.0"
