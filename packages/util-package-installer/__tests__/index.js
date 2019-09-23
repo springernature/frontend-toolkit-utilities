@@ -98,6 +98,30 @@ describe('Utility: npm-install', () => {
 	});
 
 	describe('dependencies()', () => {
+		test('calls dependenciesObjectSpy and throws if passed empty object', async () => {
+			let result;
+			try {
+				result = await install.dependencies({});
+			} catch (error) {
+				result = error;
+			}
+			expect.assertions(2);
+			expect(dependenciesObjectSpy).toHaveBeenCalledTimes(1);
+			expect(result instanceof Error).toStrictEqual(true);
+		});
+
+		test('calls dependenciesObjectSpy and throws if passed nothing', async () => {
+			let result;
+			try {
+				result = await install.dependencies();
+			} catch (error) {
+				result = error;
+			}
+			expect.assertions(2);
+			expect(dependenciesObjectSpy).toHaveBeenCalledTimes(1);
+			expect(result instanceof Error).toStrictEqual(true);
+		});
+
 		test('calls dependenciesObjectSpy', async () => {
 			expect.assertions(1);
 			await install.dependencies(mockDependencies.packageJSON);
@@ -106,6 +130,30 @@ describe('Utility: npm-install', () => {
 	});
 
 	describe('devDependencies()', () => {
+		test('calls dependenciesObjectSpy and throws if passed empty object', async () => {
+			let result;
+			try {
+				result = await install.devDependencies({});
+			} catch (error) {
+				result = error;
+			}
+			expect.assertions(2);
+			expect(dependenciesObjectSpy).toHaveBeenCalledTimes(1);
+			expect(result instanceof Error).toStrictEqual(true);
+		});
+
+		test('calls dependenciesObjectSpy and throws if passed nothing', async () => {
+			let result;
+			try {
+				result = await install.devDependencies();
+			} catch (error) {
+				result = error;
+			}
+			expect.assertions(2);
+			expect(dependenciesObjectSpy).toHaveBeenCalledTimes(1);
+			expect(result instanceof Error).toStrictEqual(true);
+		});
+
 		test('calls dependenciesObjectSpy', async () => {
 			expect.assertions(1);
 			await install.devDependencies(mockDependencies.packageJSON);
@@ -114,6 +162,30 @@ describe('Utility: npm-install', () => {
 	});
 
 	describe('peerDependencies()', () => {
+		test('calls dependenciesObjectSpy and throws if passed empty object', async () => {
+			let result;
+			try {
+				result = await install.peerDependencies({});
+			} catch (error) {
+				result = error;
+			}
+			expect.assertions(2);
+			expect(dependenciesObjectSpy).toHaveBeenCalledTimes(1);
+			expect(result instanceof Error).toStrictEqual(true);
+		});
+
+		test('calls dependenciesObjectSpy and throws if passed nothing', async () => {
+			let result;
+			try {
+				result = await install.peerDependencies();
+			} catch (error) {
+				result = error;
+			}
+			expect.assertions(2);
+			expect(dependenciesObjectSpy).toHaveBeenCalledTimes(1);
+			expect(result instanceof Error).toStrictEqual(true);
+		});
+
 		test('calls dependenciesObjectSpy', async () => {
 			expect.assertions(1);
 			await install.peerDependencies(mockDependencies.packageJSON);
