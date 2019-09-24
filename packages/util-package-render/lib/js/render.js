@@ -13,7 +13,6 @@ const api = async packageRoot => {
 		console.log(`PATH=${path}`);
 		packageJSON = require(`${packageRoot}/package.json`);
 	} catch (error) {
-		console.error(error);
 		return error;
 	}
 
