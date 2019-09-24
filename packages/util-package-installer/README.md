@@ -33,7 +33,7 @@ const packageJSON = require('./path/to/package.json');
 })();
 ```
 There are also helper methods to install just `devDependencies` or `peerDependencies`,
-please see the [full documentation is in this repo](docs/index.html).
+please see the [full documentation in this repo](docs/index.html).
 
 ## License
 
