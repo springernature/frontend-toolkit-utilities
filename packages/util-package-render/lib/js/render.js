@@ -1,8 +1,8 @@
 'use strict';
 const npmInstall = require('@springernature/util-package-installer');
-const handlebarsHelper = require('./lib/handlebars-helper');
-const jsHelper = require('./lib/js-helper');
-const sassHelper = require('./lib/sass-helper');
+const handlebarsHelper = require('./handlebars-helper');
+const jsHelper = require('./js-helper');
+const sassHelper = require('./sass-helper');
 const file = require('./utils/file');
 
 const api = async packageRoot => {

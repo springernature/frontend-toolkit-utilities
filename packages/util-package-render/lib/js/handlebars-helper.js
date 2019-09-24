@@ -1,6 +1,6 @@
 const Handlebars = require('handlebars');
-const file = require('../utils/file');
-const rootTemplate = require('../template');
+const file = require('./utils/file');
+const rootTemplate = require('./template');
 
 const HBARS_CONTEXT_KEY = 'utilPackageRenderState';
 const ERR_NO_PACKAGE_HBS_FOUND = 'no /demo/index.hbs found for package';

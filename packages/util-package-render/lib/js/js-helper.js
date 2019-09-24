@@ -1,5 +1,5 @@
 const babel = require('@babel/core');
-const file = require('../utils/file');
+const file = require('./utils/file');
 
 const ERR_NO_PACKAGE_JS_FOUND = 'no JS found for package';
 
