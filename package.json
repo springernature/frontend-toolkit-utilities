@@ -15,13 +15,13 @@
   ],
   "author": "Springer Nature",
   "scripts": {
-    "test": "jest --colors --coverage --passWithNoTests",
-    "lint": "npm run lint:js",
-    "lint:js": "eslint .",
     "build": "npm config set loglevel verbose && npm run lint && npm run test && npm run validate -- -n",
     "create": "sn-package-create",
-    "validate": "sn-package-validate",
-    "publish": "sn-package-publish"
+    "lint": "npm run lint:js",
+    "lint:js": "eslint .",
+    "publish": "sn-package-publish",
+    "test": "jest --colors --coverage --passWithNoTests",
+    "validate": "sn-package-validate"
   },
   "bugs": {
     "url": "https://github.com/springernature/frontend-toolkit-utilities/issues"
