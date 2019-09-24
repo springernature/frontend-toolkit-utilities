@@ -1,3 +1,3 @@
-const toRun = require('./index'); // eslint-disable-line unicorn/import-index
+const render = require('./lib/js/render'); // eslint-disable-line unicorn/import-index
 
-toRun('./__mocks__/apackage/');
+render('./__mocks__/apackage/');
