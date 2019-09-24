@@ -24,7 +24,7 @@
     "util-eslint-runner": "./bin/index.js"
   },
   "dependencies": {
-    "glob": "^7.1.4",
+    "glob": "^7.1.3",
     "commander": "^2.19.0"
   }
 }
