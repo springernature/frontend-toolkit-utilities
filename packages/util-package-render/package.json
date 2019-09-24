@@ -29,7 +29,7 @@
     "node-sass": "^4.12.0"
   },
   "devDependencies": {
-    "@babel/core": "~7.6.2",
-    "@babel/preset-env": "^7.5.4"
+    "@babel/core": "^7.6.2",
+    "@babel/preset-env": "^7.6.2"
   }
 }
