@@ -6,7 +6,6 @@ language: node_js
 env:
   global:
     - CHANGED_FILES=$(git diff --name-only $TRAVIS_COMMIT_RANGE)
-#    - NODE_OPTIONS=--max-old-space-size=8192
 
 # cache the node modules
 cache:
@@ -29,7 +28,7 @@ notifications:
 
 # Build script
 script:
-  - 'lerna bootstrap --hoist && npm run build'
+  - 'lerna bootstrap --hoist && npm run build:ci'
 
 # Auto-publish after script
 after_success:
