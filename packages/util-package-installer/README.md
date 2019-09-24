@@ -25,17 +25,15 @@ const packageJSON = require('./path/to/package.json');
 (async () => {
     let installResult;
     try {
-        installResult = await install.peerDependencies(packageJSON);
+        installResult = await install.dependencies(packageJSON);
         console.log(`npm install stdout: ${installResult}`);
     } catch (error) {
         console.log(`npm install stderr: ${error}`);
     }
 })();
 ```
-
-## Docs
-
-[JSDocs are in this repo](docs/module-npm-install.html/).
+There are also helper methods to install just `devDependencies` or `peerDependencies`,
+please see the [full documentation is in this repo](docs/index.html).
 
 ## License
 
