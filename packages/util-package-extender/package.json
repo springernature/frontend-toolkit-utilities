@@ -1,6 +1,6 @@
 {
   "name": "@springernature/util-package-extender",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Extends a component package by merging with the package it extends",
   "author": "Springer Nature",
   "license": "MIT",
