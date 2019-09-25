@@ -39,8 +39,8 @@ please see the [full documentation in this repo](docs/index.html).
 
 [MIT License][info-license] &copy; 2019, Springer Nature
 
-[info-npm]: https://www.npmjs.com/package/@springernature/util-package-extender
-[badge-npm]: https://img.shields.io/npm/v/@springernature/util-package-extender.svg
+[info-npm]: https://www.npmjs.com/package/@springernature/util-package-installer
+[badge-npm]: https://img.shields.io/npm/v/@springernature/util-package-installer.svg
 [info-license]: https://github.com/springernature/frontend-toolkit-utilities/blob/master/LICENCE
 [badge-license]: https://img.shields.io/badge/license-MIT-blue.svg
 [badge-node]: https://img.shields.io/badge/node->=8-brightgreen.svg
