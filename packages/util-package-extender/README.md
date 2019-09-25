@@ -137,8 +137,7 @@ extender.getPackageExtensionDetails(obj)
             packageExtensionDetails.remotePackage,
             packageExtensionDetails.localPackage
         )
-        .then(() => {console.log('success')})
-        .catch(err => {throw err});
+        .then(() => {console.log('success')});
     })
     .catch(err => {throw err});
 
@@ -153,8 +152,7 @@ extender.getPackageExtensionDetails(obj)
 			packageExtensionDetails.localPackage,
 			'./demo'
         )
-        .then(() => {console.log('success')})
-        .catch(err => {throw err});
+        .then(() => {console.log('success')});
     })
     .catch(err => {throw err});
 ```

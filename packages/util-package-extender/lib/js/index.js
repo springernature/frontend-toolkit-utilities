@@ -103,7 +103,7 @@ async function extendPackage(packageJsonPath, remotePackage, localPackage, outpu
 	const localFileList = await getLocalFileList(packageJsonPath);
 	const filteredRemoteFileList = filterRemoteFileList(remoteFileList, localFileList);
 
-	reporter.title(`extend ${remotePackage} as ${localPackage}`);
+	reporter.info('extend', remotePackage, localPackage);
 
 	await mergePackages(
 		{
@@ -115,7 +115,7 @@ async function extendPackage(packageJsonPath, remotePackage, localPackage, outpu
 		outputDirectory
 	);
 
-	reporter.success('extended', remotePackage, `as ${localPackage}`);
+	reporter.success('extended', remotePackage, localPackage);
 }
 
 module.exports = {

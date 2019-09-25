@@ -73,7 +73,7 @@ async function mergePackages(fileList, packageJsonPath, remotePackage, outputDir
 	if (extendToDirectory) {
 		// Make sure that the outputDirectory exists
 		fs.ensureDirSync(outputPath);
-		reporter.info('extending package', `into '${path.resolve(outputDirectory)}'`);
+		reporter.info('extending package', 'into folder', path.resolve(outputDirectory));
 
 		// Copy local files to outputDirectory
 		mergeAllLocalFiles = fileList.local.map(file => {
