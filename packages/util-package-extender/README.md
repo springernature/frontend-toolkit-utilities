@@ -55,44 +55,44 @@ const obj = require('./package.json');
 // With default scope
 // ------------------
 
-extender.getPackageExtensionDetails(obj)
-    .then(packageExtensionDetails => {
-        // Returns =>
-        // {
-        //   extendPackage: true,
-        //   remotePackage: '@springernature/global-package@2.0.0',
-        //   localPackage: 'brand-package@1.0.0'
-        // }
-    })
-    .catch(err => {throw err});
+try {
+    const details = await extender.getPackageExtensionDetails(obj);
+    // {
+    //   extendPackage: true,
+    //   remotePackage: '@springernature/global-package@2.0.0',
+    //   localPackage: 'brand-package@1.0.0'
+    // }
+} catch(err) {
+    throw err;
+}
 
 // With custom scope
 // -----------------
 
-extender.getPackageExtensionDetails(obj, 'my-scope')
-    .then(packageExtensionDetails => {
-        // Returns =>
-        // {
-        //   extendPackage: true,
-        //   remotePackage: '@my-scope/global-package@2.0.0',
-        //   localPackage: 'brand-package@1.0.0'
-        // }
-    })
-    .catch(err => {throw err});
+try {
+    const details = await extender.getPackageExtensionDetails(obj, 'my-scope');
+    // {
+    //   extendPackage: true,
+    //   remotePackage: '@my-scope/global-package@2.0.0',
+    //   localPackage: 'brand-package@1.0.0'
+    // }
+} catch(err) {
+    throw err;
+}
 
 // No package extension defined
 // ----------------------------
 
-extender.getPackageExtensionDetails(obj)
-    .then(packageExtensionDetails => {
-        // Returns =>
-        // {
-        //   extendPackage: false,
-        //   remotePackage: null,
-        //   localPackage: null
-        // }
-    })
-    .catch(err => {throw err});
+try {
+    const details = await extender.getPackageExtensionDetails(obj);
+    // {
+    //   extendPackage: false,
+    //   remotePackage: null,
+    //   localPackage: null
+    // }
+} catch(err) {
+    throw err;
+}
 ```
 
 ### `extendPackage(packageJsonPath, remotePackage, localPackage, outputDirectory)`
@@ -125,36 +125,35 @@ Directory in which to store the merged files. Defaults to merging in place with 
 ```javascript
 const extender = require('@springernature/util-package-extender');
 const obj = require('./package.json');
-const packageExtensionDetails = extender.getPackageExtensionDetails(obj);
 
 // Merge in place
 // --------------
 
-extender.getPackageExtensionDetails(obj)
-    .then(packageExtensionDetails => {
-        extender.extendPackage(
-            '/path/to/package.json',
-            packageExtensionDetails.remotePackage,
-            packageExtensionDetails.localPackage
-        )
-        .then(() => {console.log('success')});
-    })
-    .catch(err => {throw err});
+try {
+    const details = await extender.getPackageExtensionDetails(obj);
+    await extender.extendPackage(
+        '/path/to/package.json',
+        details.remotePackage,
+        details.localPackage
+    )
+} catch(err) {
+    throw err;
+}
 
 // Merge into output directory (./demo)
 // ------------------------------------
 
-extender.getPackageExtensionDetails(obj)
-    .then(packageExtensionDetails => {
-        extender.extendPackage(
-            '/path/to/package.json',
-            packageExtensionDetails.remotePackage,
-			packageExtensionDetails.localPackage,
-			'./demo'
-        )
-        .then(() => {console.log('success')});
-    })
-    .catch(err => {throw err});
+try {
+    const details = await extender.getPackageExtensionDetails(obj);
+    await extender.extendPackage(
+        '/path/to/package.json',
+        details.remotePackage,
+		details.localPackage,
+        './demo'
+    )
+} catch(err) {
+    throw err;
+}
 ```
 
 ## License
