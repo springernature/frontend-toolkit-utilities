@@ -13,6 +13,7 @@ const glob = require('glob');
  * Find the closest .gitignore file
  * Convert contents to glob array
  * @private
+ * @function findClosestGitignore
  * @return {Promise<Object>}
  */
 async function findClosestGitignore() {
@@ -23,8 +24,9 @@ async function findClosestGitignore() {
 /**
  * Use glob to return a list of file paths
  * relative to the packageJsonPath
+ * @function getLocalFileList
  * @param {String} packageJsonPath path to the local package.json
- * @return {Promise<Object>}
+ * @return {Promise<Array>}
  */
 function getLocalFileList(packageJsonPath) {
 	return new Promise(async (resolve, reject) => {

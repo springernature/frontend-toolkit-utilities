@@ -33,7 +33,7 @@ The helper exports two functions:
 
 ### `getPackageExtensionDetails(packageJsonObject, packageScope)`
 
-Returns `Undefined` if the `package.json` file is missing one of `name`, `version`, `extendsPackage`. Otherwise returns an `Object` containing extension details.
+Returns a `Promise` with package extension details contained in an `Object`. The `package.json` file for the local package needs to contain the keys `name`, `version`, and `extendsPackage`.
 
 #### `packageJsonObject`
 Type: `Object`
@@ -54,21 +54,45 @@ const obj = require('./package.json');
 
 // With default scope
 // ------------------
-const packageExtensionDetails = extender.getPackageExtensionDetails(obj);
-// Returns =>
-// {
-//   remotePackage: '@springernature/global-package@2.0.0',
-//   localPackage: 'brand-package@1.0.0'
-// }
+
+extender.getPackageExtensionDetails(obj)
+    .then(packageExtensionDetails => {
+        // Returns =>
+        // {
+        //   extendPackage: true,
+        //   remotePackage: '@springernature/global-package@2.0.0',
+        //   localPackage: 'brand-package@1.0.0'
+        // }
+    })
+    .catch(err => {throw err});
 
 // With custom scope
 // -----------------
-const packageExtensionDetails = extender.getPackageExtensionDetails(obj, 'my-scope');
-// Returns =>
-// {
-//   remotePackage: '@my-scope/global-package@2.0.0',
-//   localPackage: 'brand-package@1.0.0'
-// }
+
+extender.getPackageExtensionDetails(obj, 'my-scope')
+    .then(packageExtensionDetails => {
+        // Returns =>
+        // {
+        //   extendPackage: true,
+        //   remotePackage: '@my-scope/global-package@2.0.0',
+        //   localPackage: 'brand-package@1.0.0'
+        // }
+    })
+    .catch(err => {throw err});
+
+// No package extension defined
+// ----------------------------
+
+extender.getPackageExtensionDetails(obj)
+    .then(packageExtensionDetails => {
+        // Returns =>
+        // {
+        //   extendPackage: false,
+        //   remotePackage: null,
+        //   localPackage: null
+        // }
+    })
+    .catch(err => {throw err});
 ```
 
 ### `extendPackage(packageJsonPath, remotePackage, localPackage, outputDirectory)`
@@ -105,28 +129,34 @@ const packageExtensionDetails = extender.getPackageExtensionDetails(obj);
 
 // Merge in place
 // --------------
-if (packageExtensionDetails) {
-    extender.extendPackage(
-        '.',
-        packageExtensionDetails.remotePackage,
-        packageExtensionDetails.localPackage
-    )
-    .then(() => {console.log('success')})
-    .catch(err => {console.error(err)});
-}
+
+extender.getPackageExtensionDetails(obj)
+    .then(packageExtensionDetails => {
+        extender.extendPackage(
+            '/path/to/package.json',
+            packageExtensionDetails.remotePackage,
+            packageExtensionDetails.localPackage
+        )
+        .then(() => {console.log('success')})
+        .catch(err => {throw err});
+    })
+    .catch(err => {throw err});
 
 // Merge into output directory (./demo)
 // ------------------------------------
-if (packageExtensionDetails) {
-    extender.extendPackage(
-        '.',
-        packageExtensionDetails.remotePackage,
-        packageExtensionDetails.localPackage,
-        './demo'
-    )
-    .then(() => {console.log('success')})
-    .catch(err => {console.error(err)});
-}
+
+extender.getPackageExtensionDetails(obj)
+    .then(packageExtensionDetails => {
+        extender.extendPackage(
+            '/path/to/package.json',
+            packageExtensionDetails.remotePackage,
+			packageExtensionDetails.localPackage,
+			'./demo'
+        )
+        .then(() => {console.log('success')})
+        .catch(err => {throw err});
+    })
+    .catch(err => {throw err});
 ```
 
 ## License
