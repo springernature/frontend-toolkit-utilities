@@ -1,5 +1,8 @@
 # History
 
+## 0.2.1 (2019-09-26)
+    * Bugfix publishing issue
+
 ## 0.2.0 (2019-09-25)
     * Fix distributed files
 

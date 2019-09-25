@@ -1,6 +1,6 @@
 {
   "name": "@springernature/util-package-installer",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Dynamically installs NPM packages",
   "main": "./lib/js/installer.js",
   "repository": {
