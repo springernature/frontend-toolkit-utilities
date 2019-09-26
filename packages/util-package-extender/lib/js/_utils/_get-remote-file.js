@@ -42,6 +42,7 @@ const config = {
 /**
  * Generate an error message based on error type
  * @private
+ * @function generateErrorMessage
  * @param {Object} error the error object from the request
  * @return {String}
  */
@@ -60,6 +61,8 @@ function generateErrorMessage(error) {
 /**
  * Get contents of a file from a URL
  * Retry on failure <maxRetry>
+ * @async
+ * @function getRemoteFile
  * @param {String} url the request
  * @param {Object} options got configuration, default: config
  * @return {Promise<Object>}

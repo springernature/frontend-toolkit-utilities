@@ -13,6 +13,8 @@ const getRemoteFile = require('./_get-remote-file');
 /**
  * Copy local file to outputDirectory
  * @private
+ * @async
+ * @function mergeLocalFile
  * @param {String} file name of the local file
  * @param {String} sourcePath path to the local file
  * @param {String} destinationPath output path of the file
@@ -31,6 +33,8 @@ async function mergeLocalFile(file, sourcePath, destinationPath) {
 /**
  * Merge file from the remote package
  * @private
+ * @async
+ * @function mergeRemoteFile
  * @param {String} file name of the local file
  * @param {String} remotePackage name of the package on NPM
  * @param {String} destinationPath output path of the file
@@ -50,6 +54,8 @@ async function mergeRemoteFile(file, remotePackage, destinationPath) {
 
 /**
  * Merge two packages together
+ * @async
+ * @function mergePackages
  * @param {Object} fileList list of files from local and remote package
  * @param {String} packageJsonPath path to the local package.json
  * @param {String} remotePackage package and version being extended
@@ -67,7 +73,7 @@ async function mergePackages(fileList, packageJsonPath, remotePackage, outputDir
 	if (extendToDirectory) {
 		// Make sure that the outputDirectory exists
 		fs.ensureDirSync(outputPath);
-		reporter.info('extending package', `into '${path.resolve(outputDirectory)}'`);
+		reporter.info('extending package', 'into folder', path.resolve(outputDirectory));
 
 		// Copy local files to outputDirectory
 		mergeAllLocalFiles = fileList.local.map(file => {

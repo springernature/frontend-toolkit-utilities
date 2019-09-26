@@ -33,7 +33,7 @@ The helper exports two functions:
 
 ### `getPackageExtensionDetails(packageJsonObject, packageScope)`
 
-Returns `Undefined` if the `package.json` file is missing one of `name`, `version`, `extendsPackage`. Otherwise returns an `Object` containing extension details.
+Returns a `Promise` with package extension details contained in an `Object`. The `package.json` file for the local package needs to contain the keys `name`, `version`, and `extendsPackage`.
 
 #### `packageJsonObject`
 Type: `Object`
@@ -54,21 +54,45 @@ const obj = require('./package.json');
 
 // With default scope
 // ------------------
-const packageExtensionDetails = extender.getPackageExtensionDetails(obj);
-// Returns =>
-// {
-//   remotePackage: '@springernature/global-package@2.0.0',
-//   localPackage: 'brand-package@1.0.0'
-// }
+
+try {
+    const details = await extender.getPackageExtensionDetails(obj);
+    // {
+    //   extendPackage: true,
+    //   remotePackage: '@springernature/global-package@2.0.0',
+    //   localPackage: 'brand-package@1.0.0'
+    // }
+} catch(err) {
+    throw err;
+}
 
 // With custom scope
 // -----------------
-const packageExtensionDetails = extender.getPackageExtensionDetails(obj, 'my-scope');
-// Returns =>
-// {
-//   remotePackage: '@my-scope/global-package@2.0.0',
-//   localPackage: 'brand-package@1.0.0'
-// }
+
+try {
+    const details = await extender.getPackageExtensionDetails(obj, 'my-scope');
+    // {
+    //   extendPackage: true,
+    //   remotePackage: '@my-scope/global-package@2.0.0',
+    //   localPackage: 'brand-package@1.0.0'
+    // }
+} catch(err) {
+    throw err;
+}
+
+// No package extension defined
+// ----------------------------
+
+try {
+    const details = await extender.getPackageExtensionDetails(obj);
+    // {
+    //   extendPackage: false,
+    //   remotePackage: null,
+    //   localPackage: null
+    // }
+} catch(err) {
+    throw err;
+}
 ```
 
 ### `extendPackage(packageJsonPath, remotePackage, localPackage, outputDirectory)`
@@ -101,31 +125,34 @@ Directory in which to store the merged files. Defaults to merging in place with 
 ```javascript
 const extender = require('@springernature/util-package-extender');
 const obj = require('./package.json');
-const packageExtensionDetails = extender.getPackageExtensionDetails(obj);
 
 // Merge in place
 // --------------
-if (packageExtensionDetails) {
-    extender.extendPackage(
-        '.',
-        packageExtensionDetails.remotePackage,
-        packageExtensionDetails.localPackage
+
+try {
+    const details = await extender.getPackageExtensionDetails(obj);
+    await extender.extendPackage(
+        '/path/to/package.json',
+        details.remotePackage,
+        details.localPackage
     )
-    .then(() => {console.log('success')})
-    .catch(err => {console.error(err)});
+} catch(err) {
+    throw err;
 }
 
 // Merge into output directory (./demo)
 // ------------------------------------
-if (packageExtensionDetails) {
-    extender.extendPackage(
-        '.',
-        packageExtensionDetails.remotePackage,
-        packageExtensionDetails.localPackage,
+
+try {
+    const details = await extender.getPackageExtensionDetails(obj);
+    await extender.extendPackage(
+        '/path/to/package.json',
+        details.remotePackage,
+		details.localPackage,
         './demo'
     )
-    .then(() => {console.log('success')})
-    .catch(err => {console.error(err)});
+} catch(err) {
+    throw err;
 }
 ```
 

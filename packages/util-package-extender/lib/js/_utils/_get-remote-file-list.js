@@ -11,6 +11,7 @@ const getRemoteFile = require('./_get-remote-file');
  * Loop through package content tree
  * Return an array of file paths
  * @private
+ * @function getFileList
  * @param {String} json representation of file list as json
  * @param {String} filePaths the array to store file paths
  * @param {String} buildPath build the path for nested files
@@ -32,8 +33,10 @@ function getFileList(json, filePaths = [], buildPath = '') {
 
 /**
  * Get array of all files from a remote package
+ * @async
+ * @function getRemoteFileList
  * @param {String} remotePackage package and version being extended
- * @return {Promise<Object>}
+ * @return {Promise<Array>}
  */
 async function getRemoteFileList(remotePackage) {
 	const tree = await getRemoteFile(`https://data.jsdelivr.com/v1/package/npm/${remotePackage}`);
