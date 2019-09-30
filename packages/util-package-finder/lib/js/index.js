@@ -11,16 +11,21 @@ const has = require('lodash/has');
 const semver = require('semver');
 
 /**
- * API endpoint to NPM registry
- * @type {String}
+ * Use alternate backend to get all packages
+ * @type {Boolean}
  */
-const npmRegistry = 'https://registry.npmjs.org/';
+const getAllPackagesFromNPM = false;
+
+const endpoints = {
+	npmsio: 'https://api.npms.io/v2/',
+	npm: 'http://registry.npmjs.com'
+};
 
 /**
- * API endpoint to npms.io
+ * API endpoint to get all packages from
  * @type {String}
  */
-const npmsEndpoint = 'https://api.npms.io/v2/';
+const getAllPackagesEndpoint = getAllPackagesFromNPM ? endpoints.npm : endpoints.npmsio;
 
 /**
  * Get default function options
@@ -121,7 +126,7 @@ const getVersions = (json, versions) => {
 		json.results
 			.map(n => n.package.name)
 			.forEach(name => {
-				const promise = fetch(`${npmRegistry}${encodeURIComponent(name)}`)
+				const promise = fetch(`${endpoints.npm}${encodeURIComponent(name)}`)
 					.then(response => response.json())
 					.then(packageJson => {
 						json.results
@@ -188,9 +193,9 @@ const setStatus = json => {
  * @param {Boolean} d show deprecated packages
  * @return {Promise<Array>}
  */
-const getURI = (scope, d) => {
+const getAllPackagesURI = (scope, d) => {
 	const deprecated = (d) ? '' : '%20not:deprecated';
-	return `${npmsEndpoint}search?q=scope%3A${scope}${deprecated}&size=250`;
+	return `${getAllPackagesEndpoint}search?q=scope%3A${scope}${deprecated}&size=250`;
 };
 
 /**
@@ -210,7 +215,7 @@ module.exports = ({
 		versions: versions,
 		deprecated: deprecated
 	})
-		.then(opts => fetch(getURI(opts.scope, deprecated)))
+		.then(opts => fetch(getAllPackagesURI(opts.scope, deprecated)))
 		.then(response => response.json())
 		.then(json => filterResults(json, getOptions({scope: scope, filters: filters})))
 		.then(json => getVersions(json, versions))

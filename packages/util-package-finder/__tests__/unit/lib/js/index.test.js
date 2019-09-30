@@ -4,6 +4,9 @@
  */
 'use strict';
 
+// to run just these tests:
+// ./node_modules/jest/bin/jest.js --colors packages/util-package-finder/__tests__/unit/lib/js/index.test.js
+
 const fetch = require('jest-fetch-mock');
 
 jest.setMock('node-fetch', fetch);
