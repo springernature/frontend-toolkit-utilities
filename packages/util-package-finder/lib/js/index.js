@@ -11,21 +11,10 @@ const has = require('lodash/has');
 const semver = require('semver');
 
 /**
- * Use alternate backend to get all packages
+ * Run get all packages query against NPM?
  * @type {Boolean}
  */
 const getAllPackagesFromNPM = false;
-
-const endpoints = {
-	npmsio: 'https://api.npms.io/v2/',
-	npm: 'http://registry.npmjs.com'
-};
-
-/**
- * API endpoint to get all packages from
- * @type {String}
- */
-const getAllPackagesEndpoint = getAllPackagesFromNPM ? endpoints.npm : endpoints.npmsio;
 
 /**
  * Get default function options
@@ -79,8 +68,10 @@ const filterResults = (json, opts) => {
 			resolve(json);
 			return;
 		}
+
+		const resultsKey = getAllPackagesFromNPM ? 'objects' : 'results';
 		const reg = new RegExp(`^@${opts.scope}/(${opts.filters.join('|')})`, 'i');
-		json.results = json.results.filter(item => reg.test(item.package.name));
+		json.results = json[resultsKey].filter(item => reg.test(item.package.name));
 		resolve(json);
 	});
 };
@@ -126,7 +117,7 @@ const getVersions = (json, versions) => {
 		json.results
 			.map(n => n.package.name)
 			.forEach(name => {
-				const promise = fetch(`${endpoints.npm}${encodeURIComponent(name)}`)
+				const promise = fetch(`http://registry.npmjs.com/${encodeURIComponent(name)}`)
 					.then(response => response.json())
 					.then(packageJson => {
 						json.results
@@ -195,7 +186,16 @@ const setStatus = json => {
  */
 const getAllPackagesURI = (scope, d) => {
 	const deprecated = (d) ? '' : '%20not:deprecated';
-	return `${getAllPackagesEndpoint}search?q=scope%3A${scope}${deprecated}&size=250`;
+	const limit = 250;
+	const searchTemplatesByProvider = {
+		npmsio: `https://api.npms.io/v2/search?q=scope%3A${scope}${deprecated}&size=${limit}`,
+		npmjscom: `https://registry.npmjs.com/-/v1/search?text=${scope}&size=${limit}`
+	};
+	if (getAllPackagesFromNPM && deprecated) {
+		console.warn('NPM search does not return deprecated packages, but you asked for them.');
+	}
+	//console.log(searchTemplatesByProvider)
+	return getAllPackagesFromNPM ? searchTemplatesByProvider.npmjscom : searchTemplatesByProvider.npmsio;
 };
 
 /**
