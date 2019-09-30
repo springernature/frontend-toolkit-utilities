@@ -10,41 +10,6 @@ const orderBy = require('lodash/orderBy');
 const semver = require('semver');
 
 /**
- * Get default function options
- * @private
- * @param {Object} opts search options
- * @return {Promise<Object>}
- */
-const getOptions = opts => {
-	if (opts.scope.startsWith('@')) {
-		opts.scope = opts.scope.substr(1);
-	}
-	return opts;
-};
-
-/**
- * Validate default function options
- * @private
- * @param {Object} opts search options
- * @return {Promise<Object>}
- */
-const validateOptions = opts => {
-	return new Promise((resolve, reject) => {
-		const options = getOptions(opts);
-
-		if (!Array.isArray(options.filters)) {
-			reject(new Error(`Filters parameter must be of type \`array\`, found \`${typeof opts.filters}\``));
-		}
-
-		if (typeof opts.versions !== 'boolean') {
-			reject(new Error(`Versions parameter must be of type \`boolean\`, found \`${typeof opts.versions}\``));
-		}
-
-		resolve(options);
-	});
-};
-
-/**
  * Filter package results by name
  * @private
  * @param {Object} json search results
@@ -150,7 +115,7 @@ const getStatus = json => {
  * Set status of package based on latest version
  * @private
  * @param {Object} json search results
- * @return {String}
+ * @return {Promise<Array>}
  */
 const setStatus = json => {
 	return new Promise(resolve => {
@@ -167,11 +132,31 @@ const setStatus = json => {
  * Construct the search URI
  * @private
  * @param {String} scope NPM scope to search under
- * @return {Promise<Array>}
+ * @return {String}
  */
 const getAllPackagesURI = scope => {
 	const limit = 250;
 	return `https://registry.npmjs.com/-/v1/search?text=${scope}&size=${limit}`
+};
+
+/**
+ * Validate default function options
+ * @private
+ * @param {Object} opts search options
+ * @return {Promise<Object>}
+ */
+const validateOptions = opts => {
+	return new Promise((resolve, reject) => {
+		if (!Array.isArray(opts.filters)) {
+			reject(new Error(`Filters parameter must be of type \`array\`, found \`${typeof opts.filters}\``));
+		}
+
+		if (typeof opts.versions !== 'boolean') {
+			reject(new Error(`Versions parameter must be of type \`boolean\`, found \`${typeof opts.versions}\``));
+		}
+
+		resolve(opts);
+	});
 };
 
 /**
@@ -191,7 +176,7 @@ module.exports = ({
 	})
 		.then(opts => fetch(getAllPackagesURI(opts.scope)))
 		.then(response => response.json())
-		.then(json => filterResults(json, getOptions({scope: scope, filters: filters})))
+		.then(json => filterResults(json, {scope: scope, filters: filters}))
 		.then(json => getVersions(json, versions))
 		.then(json => setStatus(json))
 		.then(json => _.flow(
