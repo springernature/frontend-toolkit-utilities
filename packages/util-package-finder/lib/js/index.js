@@ -132,14 +132,14 @@ const setStatus = json => {
 };
 
 /**
- * Construct the search URI
+ * Get the interpolated search URI
  * @private
  * @param {String} scope NPM scope to search under
  * @return {String}
  */
-const getAllPackagesURI = scope => {
+const getPackagesSearchURI = scope => {
 	const limit = 250;
-	return `https://registry.npmjs.com/-/v1/search?text=${scope}&size=${limit}`
+	return `https://registry.npmjs.com/-/v1/search?text=${scope}&size=${limit}`;
 };
 
 /**
@@ -177,7 +177,7 @@ module.exports = ({
 		filters: filters,
 		versions: versions
 	})
-		.then(opts => fetch(getAllPackagesURI(opts.scope)))
+		.then(opts => fetch(getPackagesSearchURI(opts.scope)))
 		.then(response => response.json())
 		.then(json => filterResults(json, {scope: scope, filters: filters}))
 		.then(json => getVersions(json, versions))
