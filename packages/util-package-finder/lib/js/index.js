@@ -193,7 +193,7 @@ module.exports = ({
 	})
 		.then(opts => fetch(getPackagesSearchURI(opts.scope)))
 		.then(response => response.json())
-		.then(json => filterResults(json, {scope: scope, filters: filters}))
+		.then(json => filterResults(json, normaliseScopePrefix({scope: scope, filters: filters})))
 		.then(json => getVersions(json, versions))
 		.then(json => setStatus(json))
 		.then(json => _.flow(
