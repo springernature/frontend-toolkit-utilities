@@ -143,6 +143,19 @@ const getPackagesSearchURI = scope => {
 };
 
 /**
+ * Removes scope prefix before searching on it
+ * @private
+ * @param {Object} opts search options
+ * @param {Object} opts search options with scope prefix removed
+ */
+const normaliseScopePrefix = opts => {
+	if (opts.scope.startsWith('@')) {
+		opts.scope = opts.scope.substr(1);
+	}
+	return opts;
+};
+
+/**
  * Validate default function options
  * @private
  * @param {Object} opts search options
@@ -150,6 +163,7 @@ const getPackagesSearchURI = scope => {
  */
 const validateOptions = opts => {
 	return new Promise((resolve, reject) => {
+		const options = normaliseScopePrefix(opts);
 		if (!Array.isArray(opts.filters)) {
 			reject(new Error(`Filters parameter must be of type \`array\`, found \`${typeof opts.filters}\``));
 		}
@@ -158,7 +172,7 @@ const validateOptions = opts => {
 			reject(new Error(`Versions parameter must be of type \`boolean\`, found \`${typeof opts.versions}\``));
 		}
 
-		resolve(opts);
+		resolve(options);
 	});
 };
 
