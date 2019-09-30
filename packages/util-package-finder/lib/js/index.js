@@ -7,14 +7,7 @@
 const fetch = require('node-fetch');
 const _ = require('lodash/fp');
 const orderBy = require('lodash/orderBy');
-const has = require('lodash/has');
 const semver = require('semver');
-
-/**
- * Run get all packages query against NPM?
- * @type {Boolean}
- */
-const getAllPackagesFromNPM = false;
 
 /**
  * Get default function options
@@ -47,10 +40,6 @@ const validateOptions = opts => {
 			reject(new Error(`Versions parameter must be of type \`boolean\`, found \`${typeof opts.versions}\``));
 		}
 
-		if (typeof opts.deprecated !== 'boolean') {
-			reject(new Error(`Deprecated parameter must be of type \`boolean\`, found \`${typeof opts.deprecated}\``));
-		}
-
 		resolve(options);
 	});
 };
@@ -64,14 +53,14 @@ const validateOptions = opts => {
  */
 const filterResults = (json, opts) => {
 	return new Promise(resolve => {
+		json.results = json.objects;
 		if (opts.filters.length === 0) {
 			resolve(json);
 			return;
 		}
 
-		const resultsKey = getAllPackagesFromNPM ? 'objects' : 'results';
 		const reg = new RegExp(`^@${opts.scope}/(${opts.filters.join('|')})`, 'i');
-		json.results = json[resultsKey].filter(item => reg.test(item.package.name));
+		json.results = json.results.filter(item => reg.test(item.package.name));
 		resolve(json);
 	});
 };
@@ -146,9 +135,6 @@ const getVersions = (json, versions) => {
  * @return {String}
  */
 const getStatus = json => {
-	if (has(json, 'flags.deprecated')) {
-		return 'deprecated';
-	}
 	if (semver.gte(json.package.version, '1.0.0')) {
 		return 'production';
 	}
@@ -181,21 +167,11 @@ const setStatus = json => {
  * Construct the search URI
  * @private
  * @param {String} scope NPM scope to search under
- * @param {Boolean} d show deprecated packages
  * @return {Promise<Array>}
  */
-const getAllPackagesURI = (scope, d) => {
-	const deprecated = (d) ? '' : '%20not:deprecated';
+const getAllPackagesURI = scope => {
 	const limit = 250;
-	const searchTemplatesByProvider = {
-		npmsio: `https://api.npms.io/v2/search?q=scope%3A${scope}${deprecated}&size=${limit}`,
-		npmjscom: `https://registry.npmjs.com/-/v1/search?text=${scope}&size=${limit}`
-	};
-	if (getAllPackagesFromNPM && deprecated) {
-		console.warn('NPM search does not return deprecated packages, but you asked for them.');
-	}
-	//console.log(searchTemplatesByProvider)
-	return getAllPackagesFromNPM ? searchTemplatesByProvider.npmjscom : searchTemplatesByProvider.npmsio;
+	return `https://registry.npmjs.com/-/v1/search?text=${scope}&size=${limit}`
 };
 
 /**
@@ -206,16 +182,14 @@ const getAllPackagesURI = (scope, d) => {
 module.exports = ({
 	scope = 'springernature',
 	filters = [],
-	versions = false,
-	deprecated = false
+	versions = false
 } = {}) => (
 	validateOptions({
 		scope: scope,
 		filters: filters,
-		versions: versions,
-		deprecated: deprecated
+		versions: versions
 	})
-		.then(opts => fetch(getAllPackagesURI(opts.scope, deprecated)))
+		.then(opts => fetch(getAllPackagesURI(opts.scope)))
 		.then(response => response.json())
 		.then(json => filterResults(json, getOptions({scope: scope, filters: filters})))
 		.then(json => getVersions(json, versions))
