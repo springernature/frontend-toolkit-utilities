@@ -18,7 +18,10 @@ const semver = require('semver');
  */
 const filterResults = (json, opts) => {
 	return new Promise(resolve => {
+		// API returns results in an "objects" key in the top level
+		// "results" makes for clearer code
 		json.results = json.objects;
+		delete json.objects;
 		if (opts.filters.length === 0) {
 			resolve(json);
 			return;
@@ -36,7 +39,7 @@ const filterResults = (json, opts) => {
  * @param {String} version single version number
  * @return {Boolean}
  */
-const isValid = version => {
+const isValidSemver = version => {
 	return semver.valid(version);
 };
 
@@ -48,7 +51,7 @@ const isValid = version => {
  */
 const sortVersions = versions => {
 	return Object.keys(versions)
-		.filter(isValid)
+		.filter(isValidSemver)
 		.sort(semver.rcompare);
 };
 
