@@ -94,12 +94,11 @@ const printCli = response => {
 	response.forEach(item => {
 		const status = chalk.dim(`[${item.status}]`);
 		const name = item.name;
-		const icon = figures.circleFilled;
 
-		console.log(chalk.cyan(`${icon} ${name} ${status} ${chalk.green.bold.dim(item.latest)}`));
+		console.log(chalk.cyan(` ${name} ${status} ${chalk.green.bold.dim(item.latest)}`));
 
 		if (params.versions) {
-			console.log(`  ${chalk.dim(formatVersions(item.versions))}`);
+			console.log(`${chalk.dim(formatVersions(item.versions))}`);
 		}
 	});
 };
