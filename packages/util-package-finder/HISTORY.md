@@ -1,6 +1,6 @@
 # History
 
-## 0.3.0 (2019-09-01)
+## 0.3.0 (2019-10-01)
     * No longer accepts "deprecated" flag
     * Uses registry.npmjs.com to get list of packages
 

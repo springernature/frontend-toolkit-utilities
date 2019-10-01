@@ -3,7 +3,7 @@
     {
       "package": {
         "name": "@springernature/a-package-name",
-		"scope": "springernature",
+        "scope": "springernature",
         "version": "0.0.1",
         "description": "a-package-name-description",
         "links": {
@@ -15,7 +15,7 @@
     {
       "package": {
         "name": "@springernature/a-nother-package-name",
-		"scope": "springernature",
+        "scope": "springernature",
         "version": "0.0.2",
         "description": "a-nother-package-name-description",
         "links": {
@@ -27,7 +27,7 @@
     {
       "package": {
         "name": "@springernature/b-package-name",
-		"scope": "springernature",
+        "scope": "springernature",
         "version": "0.1.0",
         "description": "b-package-name-description",
         "links": {
@@ -39,7 +39,7 @@
     {
       "package": {
         "name": "@springernature/c-package-name",
-		"scope": "springernature",
+        "scope": "springernature",
         "version": "1.0.0",
         "description": "c-package-name-description",
         "links": {
