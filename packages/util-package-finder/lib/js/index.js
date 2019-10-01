@@ -134,25 +134,12 @@ const setStatus = json => {
 /**
  * Get the interpolated search URI
  * @private
- * @param {String} scope NPM scope to search under
+ * @param {String} subject freetext string to search for
  * @return {String}
  */
-const getPackagesSearchURI = scope => {
+const getPackagesSearchURI = subject => {
 	const limit = 250;
-	return `https://registry.npmjs.com/-/v1/search?text=${scope}&size=${limit}`;
-};
-
-/**
- * Removes scope prefix before searching on it
- * @private
- * @param {Object} opts search options
- * @param {Object} opts search options with scope prefix removed
- */
-const normaliseScopePrefix = opts => {
-	if (opts.scope.startsWith('@')) {
-		opts.scope = opts.scope.substr(1);
-	}
-	return opts;
+	return `https://registry.npmjs.com/-/v1/search?text=${subject}&size=${limit}`;
 };
 
 /**
@@ -163,7 +150,10 @@ const normaliseScopePrefix = opts => {
  */
 const validateOptions = opts => {
 	return new Promise((resolve, reject) => {
-		const options = normaliseScopePrefix(opts);
+		if (opts.scope && opts.scope.startsWith('@')) {
+			opts.scope = opts.scope.substr(1);
+		}
+
 		if (!Array.isArray(opts.filters)) {
 			reject(new Error(`Filters parameter must be of type \`array\`, found \`${typeof opts.filters}\``));
 		}
@@ -172,12 +162,12 @@ const validateOptions = opts => {
 			reject(new Error(`Versions parameter must be of type \`boolean\`, found \`${typeof opts.versions}\``));
 		}
 
-		resolve(options);
+		resolve(opts);
 	});
 };
 
 /**
- * Get all available packages
+ * Get all non-deprecated packages for a scope, with additional filtering
  * @param {Object} defaults
  * @return {Promise<Array>}
  */
@@ -193,7 +183,7 @@ module.exports = ({
 	})
 		.then(opts => fetch(getPackagesSearchURI(opts.scope)))
 		.then(response => response.json())
-		.then(json => filterResults(json, normaliseScopePrefix({scope: scope, filters: filters})))
+		.then(json => filterResults(json, {scope: scope, filters: filters}))
 		.then(json => getVersions(json, versions))
 		.then(json => setStatus(json))
 		.then(json => _.flow(
