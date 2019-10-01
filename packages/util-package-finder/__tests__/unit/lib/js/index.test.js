@@ -4,6 +4,9 @@
  */
 'use strict';
 
+// to run just these tests:
+// ./node_modules/jest/bin/jest.js --colors packages/util-package-finder/__tests__/unit/lib/js/index.test.js
+
 const fetch = require('jest-fetch-mock');
 
 jest.setMock('node-fetch', fetch);
@@ -32,13 +35,13 @@ describe('Get a list of scoped packages', () => {
 		expect.assertions(1);
 		return expect(
 			getPackages()
-		).resolves.toEqual(mockResponse.results);
+		).resolves.toEqual(mockResponse.objects);
 	});
 
 	test('Get filtered packages (single filter) in the default scope', () => {
 		let response = Object.assign({}, mockResponse);
 		const regex = new RegExp('@springernature/a-package-name|@springernature/a-nother-package-name');
-		response.results = response.results.filter(res => res.name.match(regex));
+		response.objects = response.objects.filter(res => res.name.match(regex));
 
 		fetch.mockResponses(
 			[JSON.stringify(mockSearchResults), {status: 200}],
@@ -49,13 +52,13 @@ describe('Get a list of scoped packages', () => {
 		expect.assertions(1);
 		return expect(
 			getPackages({filters: ['a']})
-		).resolves.toEqual(response.results);
+		).resolves.toEqual(response.objects);
 	});
 
 	test('Get filtered packages (multiple filters) in the default scope', () => {
 		let response = Object.assign({}, mockResponse);
 		const regex = new RegExp('@springernature/b-package-name|@springernature/c-package-name');
-		response.results = response.results.filter(res => res.name.match(regex));
+		response.objects = response.objects.filter(res => res.name.match(regex));
 
 		fetch.mockResponses(
 			[JSON.stringify(mockSearchResults), {status: 200}],
@@ -66,7 +69,22 @@ describe('Get a list of scoped packages', () => {
 		expect.assertions(1);
 		return expect(
 			getPackages({filters: ['b', 'c']})
-		).resolves.toEqual(response.results);
+		).resolves.toEqual(response.objects);
+	});
+
+	test('Get all packages when setting "at"-scope', () => {
+		fetch.mockResponses(
+			[JSON.stringify(mockSearchResults), {status: 200}],
+			[JSON.stringify(mockPackageResults['a-package-name']), {status: 200}],
+			[JSON.stringify(mockPackageResults['a-nother-package-name']), {status: 200}],
+			[JSON.stringify(mockPackageResults['b-package-name']), {status: 200}],
+			[JSON.stringify(mockPackageResults['c-package-name']), {status: 200}]
+		);
+
+		expect.assertions(1);
+		return expect(
+			getPackages({scope: '@springernature'})
+		).resolves.toEqual(mockResponse.objects);
 	});
 
 	test('Get all packages when setting scope', () => {
@@ -80,8 +98,8 @@ describe('Get a list of scoped packages', () => {
 
 		expect.assertions(1);
 		return expect(
-			getPackages({scope: '@springernature'})
-		).resolves.toEqual(mockResponse.results);
+			getPackages({scope: 'springernature'})
+		).resolves.toEqual(mockResponse.objects);
 	});
 
 	test('Get all packages with versions', () => {
@@ -96,7 +114,7 @@ describe('Get a list of scoped packages', () => {
 		expect.assertions(1);
 		return expect(
 			getPackages({versions: true})
-		).resolves.toEqual(mockResponseVersions.results);
+		).resolves.toEqual(mockResponseVersions.objects);
 	});
 
 	test('Returns empty array when no results found', () => {

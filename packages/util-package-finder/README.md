@@ -23,7 +23,6 @@ The status of a package is evaluated by checking the latest version and assignin
 | production | `>= 1.0.0` |
 | development | `>= 0.1.0`, `< 1.0.0` |
 | experimental | `>= 0.0.1`, `< 0.1.0` |
-| deprecated | |
 
 ## Install
 
@@ -60,11 +59,6 @@ An array of `strings` that represent package prefixes used within the springerna
 Type: `Boolean`<br/>
 Default: false<br/>
 Get a list of all available versions
-
-#### deprecated
-Type: `Boolean`<br/>
-Default: false<br/>
-Show deprecated packages
 
 ## Examples
 
@@ -153,33 +147,6 @@ packageFinder({
   date: '2019-03-08T11:55:38.384Z'  }]
 */
 
-packageFinder({
-  deprecated: true,
-  filters: ['a']
-})
-  .then(response => {
-    console.log(response);
-  }).catch(err => {
-    console.error(err);
-  });
-
-/*
-[{ name: '@springernature/a-package',
-  latest: '0.1.2',
-  versions: null,
-  status: 'development',
-  description: 'a package',
-  npm: 'https://www.npmjs.com/package/%40springernature%2Fa-package',
-  date: '2019-03-08T11:55:38.384Z'  },
-{ name: '@springernature/a-deprecated-package',
-  latest: '1.0.0',
-  versions: null,
-  status: 'deprecated',
-  description: 'a deprecated package',
-  npm: 'https://www.npmjs.com/package/%40springernature%2Fa-deprecated-package',
-  date: '2019-03-08T11:55:38.384Z'  }]
-*/
-
 ```
 
 ## CLI
@@ -203,7 +170,6 @@ $ util-package-finder --help
     --scope, -s         Set the scope (default: springernature)
     --all, -a           Get all available versions
     --filters, -f       Comma seperated list of name filters
-    --deprecated, -d    Show deprecated packages
 
   Examples
     util-package-finder
@@ -212,7 +178,6 @@ $ util-package-finder --help
     util-package-finder -a
     util-package-finder -f global,local
     util-package-finder -j -a -f global,local
-    util-package-finder -d
 ```
 
 ## License

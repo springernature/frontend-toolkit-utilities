@@ -7,59 +7,7 @@
 const fetch = require('node-fetch');
 const _ = require('lodash/fp');
 const orderBy = require('lodash/orderBy');
-const has = require('lodash/has');
 const semver = require('semver');
-
-/**
- * API endpoint to NPM registry
- * @type {String}
- */
-const npmRegistry = 'https://registry.npmjs.org/';
-
-/**
- * API endpoint to npms.io
- * @type {String}
- */
-const npmsEndpoint = 'https://api.npms.io/v2/';
-
-/**
- * Get default function options
- * @private
- * @param {Object} opts search options
- * @return {Promise<Object>}
- */
-const getOptions = opts => {
-	if (opts.scope.startsWith('@')) {
-		opts.scope = opts.scope.substr(1);
-	}
-	return opts;
-};
-
-/**
- * Validate default function options
- * @private
- * @param {Object} opts search options
- * @return {Promise<Object>}
- */
-const validateOptions = opts => {
-	return new Promise((resolve, reject) => {
-		const options = getOptions(opts);
-
-		if (!Array.isArray(options.filters)) {
-			reject(new Error(`Filters parameter must be of type \`array\`, found \`${typeof opts.filters}\``));
-		}
-
-		if (typeof opts.versions !== 'boolean') {
-			reject(new Error(`Versions parameter must be of type \`boolean\`, found \`${typeof opts.versions}\``));
-		}
-
-		if (typeof opts.deprecated !== 'boolean') {
-			reject(new Error(`Deprecated parameter must be of type \`boolean\`, found \`${typeof opts.deprecated}\``));
-		}
-
-		resolve(options);
-	});
-};
 
 /**
  * Filter package results by name
@@ -70,12 +18,21 @@ const validateOptions = opts => {
  */
 const filterResults = (json, opts) => {
 	return new Promise(resolve => {
+		// API returns results in an "objects" key in the top level
+		// "results" makes for clearer code
+		json.results = json.objects;
+		delete json.objects;
+
+		// first filter by scope
+		json.results = json.results.filter(item => opts.scope === item.package.scope);
+		// filter by user filters
 		if (opts.filters.length === 0) {
 			resolve(json);
 			return;
 		}
-		const reg = new RegExp(`^@${opts.scope}/(${opts.filters.join('|')})`, 'i');
-		json.results = json.results.filter(item => reg.test(item.package.name));
+
+		const packageNameRex = new RegExp(`/(${opts.filters.join('|')})`, 'i');
+		json.results = json.results.filter(item => packageNameRex.test(item.package.name));
 		resolve(json);
 	});
 };
@@ -86,7 +43,7 @@ const filterResults = (json, opts) => {
  * @param {String} version single version number
  * @return {Boolean}
  */
-const isValid = version => {
+const isValidSemver = version => {
 	return semver.valid(version);
 };
 
@@ -98,7 +55,7 @@ const isValid = version => {
  */
 const sortVersions = versions => {
 	return Object.keys(versions)
-		.filter(isValid)
+		.filter(isValidSemver)
 		.sort(semver.rcompare);
 };
 
@@ -121,7 +78,7 @@ const getVersions = (json, versions) => {
 		json.results
 			.map(n => n.package.name)
 			.forEach(name => {
-				const promise = fetch(`${npmRegistry}${encodeURIComponent(name)}`)
+				const promise = fetch(`http://registry.npmjs.com/${encodeURIComponent(name)}`)
 					.then(response => response.json())
 					.then(packageJson => {
 						json.results
@@ -150,9 +107,6 @@ const getVersions = (json, versions) => {
  * @return {String}
  */
 const getStatus = json => {
-	if (has(json, 'flags.deprecated')) {
-		return 'deprecated';
-	}
 	if (semver.gte(json.package.version, '1.0.0')) {
 		return 'production';
 	}
@@ -168,7 +122,7 @@ const getStatus = json => {
  * Set status of package based on latest version
  * @private
  * @param {Object} json search results
- * @return {String}
+ * @return {Promise<Array>}
  */
 const setStatus = json => {
 	return new Promise(resolve => {
@@ -182,37 +136,67 @@ const setStatus = json => {
 };
 
 /**
- * Construct the search URI
+ * Get the interpolated search URI
  * @private
- * @param {String} scope NPM scope to search under
- * @param {Boolean} d show deprecated packages
- * @return {Promise<Array>}
+ * @param {String} subject freetext string to search for
+ * @return {String}
  */
-const getURI = (scope, d) => {
-	const deprecated = (d) ? '' : '%20not:deprecated';
-	return `${npmsEndpoint}search?q=scope%3A${scope}${deprecated}&size=250`;
+const getPackagesSearchURI = subject => {
+	const limit = 250;
+	return `https://registry.npmjs.com/-/v1/search?text=${subject}&size=${limit}`;
 };
 
 /**
- * Get all available packages
+ * Validate default function options
+ * @private
+ * @param {Object} opts search options
+ * @return {Promise<Object>}
+ */
+const validateOptions = opts => {
+	return new Promise((resolve, reject) => {
+		if (!Array.isArray(opts.filters)) {
+			reject(new Error(`Filters parameter must be of type \`array\`, found \`${typeof opts.filters}\``));
+		}
+
+		if (typeof opts.versions !== 'boolean') {
+			reject(new Error(`Versions parameter must be of type \`boolean\`, found \`${typeof opts.versions}\``));
+		}
+
+		resolve(opts);
+	});
+};
+
+/**
+ * Removes any scope prefix
+ * @private
+ * @param {String} scope search scope
+ * @param {String} scope search scope with any scope prefix removed
+ */
+const normaliseScopePrefix = scope => {
+	if (scope.startsWith('@')) {
+		scope = scope.substr(1);
+	}
+	return scope;
+};
+
+/**
+ * Get all non-deprecated packages for a scope, with additional filtering
  * @param {Object} defaults
  * @return {Promise<Array>}
  */
 module.exports = ({
 	scope = 'springernature',
 	filters = [],
-	versions = false,
-	deprecated = false
+	versions = false
 } = {}) => (
 	validateOptions({
-		scope: scope,
+		scope: normaliseScopePrefix(scope),
 		filters: filters,
-		versions: versions,
-		deprecated: deprecated
+		versions: versions
 	})
-		.then(opts => fetch(getURI(opts.scope, deprecated)))
+		.then(opts => fetch(getPackagesSearchURI(opts.scope)))
 		.then(response => response.json())
-		.then(json => filterResults(json, getOptions({scope: scope, filters: filters})))
+		.then(json => filterResults(json, {scope: normaliseScopePrefix(scope), filters: filters}))
 		.then(json => getVersions(json, versions))
 		.then(json => setStatus(json))
 		.then(json => _.flow(

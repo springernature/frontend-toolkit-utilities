@@ -18,7 +18,6 @@ const cli = meow(`
 		--scope, -s         Set the scope (default: springernature)
 		--all, -a           Get all available versions
 		--filters, -f       Comma seperated list of name filters
-		--deprecated, -d    Show deprecated packages
 
 	Examples
 		util-package-finder
@@ -27,7 +26,6 @@ const cli = meow(`
 		util-package-finder -a
 		util-package-finder -f global,local
 		util-package-finder -j -a -f global,local
-		util-package-finder -d
 `, {
 	booleanDefault: undefined,
 	flags: {
@@ -49,11 +47,6 @@ const cli = meow(`
 		filters: {
 			type: 'string',
 			alias: 'f'
-		},
-		deprecated: {
-			type: 'boolean',
-			alias: 'd',
-			default: false
 		}
 	}
 });
@@ -61,8 +54,7 @@ const cli = meow(`
 const params = {
 	...cli.flags.scope && {scope: cli.flags.scope},
 	...cli.flags.filters && {filters: cli.flags.filters.split(',')},
-	...cli.flags.all && {versions: cli.flags.all},
-	...cli.flags.deprecated && {deprecated: cli.flags.deprecated}
+	...cli.flags.all && {versions: cli.flags.all}
 };
 
 /**
@@ -100,14 +92,13 @@ const printCli = response => {
 	));
 
 	response.forEach(item => {
-		const status = (item.status === 'deprecated') ? chalk.red.dim(`[${item.status}]`) : chalk.dim(`[${item.status}]`);
-		const name = (item.status === 'deprecated') ? chalk.dim(item.name) : item.name;
-		const icon = (item.status === 'deprecated') ? figures.circle : figures.circleFilled;
+		const status = chalk.dim(`[${item.status}]`);
+		const name = item.name;
 
-		console.log(chalk.cyan(`${icon} ${name} ${status} ${chalk.green.bold.dim(item.latest)}`));
+		console.log(chalk.cyan(` ${name} ${status} ${chalk.green.bold.dim(item.latest)}`));
 
 		if (params.versions) {
-			console.log(`  ${chalk.dim(formatVersions(item.versions))}`);
+			console.log(`${chalk.dim(formatVersions(item.versions))}`);
 		}
 	});
 };
