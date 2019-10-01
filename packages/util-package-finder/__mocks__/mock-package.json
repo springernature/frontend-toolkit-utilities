@@ -3,7 +3,8 @@
     "_id": "@springernature/a-package-name",
     "versions": {
       "0.0.1": {
-        "name": "a-package-name"
+		"name": "a-package-name",
+		"scope": "springernature"
       }
     }
   },
@@ -11,10 +12,12 @@
     "_id": "@springernature/a-nother-package-name",
     "versions": {
       "0.0.2": {
-        "name": "a-nother-package-name"
+        "name": "a-nother-package-name",
+		"scope": "springernature"
       },
       "0.0.1": {
-        "name": "a-nother-package-name"
+        "name": "a-nother-package-name",
+		"scope": "springernature"
       }
     }
   },
@@ -22,13 +25,16 @@
     "_id": "@springernature/b-package-name",
     "versions": {
       "0.1.0": {
-        "name": "b-package-name"
+        "name": "b-package-name",
+		"scope": "springernature"
       },
       "0.0.2": {
-        "name": "b-package-name"
+        "name": "b-package-name",
+		"scope": "springernature"
       },
       "0.0.1": {
-        "name": "b-package-name"
+        "name": "b-package-name",
+		"scope": "springernature"
       }
     }
   },
@@ -36,16 +42,20 @@
     "_id": "@springernature/c-package-name",
     "versions": {
       "1.0.0": {
-        "name": "c-package-name"
+        "name": "c-package-name",
+		"scope": "springernature"
       },
       "0.2.0": {
-        "name": "c-package-name"
+        "name": "c-package-name",
+		"scope": "springernature"
       },
       "0.1.0": {
-        "name": "c-package-name"
+        "name": "c-package-name",
+		"scope": "springernature"
       },
       "0.0.1": {
-        "name": "c-package-name"
+        "name": "c-package-name",
+		"scope": "springernature"
       }
     }
   }

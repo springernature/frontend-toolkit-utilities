@@ -22,13 +22,17 @@ const filterResults = (json, opts) => {
 		// "results" makes for clearer code
 		json.results = json.objects;
 		delete json.objects;
+
+		// first filter by scope
+		json.results = json.results.filter(item => opts.scope === item.package.scope);
+		// filter by user filters
 		if (opts.filters.length === 0) {
 			resolve(json);
 			return;
 		}
 
-		const reg = new RegExp(`^@${opts.scope}/(${opts.filters.join('|')})`, 'i');
-		json.results = json.results.filter(item => reg.test(item.package.name));
+		const packageNameRex = new RegExp(`/(${opts.filters.join('|')})`, 'i');
+		json.results = json.results.filter(item => packageNameRex.test(item.package.name));
 		resolve(json);
 	});
 };
@@ -150,10 +154,6 @@ const getPackagesSearchURI = subject => {
  */
 const validateOptions = opts => {
 	return new Promise((resolve, reject) => {
-		if (opts.scope && opts.scope.startsWith('@')) {
-			opts.scope = opts.scope.substr(1);
-		}
-
 		if (!Array.isArray(opts.filters)) {
 			reject(new Error(`Filters parameter must be of type \`array\`, found \`${typeof opts.filters}\``));
 		}
@@ -167,6 +167,19 @@ const validateOptions = opts => {
 };
 
 /**
+ * Removes any scope prefix
+ * @private
+ * @param {String} scope search scope
+ * @param {String} scope search scope with any scope prefix removed
+ */
+const normaliseScopePrefix = scope => {
+	if (scope.startsWith('@')) {
+		scope = scope.substr(1);
+	}
+	return scope;
+};
+
+/**
  * Get all non-deprecated packages for a scope, with additional filtering
  * @param {Object} defaults
  * @return {Promise<Array>}
@@ -177,13 +190,13 @@ module.exports = ({
 	versions = false
 } = {}) => (
 	validateOptions({
-		scope: scope,
+		scope: normaliseScopePrefix(scope),
 		filters: filters,
 		versions: versions
 	})
 		.then(opts => fetch(getPackagesSearchURI(opts.scope)))
 		.then(response => response.json())
-		.then(json => filterResults(json, {scope: scope, filters: filters}))
+		.then(json => filterResults(json, {scope: normaliseScopePrefix(scope), filters: filters}))
 		.then(json => getVersions(json, versions))
 		.then(json => setStatus(json))
 		.then(json => _.flow(
