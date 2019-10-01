@@ -72,7 +72,7 @@ describe('Get a list of scoped packages', () => {
 		).resolves.toEqual(response.objects);
 	});
 
-	test('Get all packages when setting scope', () => {
+	test('Get all packages when setting "at"-scope', () => {
 		fetch.mockResponses(
 			[JSON.stringify(mockSearchResults), {status: 200}],
 			[JSON.stringify(mockPackageResults['a-package-name']), {status: 200}],
@@ -84,6 +84,21 @@ describe('Get a list of scoped packages', () => {
 		expect.assertions(1);
 		return expect(
 			getPackages({scope: '@springernature'})
+		).resolves.toEqual(mockResponse.objects);
+	});
+
+	test('Get all packages when setting scope', () => {
+		fetch.mockResponses(
+			[JSON.stringify(mockSearchResults), {status: 200}],
+			[JSON.stringify(mockPackageResults['a-package-name']), {status: 200}],
+			[JSON.stringify(mockPackageResults['a-nother-package-name']), {status: 200}],
+			[JSON.stringify(mockPackageResults['b-package-name']), {status: 200}],
+			[JSON.stringify(mockPackageResults['c-package-name']), {status: 200}]
+		);
+
+		expect.assertions(1);
+		return expect(
+			getPackages({scope: 'springernature'})
 		).resolves.toEqual(mockResponse.objects);
 	});
 
