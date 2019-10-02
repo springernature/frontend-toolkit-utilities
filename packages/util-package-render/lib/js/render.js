@@ -11,9 +11,9 @@ const api = async packageRoot => {
 	try {
 		path = file.sanitisePath(packageRoot);
 		console.log(`PATH=${path}`);
-		packageJSON = require(`${packageRoot}/package.json`);
+		packageJSON = require(`${packageRoot}package.json`);
 	} catch (error) {
-		return error;
+		console.error(error);
 	}
 
 	if (packageJSON.peerDependencies) {
@@ -26,7 +26,6 @@ const api = async packageRoot => {
 		}
 	}
 
-	/*
 	const transpiledPackageJS = await jsHelper(path);
 	const compiledPackageCSS = await sassHelper(path);
 
@@ -35,7 +34,6 @@ const api = async packageRoot => {
 		js: transpiledPackageJS,
 		css: compiledPackageCSS
 	}));
-	*/
 };
 
 module.exports = api;
