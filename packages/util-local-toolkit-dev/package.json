@@ -1,0 +1,25 @@
+{
+  "name": "util-local-toolkit-dev",
+  "version": "0.0.1",
+  "description": "Create symbolic links to toolkit packages for local development",
+  "author": "Alex kilgour",
+  "license": "MIT",
+  "main": "./lib/js/index.js",
+  "keywords": [
+    "dev",
+    "cli",
+    "packages",
+    "toolkits",
+    "local"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/springernature/frontend-toolkit-utilities.git"
+  },
+  "homepage": "https://github.com/springernature/frontend-toolkit-utilities/tree/master/packages/util-local-toolkit-dev#readme",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+  }
+}
