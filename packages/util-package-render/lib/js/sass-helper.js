@@ -16,7 +16,7 @@ const api = async packageRoot => {
 		data: packageSASS,
 		outputStyle: 'expanded',
 		includePaths: [
-			path.join(packageRoot, './node_modules')
+			path.join(packageRoot, './demo') // so that relative @import paths in demo/main.scss resolve
 		]
 	});
 
