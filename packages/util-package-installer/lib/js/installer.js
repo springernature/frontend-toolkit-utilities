@@ -86,12 +86,14 @@ module.exports = {
 	/**
 	 * Helper to install just the devDependencies in a parsed package.json
 	 * @param  {PackageJSON} packageJSON={}
+	 * TODO: should pass --save-dev flag
 	 */
 	devDependencies: async (packageJSON = {}) => module.exports.dependenciesObject(packageJSON.devDependencies),
 
 	/**
 	 * Helper to install just the peerDependencies in a parsed package.json
 	 * @param  {PackageJSON} packageJSON={}
+	 * TODO: this will mangle the depedencies
 	 */
 	peerDependencies: async (packageJSON = {}) => module.exports.dependenciesObject(packageJSON.peerDependencies),
 
