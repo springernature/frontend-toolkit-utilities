@@ -5,8 +5,5 @@
   "license": "MIT",
   "peerDependencies": {
     "@springernature/nature-context": "^0.2.0"
-  },
-  "dependencies": {
-    "@springernature/nature-context": "~0.2.0"
   }
 }
