@@ -1,9 +1,12 @@
 {
-  "name": "@springernature/global-article",
+  "name": "@springernature/nature-mock-component",
   "version": "2.2.3",
-  "description": "Frontend package for article display",
+  "description": "A mock component for testing the component renderer",
   "license": "MIT",
   "peerDependencies": {
-    "@springernature/global-context": "^0.0.2"
+    "@springernature/nature-context": "^0.2.0"
+  },
+  "dependencies": {
+    "@springernature/nature-context": "~0.2.0"
   }
 }
