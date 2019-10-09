@@ -90,4 +90,25 @@ describe('Reporting configuration', () => {
 		expect.assertions(1);
 		expect(consoleOutput).toEqual('fail type this is my message');
 	});
+
+	test('prints to cli from `info` method, without optional message', () => {
+		reporter.info('type');
+
+		expect.assertions(1);
+		expect(consoleOutput).toEqual('info type');
+	});
+
+	test('prints to cli from `success` method, without optional message', () => {
+		reporter.success('type');
+
+		expect.assertions(1);
+		expect(consoleOutput).toEqual('success type');
+	});
+
+	test('prints to cli from `fail` method, without optional message', () => {
+		reporter.fail('type');
+
+		expect.assertions(1);
+		expect(consoleOutput).toEqual('fail type');
+	});
 });
