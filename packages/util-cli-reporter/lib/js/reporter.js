@@ -52,7 +52,7 @@ function configureOutput(type, description, message, comment) {
 	return `
 		${colors[type](type)}
 		${colors.description(description)}
-		${colors.message(message)}
+		${(message) ? colors.message(message) : ''}
 		${(comment) ? colors.comment(comment) : ''}
 	`
 		.replace(/\n/g, ' ').trim();
@@ -65,7 +65,7 @@ function configureOutput(type, description, message, comment) {
  * @param {String} message the main message
  * @param {String} comment additional comment (optional)
  */
-report.info = (description, message, comment = null) => {
+report.info = (description, message = null, comment = null) => {
 	console.log(
 		cleanWhitespace(
 			configureOutput('info', description, message, comment)
@@ -80,7 +80,7 @@ report.info = (description, message, comment = null) => {
  * @param {String} message the main message
  * @param {String} comment additional comment (optional)
  */
-report.success = (description, message, comment = null) => {
+report.success = (description, message = null, comment = null) => {
 	console.log(
 		cleanWhitespace(
 			configureOutput('success', description, message, comment)
@@ -95,7 +95,7 @@ report.success = (description, message, comment = null) => {
  * @param {String} message the main message
  * @param {String} comment additional comment (optional)
  */
-report.fail = (description, message, comment = null) => {
+report.fail = (description, message = null, comment = null) => {
 	console.log(
 		cleanWhitespace(
 			configureOutput('fail', description, message, comment)
