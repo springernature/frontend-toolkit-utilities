@@ -2,3 +2,4 @@
 **/coverage/*
 **/node_modules/*
 **/docs/*
+**/util-package-render/__mocks__/apackage/demo/*

@@ -40,8 +40,8 @@ const api = async packageRoot => {
 	const fullPath = path.join(distFolder, 'index.html');
 	try {
 		const distFolderExists = await file.isDir(distFolder);
-		if (! distFolderExists) {
-			fs.mkdir(distFolder)
+		if (!distFolderExists) {
+			fs.mkdir(distFolder);
 		}
 
 		await fs.writeFile(fullPath, html);
