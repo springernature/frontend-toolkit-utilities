@@ -57,7 +57,7 @@ function configureOutput(type, description, message, comment) {
 		${colors[type](type) + ' '}
 		${colors.description(description) + ' '}
 		${(message) ? colors.message(message) + ' ' : ''}
-		${(comment) ? colors.comment(comment) + ' ' : ''}
+		${(comment) ? colors.comment(comment) : ''}
 	`
 		.replace(/\n/g, '').trim();
 }
