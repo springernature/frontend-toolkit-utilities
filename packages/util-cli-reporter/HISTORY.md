@@ -2,6 +2,7 @@
 
 ## 1.1.0 (2019-10-14)
 	* Add customisable logging levels
+	* Fix a spacing bug when you have a comment but no message
 
 ## 1.0.0 (2019-10-09)
 	* Allow the message to be optional
