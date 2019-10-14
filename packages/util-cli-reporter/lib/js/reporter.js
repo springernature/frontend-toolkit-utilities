@@ -54,12 +54,12 @@ function configureTitle(string) {
  */
 function configureOutput(type, description, message, comment) {
 	return `
-		${colors[type](type)}
-		${colors.description(description)}
-		${(message) ? colors.message(message) : ''}
-		${(comment) ? colors.comment(comment) : ''}
+		${colors[type](type) + ' '}
+		${colors.description(description) + ' '}
+		${(message) ? colors.message(message) + ' ' : ''}
+		${(comment) ? colors.comment(comment) + ' ' : ''}
 	`
-		.replace(/\n/g, ' ').trim();
+		.replace(/\n/g, '').trim();
 }
 
 /**

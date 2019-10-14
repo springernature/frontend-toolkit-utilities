@@ -139,6 +139,40 @@ describe('Reporting configuration - no message', () => {
 	});
 });
 
+describe('Reporting configuration - no message, but comment', () => {
+	const originalLog = console.log;
+	const mockedLog = output => consoleOutput = stripAnsi(output);
+
+	let consoleOutput = '';
+
+	beforeEach(() => console.log = mockedLog);
+	afterEach(() => {
+		console.log = originalLog;
+		consoleOutput = '';
+	});
+
+	test('prints to cli from `fail` method', () => {
+		reporter.fail('type', null, 'comment');
+
+		expect.assertions(1);
+		expect(consoleOutput).toEqual('fail type comment');
+	});
+
+	test('prints to cli from `success` method', () => {
+		reporter.success('type', null, 'comment');
+
+		expect.assertions(1);
+		expect(consoleOutput).toEqual('success type comment');
+	});
+
+	test('prints to cli from `info` method', () => {
+		reporter.info('type', null, 'comment');
+
+		expect.assertions(1);
+		expect(consoleOutput).toEqual('info type comment');
+	});
+});
+
 describe('Reporting configuration - level=title', () => {
 	const originalLog = console.log;
 	const mockedLog = output => consoleOutput = stripAnsi(output);
