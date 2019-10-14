@@ -43,14 +43,13 @@ const args = {
 
 const myAutoComplete = autoComplete(args);
 
-// hack this for the demo
+// hack window.fetch for local demoimg
 const response = {
 	status: 200,
 	ok: true,
 	json: () => {
 		const term = window.lastQuery.replace(args.endPoint, '').toLowerCase();
-		const result = animals.filter(animal => animal.toLowerCase().includes(term));
-		return result;
+		return animalsList.filter(animal => animal.toLowerCase().includes(term));
 	}
 }
 window.fetch = (endPointAndTerm) => {
@@ -60,7 +59,7 @@ window.fetch = (endPointAndTerm) => {
 
 myAutoComplete.enable();
 
-const animals = [
+const animalsList = [
 'Aardvark',
 'Aardwolf',
 'African buffalo',
