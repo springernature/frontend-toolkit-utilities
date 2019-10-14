@@ -7,6 +7,7 @@
 const chalk = require('chalk');
 
 const report = {};
+const loggingLevels = ['none', 'fail', 'success', 'info', 'title'];
 const colors = {
 	info: chalk.green,
 	success: chalk.green.bold,
@@ -15,6 +16,9 @@ const colors = {
 	message: chalk.white,
 	comment: chalk.white.dim
 };
+
+// Defaults to info
+let logLevel = 4;
 
 /**
  * Clean whitespace from output
@@ -60,17 +64,19 @@ function configureOutput(type, description, message, comment) {
 
 /**
  * Output to CLI
- * Type: Info
+ * Type: Fail
  * @param {String} description output description
  * @param {String} [message=null] the main message
  * @param {String} [comment=null] additional comment
  */
-report.info = (description, message = null, comment = null) => {
-	console.log(
-		cleanWhitespace(
-			configureOutput('info', description, message, comment)
-		)
-	);
+report.fail = (description, message = null, comment = null) => {
+	if (logLevel >= 1) {
+		console.log(
+			cleanWhitespace(
+				configureOutput('fail', description, message, comment)
+			)
+		);
+	}
 };
 
 /**
@@ -81,26 +87,30 @@ report.info = (description, message = null, comment = null) => {
  * @param {String} [comment=null] additional comment
  */
 report.success = (description, message = null, comment = null) => {
-	console.log(
-		cleanWhitespace(
-			configureOutput('success', description, message, comment)
-		)
-	);
+	if (logLevel >= 2) {
+		console.log(
+			cleanWhitespace(
+				configureOutput('success', description, message, comment)
+			)
+		);
+	}
 };
 
 /**
  * Output to CLI
- * Type: Fail
+ * Type: Info
  * @param {String} description output description
  * @param {String} [message=null] the main message
  * @param {String} [comment=null] additional comment
  */
-report.fail = (description, message = null, comment = null) => {
-	console.log(
-		cleanWhitespace(
-			configureOutput('fail', description, message, comment)
-		)
-	);
+report.info = (description, message = null, comment = null) => {
+	if (logLevel >= 3) {
+		console.log(
+			cleanWhitespace(
+				configureOutput('info', description, message, comment)
+			)
+		);
+	}
 };
 
 /**
@@ -109,11 +119,24 @@ report.fail = (description, message = null, comment = null) => {
  * @param {String} string the title text to output
  */
 report.title = string => {
-	console.log(
-		cleanWhitespace(
-			configureTitle(string)
-		)
-	);
+	if (logLevel >= 4) {
+		console.log(
+			cleanWhitespace(
+				configureTitle(string)
+			)
+		);
+	}
+};
+
+/**
+ * Initialise with a logging level
+ * Optional, assumes info if not called
+ * @param {String} level none (0), fail (1), success (2), info (3), title (4)
+ */
+report.init = level => {
+	if (loggingLevels.includes(level)) {
+		logLevel = loggingLevels.indexOf(level);
+	}
 };
 
 module.exports = report;
