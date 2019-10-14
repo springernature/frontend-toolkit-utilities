@@ -1,4 +1,6 @@
 'use strict';
+const fs = require('fs').promises;
+const path = require('path');
 const npmInstall = require('@springernature/util-package-installer');
 const handlebarsHelper = require('./handlebars-helper');
 const jsHelper = require('./js-helper');
@@ -6,11 +8,11 @@ const sassHelper = require('./sass-helper');
 const file = require('./utils/file');
 
 const api = async packageRoot => {
-	let path;
+	let packageRootPath;
 	let packageJSON;
 	try {
-		path = file.sanitisePath(packageRoot);
-		console.log(`PATH=${path}`);
+		packageRootPath = file.sanitisePath(packageRoot);
+		console.log(`PATH=${packageRootPath}`);
 		packageJSON = require(`${packageRoot}package.json`);
 	} catch (error) {
 		console.error(error);
@@ -26,14 +28,30 @@ const api = async packageRoot => {
 		}
 	}
 
-	const transpiledPackageJS = await jsHelper(path);
-	const compiledPackageCSS = await sassHelper(path);
-
-	console.log(await handlebarsHelper({
-		path: path,
+	const transpiledPackageJS = await jsHelper(packageRootPath);
+	const compiledPackageCSS = await sassHelper(packageRootPath);
+	const html = await handlebarsHelper({
+		path: packageRootPath,
 		js: transpiledPackageJS,
 		css: compiledPackageCSS
-	}));
+	});
+
+	const distFolder = 'dist/';
+	const fullPath = path.join(distFolder, 'index.html');
+	try {
+		const distFolderExists = await file.isDir(distFolder);
+		if (! distFolderExists) {
+			fs.mkdir(distFolder)
+		}
+
+		await fs.writeFile(fullPath, html);
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
+
+	const sizeInBytes = await file.getSizeInBytes(fullPath);
+	console.log(`written to ${fullPath}, size ${sizeInBytes}`);
 };
 
 module.exports = api;

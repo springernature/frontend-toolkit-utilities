@@ -1,6 +1,7 @@
 'use strict';
 const fs = require('fs').promises;
 const path = require('path');
+const filesize = require('filesize');
 
 const api = {
 
@@ -33,6 +34,30 @@ const api = {
 		// allow alphanumerics & underscore, hyphen, dot, fwd slash
 		candidate = candidate.replace(/[^\w-./]+/g, '');
 		return candidate;
+	},
+
+	isDir: async (possibleDir = '') => {
+		let result = false;
+		try {
+			result = await fs.stat(possibleDir);
+		} catch (error) {
+			if (error.code !== 'ENOENT') {
+				throw error;
+			}
+		}
+
+		return (typeof result.isDirectory === 'function') ? result.isDirectory() : false;
+	},
+
+	getSizeInBytes: async (pathAndFile = '') => {
+		let stats;
+		try {
+			stats = await fs.stat(pathAndFile);
+		} catch (error) {
+			throw error;
+		}
+		// https://www.npmjs.com/package/filesize
+		return filesize(stats.size);
 	}
 };
 
