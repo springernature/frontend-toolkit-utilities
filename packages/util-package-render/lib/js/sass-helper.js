@@ -1,3 +1,4 @@
+'use strict';
 const path = require('path');
 const sass = require('node-sass');
 const file = require('./utils/file');

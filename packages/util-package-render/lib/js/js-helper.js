@@ -1,3 +1,4 @@
+'use strict';
 const babel = require('@babel/core');
 const file = require('./utils/file');
 
