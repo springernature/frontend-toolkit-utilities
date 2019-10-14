@@ -1,5 +1,8 @@
 # History
 
+## 1.1.0 (2019-10-14)
+	* Add customisable logging levels
+
 ## 1.0.0 (2019-10-09)
 	* Allow the message to be optional
 	* Major version as used in production on package manager
