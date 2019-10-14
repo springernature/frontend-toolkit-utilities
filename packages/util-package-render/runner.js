@@ -1,3 +1,6 @@
+'use strict';
+
+// Sample usage, useful when working on the renderer itself
 const path = require('path');
 const render = require('./lib/js/render'); // eslint-disable-line unicorn/import-index
 
