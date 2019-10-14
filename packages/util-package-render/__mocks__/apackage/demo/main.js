@@ -42,4 +42,14 @@ const args = {
 };
 
 const myAutoComplete = autoComplete(args);
+
+// hack this for the demo
+const response = {
+	status: 200,
+	ok: true,
+	json: () => ['cat']
+}
+window.fetch = term => Promise.resolve(response)
+// end hack
+
 myAutoComplete.enable();
