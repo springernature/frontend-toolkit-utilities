@@ -4,7 +4,7 @@ module.exports = (key, content) => {
 	<head>
 		<meta charset="utf-8">
 		<title>{{${key}.title}}</title>
-		<script>
+		<script type="module">
 			{{{${key}.script}}}
 		</script>
 		<style>
