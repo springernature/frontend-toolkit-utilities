@@ -1,3 +1,4 @@
+'use strict';
 const Handlebars = require('handlebars');
 const file = require('./utils/file');
 const rootTemplate = require('./template');
