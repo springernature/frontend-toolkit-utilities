@@ -130,12 +130,14 @@ report.title = string => {
 
 /**
  * Initialise with a logging level
- * Optional, assumes info if not called
+ * Defaults to title
  * @param {String} level none (0), fail (1), success (2), info (3), title (4)
  */
 report.init = level => {
 	if (loggingLevels.includes(level)) {
 		logLevel = loggingLevels.indexOf(level);
+	} else {
+		logLevel = 4;
 	}
 };
 
