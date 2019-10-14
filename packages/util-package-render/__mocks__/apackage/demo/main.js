@@ -1,4 +1,4 @@
-import autoComplete from '../js/';
+import {autoComplete} from '../js/';
 
 const showResults = results => {
 	// Update UI with results returned from server, e.g.

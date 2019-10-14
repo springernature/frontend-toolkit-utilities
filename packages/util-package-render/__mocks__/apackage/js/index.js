@@ -201,4 +201,4 @@ const autoComplete = args => {
 	};
 };
 
-module.exports = autoComplete;
+export {autoComplete};
