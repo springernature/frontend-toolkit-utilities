@@ -8,7 +8,7 @@ module.exports = (key, content) => {
 			{{{${key}.script}}}
 		</script>
 		<style>
-			{{${key}.style}}
+			{{{${key}.style}}}
 		</style>
 	</head>
 	<body>

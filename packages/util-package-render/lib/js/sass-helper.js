@@ -16,6 +16,8 @@ const api = async packageRoot => {
 	const result = sass.renderSync({
 		data: packageSASS,
 		outputStyle: 'expanded',
+		indentType: "tab",
+		indentWidth: 1,
 		includePaths: [
 			path.join(packageRoot, './demo') // so that relative @import paths in demo/main.scss resolve
 		]
