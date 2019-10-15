@@ -16,6 +16,18 @@ const colors = {
 	comment: chalk.white.dim
 };
 
+// Logging levels
+const logging = {
+	TITLE: 4,
+	INFO: 3,
+	SUCCESS: 2,
+	FAIL: 1,
+	NONE: 0
+};
+
+// Default logging level
+let logLevel = 4;
+
 /**
  * Clean whitespace from output
  * Keeps reporter code a little cleaner
@@ -49,28 +61,33 @@ function configureTitle(string) {
  * @return {String}
  */
 function configureOutput(type, description, message, comment) {
-	return `
-		${colors[type](type)}
-		${colors.description(description)}
-		${(message) ? colors.message(message) : ''}
-		${(comment) ? colors.comment(comment) : ''}
-	`
-		.replace(/\n/g, ' ').trim();
+	type = colors[type](type);
+	description = colors.description(description);
+	message = (message) ? colors.message(message) : null;
+	comment = (comment) ? colors.comment(comment) : null;
+
+	// Concatenate non-null strings
+	return [type, description, message, comment]
+		.filter(Boolean)
+		.join(' ')
+		.trim('');
 }
 
 /**
  * Output to CLI
- * Type: Info
+ * Type: Fail
  * @param {String} description output description
  * @param {String} [message=null] the main message
  * @param {String} [comment=null] additional comment
  */
-report.info = (description, message = null, comment = null) => {
-	console.log(
-		cleanWhitespace(
-			configureOutput('info', description, message, comment)
-		)
-	);
+report.fail = (description, message = null, comment = null) => {
+	if (logLevel >= logging.FAIL) {
+		console.log(
+			cleanWhitespace(
+				configureOutput('fail', description, message, comment)
+			)
+		);
+	}
 };
 
 /**
@@ -81,26 +98,30 @@ report.info = (description, message = null, comment = null) => {
  * @param {String} [comment=null] additional comment
  */
 report.success = (description, message = null, comment = null) => {
-	console.log(
-		cleanWhitespace(
-			configureOutput('success', description, message, comment)
-		)
-	);
+	if (logLevel >= logging.SUCCESS) {
+		console.log(
+			cleanWhitespace(
+				configureOutput('success', description, message, comment)
+			)
+		);
+	}
 };
 
 /**
  * Output to CLI
- * Type: Fail
+ * Type: Info
  * @param {String} description output description
  * @param {String} [message=null] the main message
  * @param {String} [comment=null] additional comment
  */
-report.fail = (description, message = null, comment = null) => {
-	console.log(
-		cleanWhitespace(
-			configureOutput('fail', description, message, comment)
-		)
-	);
+report.info = (description, message = null, comment = null) => {
+	if (logLevel >= logging.INFO) {
+		console.log(
+			cleanWhitespace(
+				configureOutput('info', description, message, comment)
+			)
+		);
+	}
 };
 
 /**
@@ -109,11 +130,29 @@ report.fail = (description, message = null, comment = null) => {
  * @param {String} string the title text to output
  */
 report.title = string => {
-	console.log(
-		cleanWhitespace(
-			configureTitle(string)
-		)
-	);
+	if (logLevel >= logging.TITLE) {
+		console.log(
+			cleanWhitespace(
+				configureTitle(string)
+			)
+		);
+	}
+};
+
+/**
+ * Initialise with a logging level
+ * Defaults to title
+ * @param {String} level none (0), fail (1), success (2), info (3), title (4)
+ */
+report.init = level => {
+	const levelUp = level.toUpperCase();
+
+	// Set if valid level
+	if (Object.prototype.hasOwnProperty.call(logging, levelUp)) {
+		logLevel = logging[levelUp];
+	} else {
+		logLevel = 4;
+	}
 };
 
 module.exports = report;
