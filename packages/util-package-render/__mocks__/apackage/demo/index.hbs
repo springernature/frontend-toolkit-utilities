@@ -2,12 +2,17 @@
 
 <p>{{data}}</p>
 
-<div class="c-autocomplete">
-	<form action="#endpoint" method="post" id="searchForm">
-		<label>Search for an Animal: <input type="text" autocomplete="off" data-component-autocomplete></label>
-		<button type="submit">Search</button>
-	</form>
-</div>
+<form action="#endpoint" method="post" id="searchForm" class="c-autocomplete-form">
+	<div>
+		<label for="searchFormTextInput" class="c-autocomplete-form__label">Search for an Animal:</label>
+		<input type="text"
+			autocomplete="off"
+			data-component-autocomplete
+			id="searchFormTextInput"
+			class="c-autocomplete">
+	</div>
+	<button type="submit">Search</button>
+</form>
 
 <!--
 	TODO
