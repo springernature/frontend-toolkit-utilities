@@ -21,15 +21,15 @@ const api = async packageRoot => {
 		throw error;
 	}
 
-	// output as ES module file, suitable as inclusion as a <script type=module> tag in modern browsers
-	const output = await bundle.generate({
+	// output as ES module file, for inclusion in a <script type="module"> tag
+	const rollupOutput = await bundle.generate({
 		output: {
 			format: 'esm'
 		}
 	});
 
 	let outputBuffer = '';
-	output.output.forEach(chunkOrAsset => {
+	rollupOutput.output.forEach(chunkOrAsset => {
 		if (chunkOrAsset.type === 'asset') {
 			// TODO not sure what this could be?
 		} else {
