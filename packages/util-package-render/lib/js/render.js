@@ -17,7 +17,7 @@ const api = async packageRoot => {
 	} catch (error) {
 		console.error(error);
 	}
-/*
+
 	if (packageJSON.peerDependencies) {
 		let installResult;
 		try {
@@ -27,7 +27,7 @@ const api = async packageRoot => {
 			console.log(`CLIENT ERRORING RESULT: ${error}`);
 		}
 	}
-*/
+
 	const transpiledPackageJS = await jsHelper(packageRootPath);
 	const compiledPackageCSS = await sassHelper(packageRootPath);
 	const html = await handlebarsHelper({
