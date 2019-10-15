@@ -53,13 +53,16 @@ function configureTitle(string) {
  * @return {String}
  */
 function configureOutput(type, description, message, comment) {
-	return `
-		${colors[type](type) + ' '}
-		${colors.description(description) + ' '}
-		${(message) ? colors.message(message) + ' ' : ''}
-		${(comment) ? colors.comment(comment) : ''}
-	`
-		.replace(/\n/g, '').trim();
+	type = colors[type](type);
+	description = colors.description(description);
+	message = (message) ? colors.message(message) : null;
+	comment = (comment) ? colors.comment(comment) : null;
+
+	// Concatenate non-null strings
+	return [type, description, message, comment]
+		.filter(Boolean)
+		.join(' ')
+		.trim('');
 }
 
 /**
