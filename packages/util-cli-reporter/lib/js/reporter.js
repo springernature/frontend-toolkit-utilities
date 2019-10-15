@@ -7,7 +7,6 @@
 const chalk = require('chalk');
 
 const report = {};
-const loggingLevels = ['none', 'fail', 'success', 'info', 'title'];
 const colors = {
 	info: chalk.green,
 	success: chalk.green.bold,
@@ -17,7 +16,16 @@ const colors = {
 	comment: chalk.white.dim
 };
 
-// Defaults to info
+// Logging levels
+const logging = {
+	TITLE: 4,
+	INFO: 3,
+	SUCCESS: 2,
+	FAIL: 1,
+	NONE: 0
+};
+
+// Default logging level
 let logLevel = 4;
 
 /**
@@ -73,7 +81,7 @@ function configureOutput(type, description, message, comment) {
  * @param {String} [comment=null] additional comment
  */
 report.fail = (description, message = null, comment = null) => {
-	if (logLevel >= 1) {
+	if (logLevel >= logging.FAIL) {
 		console.log(
 			cleanWhitespace(
 				configureOutput('fail', description, message, comment)
@@ -90,7 +98,7 @@ report.fail = (description, message = null, comment = null) => {
  * @param {String} [comment=null] additional comment
  */
 report.success = (description, message = null, comment = null) => {
-	if (logLevel >= 2) {
+	if (logLevel >= logging.SUCCESS) {
 		console.log(
 			cleanWhitespace(
 				configureOutput('success', description, message, comment)
@@ -107,7 +115,7 @@ report.success = (description, message = null, comment = null) => {
  * @param {String} [comment=null] additional comment
  */
 report.info = (description, message = null, comment = null) => {
-	if (logLevel >= 3) {
+	if (logLevel >= logging.INFO) {
 		console.log(
 			cleanWhitespace(
 				configureOutput('info', description, message, comment)
@@ -122,7 +130,7 @@ report.info = (description, message = null, comment = null) => {
  * @param {String} string the title text to output
  */
 report.title = string => {
-	if (logLevel >= 4) {
+	if (logLevel >= logging.TITLE) {
 		console.log(
 			cleanWhitespace(
 				configureTitle(string)
@@ -137,8 +145,11 @@ report.title = string => {
  * @param {String} level none (0), fail (1), success (2), info (3), title (4)
  */
 report.init = level => {
-	if (loggingLevels.includes(level)) {
-		logLevel = loggingLevels.indexOf(level);
+	const levelUp = level.toUpperCase();
+
+	// Set if valid level
+	if (Object.prototype.hasOwnProperty.call(logging, levelUp)) {
+		logLevel = logging[levelUp];
 	} else {
 		logLevel = 4;
 	}
