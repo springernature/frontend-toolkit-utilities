@@ -2,9 +2,12 @@
 
 <p>{{data}}</p>
 
-<form>
-	<label>Search for an Animal: <input type="text" autocomplete="off" data-component-autocomplete></label>
-</form>
+<div class="c-autocomplete">
+	<form action="#endpoint" method="post" id="searchForm">
+		<label>Search for an Animal: <input type="text" autocomplete="off" data-component-autocomplete></label>
+		<button type="submit">Search</button>
+	</form>
+</div>
 
 <!--
 	TODO

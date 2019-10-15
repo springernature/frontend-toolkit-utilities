@@ -57,6 +57,10 @@ window.fetch = (endPointAndTerm) => {
 	return Promise.resolve(response);
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+	document.querySelector('#searchForm button').style.display = 'none';
+})
+
 myAutoComplete.enable();
 
 const animalsList = [
