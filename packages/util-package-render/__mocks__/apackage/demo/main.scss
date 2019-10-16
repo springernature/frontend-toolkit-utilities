@@ -2,7 +2,7 @@
 
 // we must not add node modules to the SASS includePaths config,
 //   so do relative paths in this file. Paths should be relative to this file.
-@import '../node_modules/@springernature/nature-context/scss/enhanced.scss';
+@import '../node_modules/@springernature/global-context/scss/enhanced.scss';
 
 // component SCSS
 @import '../scss/index.scss';

@@ -4,6 +4,6 @@
   "description": "A mock component for testing the component renderer",
   "license": "MIT",
   "peerDependencies": {
-    "@springernature/nature-context": "^0.2.0"
+    "@springernature/global-context": "^5.0.0"
   }
 }
