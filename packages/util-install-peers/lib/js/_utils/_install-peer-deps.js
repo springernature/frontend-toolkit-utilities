@@ -1,19 +1,17 @@
 /**
  * _install-peers-deps.js
- * Check for peer dependencies and install
+ * Install peer dependencies
  */
 'use strict';
 
-const fs = require('fs');
 const path = require('path');
-const util = require('util');
 const reporter = require('@springernature/util-cli-reporter');
 const spawnShell = require('spawn-shell');
 
-const access = util.promisify(fs.access);
+const managePeerDeps = require('./_manage-peer-deps');
 
+let logLevel = 'silent';
 const rootPath = process.cwd();
-const installCommand = 'npm install --no-save --no-package-lock';
 const installationReport = {
 	noPeerDeps: [],
 	success: [],
@@ -21,25 +19,8 @@ const installationReport = {
 };
 
 /**
- * Format the peer dependencies into an installation string
- * @function formatPeerDeps
- * @param {Object} peerDependencies details of peerDependencies
- * @return {Promise<String>}
- */
-function formatPeerDeps(peerDependencies) {
-	let peerDeps;
-
-	if (typeof peerDependencies === 'object' && !Array.isArray(peerDependencies)) {
-		peerDeps = Object.keys(peerDependencies).map(function (name) {
-			return name + '@' + peerDependencies[name];
-		});
-	}
-
-	return peerDeps.map(pkg => `"${pkg}"`).join(' ');
-}
-
-/**
  * Install the peer dependencies
+ * @private
  * @async
  * @function install
  * @param {String} packagePath path to the package
@@ -51,9 +32,10 @@ async function install(packagePath, peerDependencies) {
 	process.chdir(path.resolve(rootPath, packagePath));
 
 	// Format dependencies for installation
-	const formattedPeerDeps = formatPeerDeps(peerDependencies);
+	const formattedPeerDeps = managePeerDeps.formatPeerDeps(peerDependencies);
 
 	// Install peerDependencies
+	const installCommand = `NPM_CONFIG_LOGLEVEL=${logLevel} npm install --no-save --no-package-lock`;
 	const exitCode = await spawnShell(`${installCommand} ${formattedPeerDeps}`).exitPromise;
 
 	// Switch back to root directory
@@ -64,47 +46,6 @@ async function install(packagePath, peerDependencies) {
 		installationReport.success.push(packagePath);
 	} else {
 		installationReport.failure.push(packagePath);
-	}
-}
-
-/**
- * Get the package.json file as an Object
- * @async
- * @function getPackageJson
- * @param {String} packageJsonPath path to the package.json
- * @return {Promise<Object>}
- */
-async function getPackageJson(packageJsonPath) {
-	try {
-		await access(packageJsonPath);
-		return require(packageJsonPath);
-	} catch (error) {
-		throw new Error('package.json');
-	}
-}
-
-/**
- * Check if a package has peer dependencies
- * @async
- * @function checkForPeerDeps
- * @param {String} packagePath path to the package
- * @return {Promise<Object>}
- */
-async function checkForPeerDeps(packagePath) {
-	try {
-		// Check package.json file exists for package
-		const packageJsonPath = path.resolve(rootPath, packagePath, 'package.json');
-		const packageDetails = await getPackageJson(packageJsonPath);
-
-		// Check package has peerDependencies
-		if (!packageDetails.peerDependencies) {
-			throw new Error('peerDependencies');
-		}
-
-		return packageDetails.peerDependencies;
-	} catch (error) {
-		installationReport.noPeerDeps.push(packagePath);
-		throw error;
 	}
 }
 
@@ -121,14 +62,21 @@ async function installPackagePeerDeps(allPackages, toolkitFolderName, packagesFo
 	const pattern = `^${toolkitFolderName}/.+/${packagesFolderName}/`;
 	const pathToPackage = new RegExp(pattern);
 
+	// Set the NPM logging level if debugging is on
+	if (debug) {
+		logLevel = 'info';
+	}
+
 	reporter.info('installing', 'peerDependencies...\n');
 
 	await Promise.all(
 		allPackages.map(async packagePath => {
 			try {
-				const peerDependencies = await checkForPeerDeps(packagePath);
+				const peerDependencies = await managePeerDeps.checkForPeerDeps(packagePath, rootPath);
 				await install(packagePath, peerDependencies);
 			} catch (error) {
+				installationReport.noPeerDeps.push(packagePath);
+
 				if (debug) {
 					reporter.fail('not found', error.message, packagePath);
 				}
@@ -136,6 +84,7 @@ async function installPackagePeerDeps(allPackages, toolkitFolderName, packagesFo
 		})
 	);
 
+	// Report the results
 	reporter.info('found no peerDependencies', `${installationReport.noPeerDeps.length} packages`);
 	reporter.info('installed peerDependencies', `${installationReport.success.length} packages`);
 	reporter.info('failed to install peerDependencies', `${installationReport.failure.length} packages`);
