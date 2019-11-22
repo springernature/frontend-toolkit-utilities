@@ -1,0 +1,32 @@
+{
+  "name": "util-install-peers",
+  "version": "0.0.1",
+  "description": "Automatically install peer dependencies for packages",
+  "main": "lib/js/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/springernature/frontend-toolkit-utilities.git"
+  },
+  "keywords": [
+    "cli",
+    "elements",
+    "toolkits",
+    "packages",
+    "peerDependency"
+  ],
+  "author": "Alex Kilgour",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/springernature/frontend-toolkit-utilities/issues"
+  },
+  "homepage": "https://github.com/springernature/frontend-toolkit-utilities#readme",
+  "dependencies": {
+    "@springernature/util-cli-reporter": "^1.1.0",
+    "globby": "^10.0.1",
+    "spawn-shell": "^2.1.0",
+    "yargs": "^15.0.2"
+  }
+}
