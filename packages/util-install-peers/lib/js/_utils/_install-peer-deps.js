@@ -67,7 +67,7 @@ async function installPackagePeerDeps(allPackages, toolkitFolderName, packagesFo
 		logLevel = 'info';
 	}
 
-	reporter.info('installing', 'peerDependencies...\n');
+	reporter.info('installing', 'peerDependencies...');
 
 	await Promise.all(
 		allPackages.map(async packagePath => {
@@ -90,18 +90,18 @@ async function installPackagePeerDeps(allPackages, toolkitFolderName, packagesFo
 	reporter.info('failed to install peerDependencies', `${installationReport.failure.length} packages`);
 
 	if (debug && installationReport.noPeerDeps.length > 0) {
-		console.log('\npackages with no peerDependencies:');
-		console.log(installationReport.noPeerDeps.map(path => path.replace(pathToPackage, '')).join(', '));
+		const noPackages = installationReport.noPeerDeps.map(path => path.replace(pathToPackage, '')).join(', ');
+		reporter.info('packages', 'no peerDependencies', noPackages);
 	}
 
 	if (debug && installationReport.success.length > 0) {
-		console.log('\npackages with installed peerDependencies:');
-		console.log(installationReport.success.map(path => path.replace(pathToPackage, '')).join(', '));
+		const successPackages = installationReport.success.map(path => path.replace(pathToPackage, '')).join(', ');
+		reporter.info('packages', 'installed peerDependencies', successPackages);
 	}
 
 	if (debug && installationReport.failure.length > 0) {
-		console.log('\npackages with failed peerDependencies:');
-		console.log(installationReport.failure.map(path => path.replace(pathToPackage, '')).join(', '));
+		const failedPackages = installationReport.failure.map(path => path.replace(pathToPackage, '')).join(', ');
+		reporter.info('packages', 'failed peerDependencies', failedPackages);
 	}
 }
 
