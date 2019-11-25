@@ -50,6 +50,9 @@
     "modulePaths": [
       "<rootDir>/"
     ],
+    "modulePathIgnorePatterns": [
+      "<rootDir>/packages/.*/__mocks__"
+    ],
     "verbose": true,
     "testRegex": "__tests__/.*\\.js$",
     "collectCoverageFrom": [

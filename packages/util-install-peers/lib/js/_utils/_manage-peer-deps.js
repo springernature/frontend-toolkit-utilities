@@ -23,7 +23,7 @@ async function getPackageJson(packageJsonPath) {
 		await access(packageJsonPath);
 		return require(packageJsonPath);
 	} catch (error) {
-		throw new Error('package.json');
+		throw new Error(packageJsonPath);
 	}
 }
 
@@ -56,7 +56,7 @@ function formatPeerDeps(peerDependencies) {
 async function checkForPeerDeps(packagePath, rootPath) {
 	try {
 		// Check package.json file exists for package
-		const packageJsonPath = path.resolve(rootPath, packagePath, 'package.json');
+		const packageJsonPath = path.join(rootPath, packagePath, 'package.json');
 		const packageDetails = await getPackageJson(packageJsonPath);
 
 		// Check package has peerDependencies
