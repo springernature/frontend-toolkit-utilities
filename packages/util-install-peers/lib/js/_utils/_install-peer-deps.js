@@ -29,7 +29,7 @@ const installationReport = {
  */
 async function install(packagePath, peerDependencies) {
 	// Ready to install, switch directories
-	process.chdir(path.resolve(rootPath, packagePath));
+	process.chdir(path.join(rootPath, packagePath));
 
 	// Format dependencies for installation
 	const formattedPeerDeps = managePeerDeps.formatPeerDeps(peerDependencies);
@@ -53,15 +53,11 @@ async function install(packagePath, peerDependencies) {
  * Find peer dependencies and install them locally to each package
  * @async
  * @function installPackagePeerDeps
- * @param {Array} allPackages name of the toolkits folder
- * @param {String} toolkitFolderName name of the toolkits folder
- * @param {String} packagesFolderName name of the packages folder
+ * @param {Array} allPackages array of paths to packages
  * @param {Boolean} debug show debug output
+ * @return {Promise<Object>}
  */
-async function installPackagePeerDeps(allPackages, toolkitFolderName, packagesFolderName, debug) {
-	const pattern = `^${toolkitFolderName}/.+/${packagesFolderName}/`;
-	const pathToPackage = new RegExp(pattern);
-
+async function installPackagePeerDeps(allPackages, debug) {
 	// Set the NPM logging level if debugging is on
 	if (debug) {
 		logLevel = 'info';
@@ -84,25 +80,7 @@ async function installPackagePeerDeps(allPackages, toolkitFolderName, packagesFo
 		})
 	);
 
-	// Report the results
-	reporter.info('found no peerDependencies', `${installationReport.noPeerDeps.length} packages`);
-	reporter.info('installed peerDependencies', `${installationReport.success.length} packages`);
-	reporter.info('failed to install peerDependencies', `${installationReport.failure.length} packages`);
-
-	if (debug && installationReport.noPeerDeps.length > 0) {
-		const noPackages = installationReport.noPeerDeps.map(path => path.replace(pathToPackage, '')).join(', ');
-		reporter.info('packages', 'no peerDependencies', noPackages);
-	}
-
-	if (debug && installationReport.success.length > 0) {
-		const successPackages = installationReport.success.map(path => path.replace(pathToPackage, '')).join(', ');
-		reporter.info('packages', 'installed peerDependencies', successPackages);
-	}
-
-	if (debug && installationReport.failure.length > 0) {
-		const failedPackages = installationReport.failure.map(path => path.replace(pathToPackage, '')).join(', ');
-		reporter.info('packages', 'failed peerDependencies', failedPackages);
-	}
+	return installationReport;
 }
 
 module.exports = installPackagePeerDeps;
