@@ -27,7 +27,7 @@ const installPackagePeerDeps = require('./_utils/_install-peer-deps');
  * @private
  * @function printReport
  * @param {Object} installationReport details of installations & failures
- * @param {String} pathToPackages regex for package base path
+ * @param {Object} pathToPackages regex for package base path
  * @param {Boolean} debug show debug output
  */
 function printReport(installationReport, pathToPackages, debug) {
@@ -67,7 +67,7 @@ function printReport(installationReport, pathToPackages, debug) {
 		reporter.success('found', `${allPackages.length} packages`);
 
 		// Install peerDependencies
-		const installationReport = await installPackagePeerDeps(allPackages, argv.debug);
+		const installationReport = await installPackagePeerDeps(pathToPackages, allPackages, argv.debug);
 
 		// Report to CLI
 		printReport(installationReport, pathToPackages, argv.debug);

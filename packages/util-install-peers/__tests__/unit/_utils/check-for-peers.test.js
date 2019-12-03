@@ -1,6 +1,6 @@
 /**
- * __tests__/unit/_utils/manage-peer-deps.test.js
- * Test: js/_utils/manage-peer-deps.test.js
+ * __tests__/unit/_utils/check-for-peers.test.js
+ * Test: js/_utils/_check-for-peers.js
  */
 'use strict';
 
@@ -25,7 +25,7 @@ jest.mock('path/to/package-no-deps/package.json', () => ({
 
 const MOCK_PACKAGES = mockfs.fs.__fsMockFiles();
 
-let managePeerDeps = require('../../../lib/js/_utils/_manage-peer-deps');
+let checkForPeers = require('../../../lib/js/_utils/_check-for-peers');
 
 describe('Find toolkits within a repository', () => {
 	beforeEach(() => {
@@ -37,30 +37,24 @@ describe('Find toolkits within a repository', () => {
 		mockfs.fs.restore();
 	});
 
-	test('Correctly format list of peerDependencies', () => {
-		const depString = managePeerDeps.formatPeerDeps(mockPeerDeps);
-		expect.assertions(1);
-		expect(depString).toEqual('"dependency-a@5.0.0" "dependency-b@^1.0.2" "dependency-c@~3.4.0" "dependency-d@7.2.1-alpha" "@scope/dependency-e@3.0.0"');
-	});
-
 	test('Get a list of peerDependencies from a package.json file', async () => {
 		expect.assertions(1);
 		await expect(
-			managePeerDeps.checkForPeerDeps('package', 'path/to')
+			checkForPeers('package', 'path/to')
 		).resolves.toEqual(mockPeerDeps);
 	});
 
 	test('Throw error when cannot find package.json file', async () => {
 		expect.assertions(1);
 		await expect(
-			managePeerDeps.checkForPeerDeps('package', 'no/path/to')
+			checkForPeers('package', 'no/path/to')
 		).rejects.toThrowError(new Error('no/path/to/package/package.json'));
 	});
 
 	test('Throw error when no peerDependencies in package.json file', async () => {
 		expect.assertions(1);
 		await expect(
-			managePeerDeps.checkForPeerDeps('package-no-deps', 'path/to')
+			checkForPeers('package-no-deps', 'path/to')
 		).rejects.toThrowError(new Error('peerDependencies'));
 	});
 });

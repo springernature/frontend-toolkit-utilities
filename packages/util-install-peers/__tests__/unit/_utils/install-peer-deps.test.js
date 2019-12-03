@@ -1,6 +1,6 @@
 /**
  * __tests__/unit/_utils/install-peer-deps.test.js
- * Test: js/_utils/install-peer-deps.test.js
+ * Test: js/_utils/_install-peer-deps.js
  */
 'use strict';
 
@@ -8,7 +8,7 @@ const mockProcess = require('../../../__mocks__/process');
 
 jest.mock('@springernature/util-cli-reporter');
 jest.mock('spawn-shell', () => require('../../../__mocks__/spawn-shell'));
-jest.mock('../../../lib/js/_utils/_manage-peer-deps.js');
+jest.mock('../../../lib/js/_utils/_check-for-peers.js');
 
 let installPeerDeps = require('../../../lib/js/_utils/_install-peer-deps');
 

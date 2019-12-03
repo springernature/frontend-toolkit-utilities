@@ -1,6 +1,6 @@
 /**
  * __tests__/unit/_utils/find-all-packages.test.js
- * Test: js/_utils/find-all-packages.test.js
+ * Test: js/_utils/_find-all-packages.js
  */
 'use strict';
 
