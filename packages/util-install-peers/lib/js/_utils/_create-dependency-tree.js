@@ -107,6 +107,9 @@ async function analysePackage(task, done) {
 		const name = task.name;
 		const peerDeps = await findPeerDependencies(name);
 
+		// Push this dependency to the flattened tree
+		task.flat.push(task.name);
+
 		// Add peerDependency info to main dependency tree
 		objectPath.set(
 			task.tree,
@@ -122,6 +125,7 @@ async function analysePackage(task, done) {
 					parent: task.parent,
 					name: dependency,
 					tree: task.tree,
+					flat: task.flat,
 					debug: task.debug
 				});
 			});
@@ -148,6 +152,7 @@ async function createDependencyTree(packageName, peerDependencies, debug) {
 	try {
 		const primaryPeers = formatDependencies.array(peerDependencies);
 		const dependencyTree = formatDependencies.object(peerDependencies);
+		const flattenedTree = [];
 
 		reporter.info('queue', 'analysing', packageName);
 
@@ -157,6 +162,7 @@ async function createDependencyTree(packageName, peerDependencies, debug) {
 				parent: [dependency],
 				name: dependency,
 				tree: dependencyTree,
+				flat: flattenedTree,
 				debug: debug
 			});
 		});
@@ -169,7 +175,10 @@ async function createDependencyTree(packageName, peerDependencies, debug) {
 		}
 
 		// Return the tree
-		return dependencyTree;
+		return {
+			tree: dependencyTree,
+			flat: flattenedTree
+		};
 	} catch (error) {
 		throw error.message;
 	}
