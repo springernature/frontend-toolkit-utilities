@@ -83,7 +83,6 @@ async function installPackagePeerDeps(pathToPackages, allPackages, debug) {
 				// Now walk the tree getting any nested peerDependencies
 				const dependencyTree = await createDependencyTree(packageName, peerDependencies, debug);
 
-
 				const fakeTree = {
 					tree: {
 						'@springernature/springer-context@12.3.0': {
@@ -95,7 +94,8 @@ async function installPackagePeerDeps(pathToPackages, allPackages, debug) {
 								'someother@^3.0.0': {}
 							},
 							'abc@1.0.0': {
-								'someother@~3.6.0': {}
+								'someother@~3.6.0': {},
+								'dbs@~4.7.6': {}
 							}
 						}
 					},
@@ -105,12 +105,12 @@ async function installPackagePeerDeps(pathToPackages, allPackages, debug) {
 						'someother@^2.0.0',
 						'someothertwo@~4.5.0',
 						'dbs@~4.7.6',
+						'dbs@~4.7.6',
 						'someother@^3.0.0',
 						'abc@1.0.0',
 						'someother@~3.6.0'
 					]
 				};
-
 
 				// Analyse flattened tree for issues and generate install list
 				// const dependenciesToInstall = await analyseInstallationTree(packageName, dependencyTree, debug);
