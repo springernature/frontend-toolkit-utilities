@@ -63,7 +63,6 @@ function compareDependencies(dependencies) {
 		const versions = versionTree[key];
 		const packageError = {
 			name: key,
-			all: versions,
 			incompatible: []
 		};
 
