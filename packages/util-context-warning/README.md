@@ -31,7 +31,7 @@ $ npx @springernature/util-context-warning \
 	  -c @springernature/global-context@1.0.0 @springernature/nature-context@2.0.0
 ```
 
-![example output](img/cli-ouput.png)
+![example output](https://raw.githubusercontent.com/springernature/frontend-toolkit-utilities/master/packages/util-context-warning/img/cli-ouput.png)
 
 ## License
 
