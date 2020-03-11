@@ -1,5 +1,9 @@
 # History
 
+## 0.0.4 (2020-03-11)
+	* New way of handling context packages
+	* Single context name, multiple versions
+
 ## 0.0.3 (2020-01-04)
 	* Hardcode the img so it appears on NPM
 

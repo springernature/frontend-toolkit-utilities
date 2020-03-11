@@ -4,7 +4,7 @@
 [![Node version][badge-node]][info-node]
 ![MIT License][badge-license]
 
-When installing a package from the Elements Design System, output some messaging to the command-line to warn about installing a context dependency in your application.
+When installing a package from the Elements Design System, output some messaging to the command-line to warn about installing a valid brand context dependency in your application.
 
 This package only handles formatting of the output message, working out valid dependencies needs to be done elsewhere.
 
@@ -20,18 +20,39 @@ $ npx @springernature/util-context-warning [options]
 
 ```
 -p, --package  Name of package
--c, --context  Space separated <name>@<version> for all context options
+-v, --versions  Space separated brand context versions in semver
+-c, --context  Name of the brand context package. Default: @springernature/brand-context
 ```
 
-### Full example
+### Example
 
 ```
 $ npx @springernature/util-context-warning \
       -p @springernature/global-article@1.0.0 \
-	  -c @springernature/global-context@1.0.0 @springernature/nature-context@2.0.0
+	  -v 1.0.0 2.0.0
 ```
 
-![example output](https://raw.githubusercontent.com/springernature/frontend-toolkit-utilities/master/packages/util-context-warning/img/cli-ouput.png)
+![example output](https://raw.githubusercontent.com/springernature/frontend-toolkit-utilities/master/packages/util-context-warning/img/cli-standard.png)
+
+#### Custom brand context name
+
+```
+$ npx @springernature/util-context-warning \
+      -p @springernature/global-article@1.0.0 \
+	  -v 1.0.0 2.0.0 \
+	  -c @otherscope/othername
+```
+
+![example output](https://raw.githubusercontent.com/springernature/frontend-toolkit-utilities/master/packages/util-context-warning/img/cli-name.png)
+
+#### No brand context versions
+
+```
+$ npx @springernature/util-context-warning \
+      -p @springernature/global-article@1.0.0
+```
+
+![example output](https://raw.githubusercontent.com/springernature/frontend-toolkit-utilities/master/packages/util-context-warning/img/cli-error.png)
 
 ## License
 
