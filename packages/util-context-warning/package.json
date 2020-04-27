@@ -1,6 +1,6 @@
 {
   "name": "@springernature/util-context-warning",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "CLI messaging for installing Elements context dependencies",
   "author": "Alex Kilgour",
   "license": "MIT",

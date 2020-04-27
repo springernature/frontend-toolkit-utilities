@@ -1,5 +1,8 @@
 # History
 
+## 0.0.5 (2020-04-27)
+	* Replace `chalk` with `kleur`
+
 ## 0.0.4 (2020-03-11)
 	* New way of handling context packages
 	* Single context name, multiple versions
