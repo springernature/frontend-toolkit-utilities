@@ -4,16 +4,16 @@
  */
 'use strict';
 
-const chalk = require('chalk');
+const kleur = require('kleur');
 
 const report = {};
 const colors = {
-	info: chalk.green,
-	success: chalk.green.bold,
-	fail: chalk.red.bold,
-	description: chalk.magenta,
-	message: chalk.white,
-	comment: chalk.white.dim
+	info: kleur.green,
+	success: kleur.green().bold,
+	fail: kleur.red().bold,
+	description: kleur.magenta,
+	message: kleur.white,
+	comment: kleur.white().dim
 };
 
 // Logging levels
