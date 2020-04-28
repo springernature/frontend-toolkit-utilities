@@ -1,5 +1,8 @@
 # History
 
+## 1.1.1 (2020-04-27)
+	* Replace `chalk` with `kleur`
+
 ## 1.1.0 (2019-10-14)
 	* Add customisable logging levels
 	* Fix a spacing bug when you have a comment but no message

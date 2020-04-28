@@ -1,7 +1,7 @@
 {
   "name": "@springernature/util-package-finder",
   "description": "Get a list of packages and available versions from within an NPM scope",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "license": "MIT",
   "keywords": [
     "frontend",
@@ -29,9 +29,9 @@
   },
   "dependencies": {
     "boxen": "^2.0.0",
-    "chalk": "^2.4.1",
     "figures": "^2.0.0",
     "jest-fetch-mock": "^1.6.5",
+    "kleur": "^3.0.3",
     "lodash": "^4.17.10",
     "meow": "^5.0.0",
     "node-fetch": "^2.2.0",

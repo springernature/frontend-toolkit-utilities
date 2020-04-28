@@ -5,10 +5,10 @@
 'use strict';
 
 const boxen = require('boxen');
-const chalk = require('chalk');
+const kleur = require('kleur');
 
-const warning = chalk.black.bgYellow(' WARNING ');
-const error = chalk.black.bgRed(' ERROR ');
+const warning = kleur.black().bgYellow(' WARNING ');
+const error = kleur.black().bgRed(' ERROR ');
 const warningMessage = 'Include valid brand context for this package:';
 const errorMessage = 'No brand context defined for this package';
 
@@ -21,7 +21,7 @@ const errorMessage = 'No brand context defined for this package';
 module.exports = (packageName, versions, context) => {
 	if (packageName && versions) {
 		const contextPackages = versions
-			.map(version => chalk.cyan(`${context}@${version}`))
+			.map(version => kleur.cyan(`${context}@${version}`))
 			.join('\n');
 
 		console.log(
