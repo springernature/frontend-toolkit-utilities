@@ -16,7 +16,7 @@ $ npm install @springernature/util-sass-compiler
 
 The `render` function returns an Object of the form
 
-```json
+```js
 {
   "css": <Buffer>,
   "stats": {},
