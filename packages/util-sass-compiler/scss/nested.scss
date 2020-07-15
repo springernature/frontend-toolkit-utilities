@@ -1,0 +1,9 @@
+/* nested SASS */
+
+.foo {
+	width: 100px;
+
+	&:last {
+		width: 200px;
+	}
+}
