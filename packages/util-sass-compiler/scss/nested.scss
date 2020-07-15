@@ -1,9 +1,7 @@
-/* nested SASS */
+/* SASS */
+
+$width: 100px;
 
 .foo {
-	width: 100px;
-
-	&:last {
-		width: 200px;
-	}
+	width: $width;
 }

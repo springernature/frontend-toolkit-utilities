@@ -17,24 +17,20 @@ const cssData = `
 		width: 100px;
 	}`;
 
-const nestedSassData = `
+const sassData = `
+	$width: 100px;
 	.foo {
-		width: 100px;
-		&:last {
-			width: 200px;
-		}
+		width: $width;
 	}`;
 
 const functionErrData = `
 	@import '${importsLocation}';
-
 	.foo {
 		width: half('string');
 	}`;
 
 const functionWarnData = `
 	@import '${importsLocation}';
-
 	.foo {
 		width: half(9px);
 	}`;
@@ -47,9 +43,9 @@ describe('Compile SASS', () => {
 		expect(result.css.toString().trim()).toEqual('.foo{width:100px}');
 	});
 
-	test('nested SASS from data', async () => {
-		const result = await render({data: nestedSassData});
-		expect(result.css.toString().trim()).toEqual('.foo{width:100px}.foo:last{width:200px}');
+	test('SASS from data', async () => {
+		const result = await render({data: sassData});
+		expect(result.css.toString().trim()).toEqual('.foo{width:100px}');
 	});
 
 	test('plain CSS from file', async () => {
@@ -59,11 +55,11 @@ describe('Compile SASS', () => {
 		expect(result.css.toString().trim()).toEqual('.foo{width:100px}');
 	});
 
-	test('nested SASS from file', async () => {
+	test('SASS from file', async () => {
 		const result = await render({
 			file: path.resolve(__dirname, '../../../../scss/nested.scss')
 		});
-		expect(result.css.toString().trim()).toEqual('.foo{width:100px}.foo:last{width:200px}');
+		expect(result.css.toString().trim()).toEqual('.foo{width:100px}');
 	});
 
 	test('imports don\'t output CSS', async () => {
@@ -128,14 +124,11 @@ describe('Compile SASS', () => {
 	});
 
 	test('JSON full object', async () => {
-		const result = await render({data: nestedSassData});
+		const result = await render({data: sassData});
 		expect(result.json).toEqual(
 			{
 				'.foo': {
 					'width': '100px'
-				},
-				'.foo:last': {
-					'width': '200px'
 				}
 			}
 		);

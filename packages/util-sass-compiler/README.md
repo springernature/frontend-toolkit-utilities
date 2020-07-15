@@ -18,9 +18,9 @@ The `render` function returns an Object of the form
 
 ```json
 {
-  css: Buffer,
-  stats: {},
-  json: {}
+  "css": <Buffer>,
+  "stats": {},
+  "json": {}
 }
 ```
 
