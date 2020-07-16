@@ -8,7 +8,7 @@ const path = require('path');
 const sass = require('node-sass');
 import {render} from '../../../../lib/js/render';
 
-const importsLocation = path.resolve(__dirname, '../../../../scss/imports');
+const importsLocation = path.resolve(__dirname, '../scss/imports');
 
 // Data
 
@@ -50,28 +50,28 @@ describe('Compile SASS', () => {
 
 	test('plain CSS from file', async () => {
 		const result = await render({
-			file: path.resolve(__dirname, '../../../../scss/css.css')
+			file: path.resolve(__dirname, '../scss/css.css')
 		});
 		expect(result.css.toString().trim()).toEqual('.foo{width:100px}');
 	});
 
 	test('SASS from file', async () => {
 		const result = await render({
-			file: path.resolve(__dirname, '../../../../scss/nested.scss')
+			file: path.resolve(__dirname, '../scss/nested.scss')
 		});
 		expect(result.css.toString().trim()).toEqual('.foo{width:100px}');
 	});
 
 	test('imports don\'t output CSS', async () => {
 		const result = await render({
-			file: path.resolve(__dirname, '../../../../scss/_imports.scss')
+			file: path.resolve(__dirname, '../scss/_imports.scss')
 		});
 		expect(result.css.toString().trim()).toEqual('');
 	});
 
 	test('SASS function', async () => {
 		const result = await render({
-			file: path.resolve(__dirname, '../../../../scss/function.scss')
+			file: path.resolve(__dirname, '../scss/function.scss')
 		});
 		expect(result.css.toString().trim()).toEqual('.foo{width:5px}');
 	});
@@ -99,7 +99,7 @@ describe('Compile SASS', () => {
 
 	test('SASS mixin', async () => {
 		const result = await render({
-			file: path.resolve(__dirname, '../../../../scss/mixin.scss')
+			file: path.resolve(__dirname, '../scss/mixin.scss')
 		});
 		expect(result.css.toString().trim()).toEqual('.foo{background-color:blue;border:1px solid red;padding:10px}');
 	});
