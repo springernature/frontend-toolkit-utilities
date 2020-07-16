@@ -1,0 +1,17 @@
+{
+  "name": "@springernature/util-sass-compiler",
+  "version": "0.1.0",
+  "description": "Promisify SASS.render and add JSON output",
+  "author": "Alex Kilgour",
+  "license": "MIT",
+  "main": "./lib/js/render.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/springernature/frontend-toolkit-utilities.git"
+  },
+  "homepage": "https://github.com/springernature/frontend-toolkit-utilities/tree/master/packages/util-sass-compiler#readme",
+  "dependencies": {
+    "css2json": "^1.1.1",
+    "node-sass": "^4.14.1"
+  }
+}
