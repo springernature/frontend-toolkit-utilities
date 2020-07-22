@@ -15,6 +15,7 @@ This repository contains utilities and helpers for interacting with the front-en
 	* [Package structure](#package-structure)
 	* [Naming](#naming)
 		* [`package.json`](#packagejson)
+* [NPM Scripts](#npm-scripts)
 * [Testing](#testing)
 * [Linting](#linting)
 * [Continuous integration](#continuous-integration)
@@ -80,11 +81,57 @@ Packages in `frontend-toolkit-utilities` are [scoped](https://docs.npmjs.com/mis
 }
 ```
 
+## NPM Scripts
+
+The following script commands are available:
+
+* `npm run bootstrap:local`
+
+   Bootstrap all package dependencies for running tests and using components locally. This is run automatically on CI.
+
+* `npm run build`
+
+   Run the `lint`, `test`, and `validate` scripts before pushing.
+
+* `npm run build:ci`
+
+   As above, but run on CI. Do not use locally.
+
+* `npm run create`
+
+   Run the `create` script from the [frontend package manager](https://github.com/springernature/frontend-package-manager#package-creation).
+
+* `npm run lint`
+
+   Run code linting for `Javascript`.
+
+* `npm run lint:js`
+
+   Run code linting for `Javascript`.
+
+* `npm run publish`
+
+   Run the `publish` script from the [frontend package manager](https://github.com/springernature/frontend-package-manager#package-publication).
+
+* `npm run test`
+
+   Run unit tests via `Jest`.
+
+* `npm run test:ci`
+
+   Run unit tests on CI. Do not use locally.
+
+* `npm run validate`
+
+   Run the `validate` script from the [frontend package manager](https://github.com/springernature/frontend-package-manager#package-validation).
+
 ## Testing
 
 Tests for your package should be written in your `packages/util-name-of-package/__tests_` folder. For example, unit tests for `util-name-of-package` should live in `packages/util-name-of-package/__tests__/unit/*.js`.
 
 To run all the tests use `npm run test` from within the project on the command line. The run an individual test use `npm run test <name-of-test-file>`.
+
+**NOTE**: Make sure that you bootstrap all package dependencies before running tests using `npm run bootstrap:local`.
 
 ## Linting
 
