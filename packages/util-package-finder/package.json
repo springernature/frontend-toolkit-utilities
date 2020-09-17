@@ -30,7 +30,7 @@
   "dependencies": {
     "boxen": "^2.0.0",
     "figures": "^2.0.0",
-    "jest-fetch-mock": "^1.6.5",
+    "jest-fetch-mock": "^3.0.3",
     "kleur": "^3.0.3",
     "lodash": "^4.17.10",
     "meow": "^5.0.0",
