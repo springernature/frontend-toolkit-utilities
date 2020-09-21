@@ -1,21 +1,35 @@
 'use strict';
+
+const path = require('path');
 const rollup = require('rollup');
 const file = require('./utils/file');
 
-const ERR_NO_PACKAGE_JS_FOUND = 'no JS found for package';
+const ERR_NO_PACKAGE_JS_FOUND = 'No JS found for package';
 
-const api = async packageRoot => {
-	let packageJS = await file.getContent(`${packageRoot}/demo/main.js`);
+/**
+ * If JS is included, compile to ES6
+ * @async
+ * @function compileJS
+ * @param {String} packageRoot path of the package to render
+ * @param {String} demoCodeFolder render using code in this folder
+ * @return {Promise<String>}
+ */
+const compileJS = async (packageRoot, demoCodeFolder) => {
+	const jsEntryPoint = path.join(packageRoot, demoCodeFolder, 'main.js');
+	let packageJS = await file.getContent(jsEntryPoint);
+	let outputBuffer = '';
+	let bundle;
+
+	// lack of packageJS should not be fatal
 	if (packageJS instanceof Error) {
-		// lack of packageJS should not be fatal
 		console.warn(ERR_NO_PACKAGE_JS_FOUND);
 		return `// ${ERR_NO_PACKAGE_JS_FOUND}`;
 	}
 
-	let bundle;
+	// Create a rollup bundle
 	try {
 		bundle = await rollup.rollup({
-			input: `${packageRoot}/demo/main.js`
+			input: path.join(packageRoot, demoCodeFolder, 'main.js')
 		});
 	} catch (error) {
 		throw error;
@@ -28,15 +42,16 @@ const api = async packageRoot => {
 		}
 	});
 
-	let outputBuffer = '';
+	// Iterate through output and generate js string
 	rollupOutput.output.forEach(chunkOrAsset => {
 		if (chunkOrAsset.type === 'asset') {
-			// TODO not sure what this could be?
+			console.log(`Rollup generated the asset: ${chunkOrAsset.fileName}`);
 		} else {
-			outputBuffer += chunkOrAsset.code
+			outputBuffer += chunkOrAsset.code;
 		}
 	});
+
 	return outputBuffer;
 };
 
-module.exports = api;
+module.exports = compileJS;

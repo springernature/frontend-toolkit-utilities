@@ -1,10 +1,11 @@
 'use strict';
+
 const fs = require('fs').promises;
 const path = require('path');
 const filesize = require('filesize');
 
 const api = {
-
+	// Get the contents of a file
 	getContent: async (pathBits = []) => {
 		if (typeof pathBits === 'string') {
 			pathBits = [pathBits];
@@ -12,32 +13,38 @@ const api = {
 
 		const fullPath = path.join(...pathBits);
 		let content;
+
 		try {
 			content = await fs.readFile(fullPath, 'utf-8');
 		} catch (err) {
 			content = err;
 		}
+
 		return content;
 	},
 
-	sanitisePath: str => {
+	// Sanitise the path to the package
+	sanitisePath: (str = '') => {
 		if (typeof str !== 'string') {
-			throw new TypeError('invalid path type');
+			throw new TypeError(`The "path" argument must be of type string. Received type number (${str})`);
 		}
 
 		if (str === '') {
-			return '.';
+			path.resolve('.');
 		}
 
 		// fold dots, stop traversal
 		let candidate = str.replace(/\.+/g, '.');
+
 		// allow alphanumerics & underscore, hyphen, dot, fwd slash
 		candidate = candidate.replace(/[^\w-./]+/g, '');
-		return candidate;
+
+		return path.resolve(candidate);
 	},
 
 	isDir: async (possibleDir = '') => {
 		let result = false;
+
 		try {
 			result = await fs.stat(possibleDir);
 		} catch (error) {
@@ -51,11 +58,13 @@ const api = {
 
 	getSizeInBytes: async (pathAndFile = '') => {
 		let stats;
+
 		try {
 			stats = await fs.stat(pathAndFile);
 		} catch (error) {
 			throw error;
 		}
+
 		// https://www.npmjs.com/package/filesize
 		return filesize(stats.size);
 	}

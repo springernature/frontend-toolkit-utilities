@@ -1,3 +1,4 @@
+// HTML template wrapper
 module.exports = (key, content) => {
 	return `<!doctype html>
 <html lang="en">

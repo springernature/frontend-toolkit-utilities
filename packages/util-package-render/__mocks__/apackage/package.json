@@ -3,7 +3,8 @@
   "version": "2.2.3",
   "description": "A mock component for testing the component renderer",
   "license": "MIT",
-  "peerDependencies": {
-    "@springernature/global-context": "^5.0.0"
+  "brandContext": "^3.0.0",
+  "dependencies": {
+    "@springernature/brand-context": "^3.2.4"
   }
 }
