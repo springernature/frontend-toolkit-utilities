@@ -42,6 +42,7 @@ const api = {
 		return path.resolve(candidate);
 	},
 
+	// Check if path is a directory that exists
 	isDir: async (possibleDir = '') => {
 		let result = false;
 
@@ -56,6 +57,7 @@ const api = {
 		return (typeof result.isDirectory === 'function') ? result.isDirectory() : false;
 	},
 
+	// Get the size of a file
 	getSizeInBytes: async (pathAndFile = '') => {
 		let stats;
 

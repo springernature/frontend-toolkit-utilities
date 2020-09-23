@@ -19,7 +19,7 @@ const ERR_NO_PACKAGE_SASS_FOUND = 'No SASS found for package';
  */
 const compileSASS = async (packageRoot, demoCodeFolder) => {
 	const sassEntryPoint = path.join(packageRoot, demoCodeFolder, 'main.scss');
-	let packageSASS = await file.getContent(`${sassEntryPoint}`);
+	let packageSASS = await file.getContent(sassEntryPoint);
 	let result;
 
 	// Lack of packageSASS should not be fatal

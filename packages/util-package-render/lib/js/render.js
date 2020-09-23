@@ -8,9 +8,6 @@ const jsHelper = require('./js-helper');
 const sassHelper = require('./sass-helper');
 const file = require('./utils/file');
 
-// Name of the demo folder expected
-const demoCodeFolder = 'demo';
-
 // Where to find the brand context
 const npmScope = 'springernature';
 const contextName = 'brand-context';
@@ -73,17 +70,21 @@ const installDependencies = async packageJSON => {
  * @private
  * @function generateHTML
  * @param {Object} packageRootPath path of the package to render
+ * @param {String} demoCodeFolder name of folder where demo code stored
+ * @param {String} name of the package to be rendered
  * @return {String}
  */
-const generateHTML = async packageRootPath => {
+const generateHTML = async (packageRootPath, demoCodeFolder, name) => {
 	try {
 		const transpiledPackageJS = await jsHelper(packageRootPath, demoCodeFolder);
 		const compiledPackageCSS = await sassHelper(packageRootPath, demoCodeFolder);
 
 		return await handlebarsHelper({
-			path: packageRootPath,
+			packageRoot: packageRootPath,
 			js: transpiledPackageJS,
-			css: compiledPackageCSS
+			css: compiledPackageCSS,
+			demoCodeFolder: demoCodeFolder,
+			name: name
 		});
 	} catch (error) {
 		throw error;
@@ -124,10 +125,11 @@ const writeHtmlFile = async (packageRoot, distFolder, html) => {
  * @async
  * @function renderDemo
  * @param {String} packageRoot path of the package to render
+ * @param {String} demoCodeFolder name of folder where demo code stored
  * @param {String} [distFolder] path to write the index.html file
  * @return {Promise}
  */
-const renderDemo = async (packageRoot, distFolder) => {
+const renderDemo = async (packageRoot, demoCodeFolder, distFolder) => {
 	// Confirm path of package to render
 	const packageRootPath = file.sanitisePath(packageRoot);
 	console.log(`PATH=${packageRootPath}`);
@@ -139,7 +141,7 @@ const renderDemo = async (packageRoot, distFolder) => {
 	await installDependencies(packageJSON);
 
 	// Generate static HTML
-	const html = await generateHTML(packageRootPath);
+	const html = await generateHTML(packageRootPath, demoCodeFolder, packageJSON.name);
 
 	// Write html to file
 	if (distFolder) {

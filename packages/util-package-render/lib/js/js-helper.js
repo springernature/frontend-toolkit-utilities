@@ -7,20 +7,20 @@ const file = require('./utils/file');
 const ERR_NO_PACKAGE_JS_FOUND = 'No JS found for package';
 
 /**
- * If JS is included, compile to ES6
+ * If JS is included, transpile to ES6
  * @async
- * @function compileJS
+ * @function transpileJS
  * @param {String} packageRoot path of the package to render
  * @param {String} demoCodeFolder render using code in this folder
  * @return {Promise<String>}
  */
-const compileJS = async (packageRoot, demoCodeFolder) => {
+const transpileJS = async (packageRoot, demoCodeFolder) => {
 	const jsEntryPoint = path.join(packageRoot, demoCodeFolder, 'main.js');
 	let packageJS = await file.getContent(jsEntryPoint);
 	let outputBuffer = '';
 	let bundle;
 
-	// lack of packageJS should not be fatal
+	// Lack of packageJS should not be fatal
 	if (packageJS instanceof Error) {
 		console.warn(ERR_NO_PACKAGE_JS_FOUND);
 		return `// ${ERR_NO_PACKAGE_JS_FOUND}`;
@@ -35,7 +35,7 @@ const compileJS = async (packageRoot, demoCodeFolder) => {
 		throw error;
 	}
 
-	// output as ES module file, for inclusion in a <script type="module"> tag
+	// Output as ES module file, for inclusion in a <script type="module"> tag
 	const rollupOutput = await bundle.generate({
 		output: {
 			format: 'esm'
@@ -54,4 +54,4 @@ const compileJS = async (packageRoot, demoCodeFolder) => {
 	return outputBuffer;
 };
 
-module.exports = compileJS;
+module.exports = transpileJS;

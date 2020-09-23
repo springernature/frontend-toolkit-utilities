@@ -1,62 +1,101 @@
 'use strict';
+
+const path = require('path');
 const Handlebars = require('handlebars');
 const file = require('./utils/file');
-const rootTemplate = require('./template');
+const baseTemplate = require('./template');
 
-const HBARS_CONTEXT_KEY = 'utilPackageRenderState';
-const ERR_NO_PACKAGE_HBS_FOUND = 'no /demo/index.hbs found for package';
-const ERR_NO_PACKAGE_CONTEXT_FOUND = 'no /demo/context.json found for package';
-const ERR_INVALID_CONTEXT_KEY_NAME = 'invalid as a key name in package demo context, skipping package...';
+/**
+ * Compile handlebars template into a function
+ * @function compileHandlebars
+ * @param {String} template code to compile
+ * @return {Function}
+ */
+const compileHandlebars = template => {
+	try {
+		return Handlebars.compile(template);
+	} catch (error) {
+		throw error;
+	}
+};
 
-const api = async config => {
-	// does the hbars magic. template has placeholders for "title" "script" "style"
-	const packageRoot = config.path;
+const getDemoTemplate = async (packageRoot, demoCodeFolder) => {
+	const ERR_NO_PACKAGE_HBS_FOUND = `No ${demoCodeFolder}/index.hbs found for package`;
+	const templateEntryPoint = path.join(packageRoot, demoCodeFolder, 'index.hbs');
+	const packageTemplate = await file.getContent(templateEntryPoint);
 
-	// first, get the demo template, then pass it into our base template & compile
-	let packageTemplate = await file.getContent(`${packageRoot}/demo/index.hbs`);
+	// Lack of template should not be fatal
 	if (packageTemplate instanceof Error) {
-		// lack of template should not be fatal
 		console.warn(ERR_NO_PACKAGE_HBS_FOUND);
-		packageTemplate = `<!-- ${ERR_NO_PACKAGE_HBS_FOUND} -->`;
+		return `<!-- ${ERR_NO_PACKAGE_HBS_FOUND} -->`;
 	}
 
-	const fullPageTemplate = rootTemplate(HBARS_CONTEXT_KEY, packageTemplate);
+	return packageTemplate;
+};
 
-	let compiledPage;
-	try {
-		compiledPage = Handlebars.compile(fullPageTemplate);
-	} catch (e) {
-		return console.error(e);
-	}
+const getDemoContext = async (packageRoot, demoCodeFolder) => {
+	const ERR_NO_PACKAGE_CONTEXT_FOUND = `No ${demoCodeFolder}/context.json found for package`;
+	const contextEntryPoint = path.join(packageRoot, demoCodeFolder, 'context.json');
+	const packageContextData = await file.getContent(contextEntryPoint);
+	let packageContextJSON;
 
-	// second, grab the demo context JSON, merge it with our context and render
-	let packageContextContent = await file.getContent(`${packageRoot}/demo/context.json`);
-	if (packageContextContent instanceof Error) {
-		// lack of context should not be fatal
+	// Lack of context should not be fatal
+	if (packageContextData instanceof Error) {
 		console.warn(ERR_NO_PACKAGE_CONTEXT_FOUND);
-		packageContextContent = '{}';
+		return {};
 	}
 
-	let packageDemoContext;
+	// Convert context string to JSON
 	try {
-		packageDemoContext = JSON.parse(packageContextContent);
-	} catch (e) {
-		return console.error(e);
+		packageContextJSON = JSON.parse(packageContextData);
+	} catch (error) {
+		throw error;
 	}
 
-	if (Object.prototype.hasOwnProperty.call(packageDemoContext, HBARS_CONTEXT_KEY)) {
-		return new Error(`"${HBARS_CONTEXT_KEY}" ${ERR_INVALID_CONTEXT_KEY_NAME}`);
+	return packageContextJSON;
+};
+
+/**
+ * Does the hbars magic
+ * Template has placeholders for "title" "script" "style"
+ * @async
+ * @function compileTemplate
+ * @param {Object} config configuration for compiling template
+ * @param {String} config.packageRoot path of the package to render
+ * @param {String} config.js transpiled Javascript
+ * @param {String} config.css compiled CSS
+ * @param {String} config.demoCodeFolder name of folder where demo code stored
+ * @param {String} config.name of the package to be rendered
+ * @return {Promise<String>}
+ */
+const compileTemplate = async config => {
+	const HBARS_CONTEXT_KEY = 'utilPackageRenderState';
+	const ERR_INVALID_CONTEXT_KEY_NAME = 'Invalid as a key name in package demo context, skipping package...';
+
+	// Get the demo template
+	const packageTemplate = await getDemoTemplate(config.packageRoot, config.demoCodeFolder);
+
+	// Get the context data as JSON
+	const packageContextJSON = await getDemoContext(config.packageRoot, config.demoCodeFolder);
+
+	// Merge demo template into base template and compile
+	const fullPageTemplate = baseTemplate(HBARS_CONTEXT_KEY, packageTemplate);
+	const compiledPage = compileHandlebars(fullPageTemplate);
+
+	// Reserved JSON key HBARS_CONTEXT_KEY
+	if (Object.prototype.hasOwnProperty.call(packageContextJSON, HBARS_CONTEXT_KEY)) {
+		throw new Error(`"${HBARS_CONTEXT_KEY}" ${ERR_INVALID_CONTEXT_KEY_NAME}`);
 	}
 
-	let context = packageDemoContext;
-	context[HBARS_CONTEXT_KEY] = {
-		title: 'a package demo',
+	// Add title, css, js information to context data
+	packageContextJSON[HBARS_CONTEXT_KEY] = {
+		title: config.name,
 		script: config.js,
 		style: config.css
 	};
 
-	const result = compiledPage(context);
-	return result;
+	// Return rendered template
+	return compiledPage(packageContextJSON);
 };
 
-module.exports = api;
+module.exports = compileTemplate;
