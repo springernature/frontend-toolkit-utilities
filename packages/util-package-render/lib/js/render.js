@@ -91,13 +91,43 @@ const generateHTML = async packageRootPath => {
 };
 
 /**
+ * Write content to HTML index file
+ * @async
+ * @private
+ * @function writeHtmlFile
+ * @param {String} packageRoot path of the package to render
+ * @param {String} distFolder path to write the index.html file
+ * @param {String} html content to be written to file
+ * @return {Promise}
+ */
+const writeHtmlFile = async (packageRoot, distFolder, html) => {
+	const fullPath = path.join(distFolder, 'index.html');
+
+	try {
+		const distFolderExists = await file.isDir(distFolder);
+
+		if (!distFolderExists) {
+			await fs.mkdir(distFolder);
+		}
+
+		await fs.writeFile(fullPath, html);
+	} catch (error) {
+		throw error;
+	}
+
+	const sizeInBytes = await file.getSizeInBytes(fullPath);
+	console.log(`written to ${path.relative(packageRoot, fullPath)}, size ${sizeInBytes}`);
+};
+
+/**
  * Render a package using code from a demo folder
  * @async
  * @function renderDemo
  * @param {String} packageRoot path of the package to render
+ * @param {String} [distFolder] path to write the index.html file
  * @return {Promise}
  */
-const renderDemo = async packageRoot => {
+const renderDemo = async (packageRoot, distFolder) => {
 	// Confirm path of package to render
 	const packageRootPath = file.sanitisePath(packageRoot);
 	console.log(`PATH=${packageRootPath}`);
@@ -111,25 +141,13 @@ const renderDemo = async packageRoot => {
 	// Generate static HTML
 	const html = await generateHTML(packageRootPath);
 
-	/*
-	const distFolder = 'dist/';
-	// console.log(path.join(packageRootPath, './demo', 'dist') );
-	const fullPath = path.join(distFolder, 'index.html');
-	// console.log(fullPath);
-	try {
-		const distFolderExists = await file.isDir(distFolder);
-		if (!distFolderExists) {
-			fs.mkdir(distFolder);
-		}
-
-		await fs.writeFile(fullPath, html);
-	} catch (error) {
-		throw error;
+	// Write html to file
+	if (distFolder) {
+		writeHtmlFile(packageRootPath, distFolder, html);
 	}
 
-	const sizeInBytes = await file.getSizeInBytes(fullPath);
-	console.log(`written to ${fullPath}, size ${sizeInBytes}`);
-	*/
+	// Return the html content
+	return html;
 };
 
 module.exports = renderDemo;

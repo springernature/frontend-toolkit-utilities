@@ -8,9 +8,12 @@ const render = require('./lib/js/render'); // eslint-disable-line unicorn/import
 const workdir = './__mocks__/apackage/';
 const fulldir = path.join(path.resolve(__dirname), workdir);
 
+// Path to write the HTML
+const distFolder = path.join(fulldir, 'dist');
+
 (async () => {
 	try {
-		await render(fulldir);
+		await render(fulldir, distFolder);
 	} catch (error) {
 		console.error(error);
 	}
