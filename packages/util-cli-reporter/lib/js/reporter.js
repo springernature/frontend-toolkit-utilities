@@ -10,7 +10,7 @@ const report = {};
 const colors = {
 	info: kleur.green,
 	success: kleur.green().bold,
-	warning: kleur.yellow().bold,
+	warning: kleur.yellow,
 	fail: kleur.red().bold,
 	description: kleur.magenta,
 	message: kleur.white,
