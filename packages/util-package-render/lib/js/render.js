@@ -23,7 +23,7 @@ const getPackageJson = packageRoot => {
 	try {
 		packageJSON = require(packageJsonPath);
 	} catch (error) {
-		console.error('Warning: No package.json found for package');
+		reporter.warning('not found', 'package.json');
 	}
 
 	return packageJSON;
@@ -57,9 +57,9 @@ const installDependencies = async (packageJSON, brandContext) => {
 	if (packageJSON.dependencies) {
 		try {
 			const installResult = await npmInstall.dependencies(packageJSON);
-			console.log(`CLIENT SUCCESS RESULT: ${installResult}`);
+			reporter.success('dependencies installed', installResult);
 		} catch (error) {
-			console.log(`CLIENT ERRORING RESULT: ${error}`);
+			reporter.warning('dependency install fail', error);
 		}
 	}
 };
@@ -113,6 +113,7 @@ const writeHtmlFile = async (packageRoot, distFolder, html) => {
 
 		await fs.writeFile(fullPath, html);
 	} catch (error) {
+		reporter.fail('writing file', fullPath);
 		throw error;
 	}
 

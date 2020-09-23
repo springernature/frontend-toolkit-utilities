@@ -5,7 +5,7 @@ const rollup = require('rollup');
 const reporter = require('@springernature/util-cli-reporter');
 const file = require('./utils/file');
 
-const ERR_NO_PACKAGE_JS_FOUND = 'No JS found for package';
+const ERR_NO_PACKAGE_JS_FOUND = 'no JS found for package';
 
 /**
  * If JS is included, transpile to ES6
@@ -25,7 +25,7 @@ const transpileJS = async (packageRoot, demoCodeFolder) => {
 
 	// Lack of packageJS should not be fatal
 	if (packageJS instanceof Error) {
-		console.warn(ERR_NO_PACKAGE_JS_FOUND);
+		reporter.warning('missing JS', ERR_NO_PACKAGE_JS_FOUND);
 		return `// ${ERR_NO_PACKAGE_JS_FOUND}`;
 	}
 
@@ -35,6 +35,7 @@ const transpileJS = async (packageRoot, demoCodeFolder) => {
 			input: path.join(packageRoot, demoCodeFolder, 'main.js')
 		});
 	} catch (error) {
+		reporter.fail('rollup', 'could not create rollup bundle');
 		throw error;
 	}
 

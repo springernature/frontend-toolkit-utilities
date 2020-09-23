@@ -17,6 +17,7 @@ const compileHandlebars = template => {
 	try {
 		return Handlebars.compile(template);
 	} catch (error) {
+		reporter.fail('compile', 'could not compile handlebars template');
 		throw error;
 	}
 };
@@ -32,13 +33,13 @@ const compileHandlebars = template => {
  * @return {Promise<String>}
  */
 const getDemoTemplate = async (packageRoot, demoCodeFolder) => {
-	const ERR_NO_PACKAGE_HBS_FOUND = `No ${demoCodeFolder}/index.hbs found for package`;
+	const ERR_NO_PACKAGE_HBS_FOUND = `no ${demoCodeFolder}/index.hbs found for package`;
 	const templateEntryPoint = path.join(packageRoot, demoCodeFolder, 'index.hbs');
 	const packageTemplate = await file.getContent(templateEntryPoint);
 
 	// Lack of template should not be fatal
 	if (packageTemplate instanceof Error) {
-		console.warn(ERR_NO_PACKAGE_HBS_FOUND);
+		reporter.warning('missing template', ERR_NO_PACKAGE_HBS_FOUND);
 		return `<!-- ${ERR_NO_PACKAGE_HBS_FOUND} -->`;
 	}
 
@@ -56,14 +57,14 @@ const getDemoTemplate = async (packageRoot, demoCodeFolder) => {
  * @return {Promise<Object>}
  */
 const getDemoContext = async (packageRoot, demoCodeFolder) => {
-	const ERR_NO_PACKAGE_CONTEXT_FOUND = `No ${demoCodeFolder}/context.json found for package`;
+	const ERR_NO_PACKAGE_CONTEXT_FOUND = `no ${demoCodeFolder}/context.json found for package`;
 	const contextEntryPoint = path.join(packageRoot, demoCodeFolder, 'context.json');
 	const packageContextData = await file.getContent(contextEntryPoint);
 	let packageContextJSON;
 
 	// Lack of context should not be fatal
 	if (packageContextData instanceof Error) {
-		console.warn(ERR_NO_PACKAGE_CONTEXT_FOUND);
+		reporter.warning('missing data', ERR_NO_PACKAGE_CONTEXT_FOUND);
 		return {};
 	}
 
@@ -71,6 +72,7 @@ const getDemoContext = async (packageRoot, demoCodeFolder) => {
 	try {
 		packageContextJSON = JSON.parse(packageContextData);
 	} catch (error) {
+		reporter.fail('json parse', 'could not parse json data file');
 		throw error;
 	}
 
@@ -92,7 +94,7 @@ const getDemoContext = async (packageRoot, demoCodeFolder) => {
  */
 const compileTemplate = async config => {
 	const HBARS_CONTEXT_KEY = 'utilPackageRenderState';
-	const ERR_INVALID_CONTEXT_KEY_NAME = 'Invalid as a key name in context data file, skipping package...';
+	const ERR_INVALID_CONTEXT_KEY_NAME = 'invalid as a key name in context data file, skipping package...';
 
 	reporter.info('generating compiled static html');
 
@@ -108,6 +110,7 @@ const compileTemplate = async config => {
 
 	// Reserved JSON key HBARS_CONTEXT_KEY
 	if (Object.prototype.hasOwnProperty.call(packageContextJSON, HBARS_CONTEXT_KEY)) {
+		reporter.fail('invalid key', 'in data file');
 		throw new Error(`"${HBARS_CONTEXT_KEY}" ${ERR_INVALID_CONTEXT_KEY_NAME}`);
 	}
 

@@ -8,7 +8,7 @@ const file = require('./utils/file');
 
 const render = util.promisify(sass.render);
 
-const ERR_NO_PACKAGE_SASS_FOUND = 'No SASS found for package';
+const ERR_NO_PACKAGE_SASS_FOUND = 'no sass found for package';
 
 /**
  * If SASS is included, compile it to CSS
@@ -27,7 +27,7 @@ const compileSASS = async (packageRoot, demoCodeFolder) => {
 
 	// Lack of packageSASS should not be fatal
 	if (packageSASS instanceof Error) {
-		console.warn(ERR_NO_PACKAGE_SASS_FOUND);
+		reporter.warning('missing sass', ERR_NO_PACKAGE_SASS_FOUND);
 		packageSASS = `/* ${ERR_NO_PACKAGE_SASS_FOUND} */`;
 	}
 
@@ -44,6 +44,7 @@ const compileSASS = async (packageRoot, demoCodeFolder) => {
 			]
 		});
 	} catch (error) {
+		reporter.fail('sass', 'could not compile sass to css');
 		throw error;
 	}
 
