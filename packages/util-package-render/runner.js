@@ -17,16 +17,24 @@ const brandContext = '@springernature/brand-context';
 // Path to write the HTML
 const distFolder = path.join(fulldir, 'dist');
 
-(async () => {
+// Return contents of compiled demo file
+async function returnResultAsString() {
 	try {
-		// Return contents of compiled demo file
-		// const result = await render(fulldir, demoFolderName, brandContext);
-		// console.log(result);
-
-		// Write compiled demo to file
-		await render(fulldir, demoFolderName, brandContext, distFolder);
+		const result = await render(fulldir, demoFolderName, brandContext);
+		console.log(result);
 	} catch (error) {
-		console.log('Error handled by me');
 		console.error(error);
 	}
-})();
+}
+
+// Save demo to index.html file in desired location
+async function saveResultToFile() {
+	try {
+		await render(fulldir, demoFolderName, brandContext, distFolder);
+	} catch (error) {
+		console.error(error);
+	}
+}
+
+returnResultAsString();
+saveResultToFile();
