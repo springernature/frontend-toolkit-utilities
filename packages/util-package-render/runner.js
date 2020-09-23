@@ -15,26 +15,15 @@ const demoFolderName = 'demo';
 const brandContext = '@springernature/brand-context';
 
 // Path to write the HTML
-const distFolder = path.join(fulldir, 'dist');
+const distFolder = path.join(fulldir, 'dist'); // eslint-disable-line no-unused-vars
 
-// Return contents of compiled demo file
-async function returnResultAsString() {
+(async () => {
 	try {
+		// Add distFolder option to save to file and not return a result
+		// e.g. await render(fulldir, demoFolderName, brandContext, distFolder);
 		const result = await render(fulldir, demoFolderName, brandContext);
 		console.log(result);
 	} catch (error) {
 		console.error(error);
 	}
-}
-
-// Save demo to index.html file in desired location
-async function saveResultToFile() {
-	try {
-		await render(fulldir, demoFolderName, brandContext, distFolder);
-	} catch (error) {
-		console.error(error);
-	}
-}
-
-returnResultAsString();
-saveResultToFile();
+})();
