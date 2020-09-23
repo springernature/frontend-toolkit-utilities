@@ -74,7 +74,7 @@ By running the `reporter.init()` function you can set the following logging leve
 
 ### Output
 
-![example output](img/cli-ouput.png)
+![example output](img/example.png)
 
 ## License
 
