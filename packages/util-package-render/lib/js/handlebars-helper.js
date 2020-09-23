@@ -7,6 +7,7 @@ const baseTemplate = require('./template');
 
 /**
  * Compile handlebars template into a function
+ * @private
  * @function compileHandlebars
  * @param {String} template code to compile
  * @return {Function}
@@ -19,6 +20,16 @@ const compileHandlebars = template => {
 	}
 };
 
+/**
+ * Contents of template to be rendered
+ * Or default contents if none found
+ * @async
+ * @private
+ * @function getDemoTemplate
+ * @param {String} packageRoot path of the package to render
+ * @param {String} demoCodeFolder name of folder where demo code stored
+ * @return {Promise<String>}
+ */
 const getDemoTemplate = async (packageRoot, demoCodeFolder) => {
 	const ERR_NO_PACKAGE_HBS_FOUND = `No ${demoCodeFolder}/index.hbs found for package`;
 	const templateEntryPoint = path.join(packageRoot, demoCodeFolder, 'index.hbs');
@@ -33,6 +44,16 @@ const getDemoTemplate = async (packageRoot, demoCodeFolder) => {
 	return packageTemplate;
 };
 
+/**
+ * Contents of JSON context data
+ * Or empty object if none found
+ * @async
+ * @private
+ * @function getDemoContext
+ * @param {String} packageRoot path of the package to render
+ * @param {String} demoCodeFolder name of folder where demo code stored
+ * @return {Promise<Object>}
+ */
 const getDemoContext = async (packageRoot, demoCodeFolder) => {
 	const ERR_NO_PACKAGE_CONTEXT_FOUND = `No ${demoCodeFolder}/context.json found for package`;
 	const contextEntryPoint = path.join(packageRoot, demoCodeFolder, 'context.json');

@@ -8,10 +8,6 @@ const jsHelper = require('./js-helper');
 const sassHelper = require('./sass-helper');
 const file = require('./utils/file');
 
-// Where to find the brand context
-const npmScope = 'springernature';
-const contextName = 'brand-context';
-
 /**
  * Check package.json contents
  * @private
@@ -38,9 +34,10 @@ const getPackageJson = packageRoot => {
  * @private
  * @function installDependencies
  * @param {Object} packageJSON path of the package to render
- * @return {String}
+ * @param {String} brandContext name of the brand context package on NPM
+ * @return {Promise}
  */
-const installDependencies = async packageJSON => {
+const installDependencies = async (packageJSON, brandContext) => {
 	if (typeof packageJSON !== 'object') {
 		return;
 	}
@@ -50,7 +47,7 @@ const installDependencies = async packageJSON => {
 		if (!packageJSON.dependencies) {
 			packageJSON.dependencies = {};
 		}
-		packageJSON.dependencies[`@${npmScope}/${contextName}`] = packageJSON.brandContext;
+		packageJSON.dependencies[brandContext] = packageJSON.brandContext;
 	}
 
 	// Install dependencies
@@ -72,7 +69,7 @@ const installDependencies = async packageJSON => {
  * @param {Object} packageRootPath path of the package to render
  * @param {String} demoCodeFolder name of folder where demo code stored
  * @param {String} name of the package to be rendered
- * @return {String}
+ * @return {Promise<String>}
  */
 const generateHTML = async (packageRootPath, demoCodeFolder, name) => {
 	try {
@@ -126,10 +123,16 @@ const writeHtmlFile = async (packageRoot, distFolder, html) => {
  * @function renderDemo
  * @param {String} packageRoot path of the package to render
  * @param {String} demoCodeFolder name of folder where demo code stored
+ * @param {String} [brandContext='@springernature/brand-context'] name of the brand context package on NPM
  * @param {String} [distFolder] path to write the index.html file
  * @return {Promise}
  */
-const renderDemo = async (packageRoot, demoCodeFolder, distFolder) => {
+const renderDemo = async (
+	packageRoot,
+	demoCodeFolder,
+	brandContext = '@springernature/brand-context',
+	distFolder
+) => {
 	// Confirm path of package to render
 	const packageRootPath = file.sanitisePath(packageRoot);
 	console.log(`PATH=${packageRootPath}`);
@@ -138,7 +141,7 @@ const renderDemo = async (packageRoot, demoCodeFolder, distFolder) => {
 
 	// Install dependencies
 	const packageJSON = getPackageJson(packageRootPath);
-	await installDependencies(packageJSON);
+	await installDependencies(packageJSON, brandContext);
 
 	// Generate static HTML
 	const html = await generateHTML(packageRootPath, demoCodeFolder, packageJSON.name);
