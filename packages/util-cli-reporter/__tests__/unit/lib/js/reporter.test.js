@@ -36,9 +36,8 @@ describe('Reporter Basics', () => {
 
 describe('Reporting configuration - no init', () => {
 	const originalLog = console.log;
-	const mockedLog = output => consoleOutput = stripAnsi(output);
-
 	let consoleOutput = '';
+	const mockedLog = output => consoleOutput = stripAnsi(output);
 
 	beforeEach(() => console.log = mockedLog);
 	afterEach(() => {
@@ -84,9 +83,8 @@ describe('Reporting configuration - no init', () => {
 
 describe('Reporting configuration - no comment', () => {
 	const originalLog = console.log;
-	const mockedLog = output => consoleOutput = stripAnsi(output);
-
 	let consoleOutput = '';
+	const mockedLog = output => consoleOutput = stripAnsi(output);
 
 	beforeEach(() => console.log = mockedLog);
 	afterEach(() => {
@@ -125,9 +123,8 @@ describe('Reporting configuration - no comment', () => {
 
 describe('Reporting configuration - no message', () => {
 	const originalLog = console.log;
-	const mockedLog = output => consoleOutput = stripAnsi(output);
-
 	let consoleOutput = '';
+	const mockedLog = output => consoleOutput = stripAnsi(output);
 
 	beforeEach(() => console.log = mockedLog);
 	afterEach(() => {
@@ -166,9 +163,8 @@ describe('Reporting configuration - no message', () => {
 
 describe('Reporting configuration - no message, but comment', () => {
 	const originalLog = console.log;
-	const mockedLog = output => consoleOutput = stripAnsi(output);
-
 	let consoleOutput = '';
+	const mockedLog = output => consoleOutput = stripAnsi(output);
 
 	beforeEach(() => console.log = mockedLog);
 	afterEach(() => {
@@ -207,9 +203,8 @@ describe('Reporting configuration - no message, but comment', () => {
 
 describe('Reporting configuration - level=title', () => {
 	const originalLog = console.log;
-	const mockedLog = output => consoleOutput = stripAnsi(output);
-
 	let consoleOutput = '';
+	const mockedLog = output => consoleOutput = stripAnsi(output);
 
 	beforeEach(() => {
 		console.log = mockedLog;
@@ -258,9 +253,8 @@ describe('Reporting configuration - level=title', () => {
 
 describe('Reporting configuration - level=info', () => {
 	const originalLog = console.log;
-	const mockedLog = output => consoleOutput = stripAnsi(output);
-
 	let consoleOutput = '';
+	const mockedLog = output => consoleOutput = stripAnsi(output);
 
 	beforeEach(() => {
 		console.log = mockedLog;
@@ -309,9 +303,8 @@ describe('Reporting configuration - level=info', () => {
 
 describe('Reporting configuration - level=success', () => {
 	const originalLog = console.log;
-	const mockedLog = output => consoleOutput = stripAnsi(output);
-
 	let consoleOutput = '';
+	const mockedLog = output => consoleOutput = stripAnsi(output);
 
 	beforeEach(() => {
 		console.log = mockedLog;
@@ -360,9 +353,8 @@ describe('Reporting configuration - level=success', () => {
 
 describe('Reporting configuration - level=warning', () => {
 	const originalLog = console.log;
-	const mockedLog = output => consoleOutput = stripAnsi(output);
-
 	let consoleOutput = '';
+	const mockedLog = output => consoleOutput = stripAnsi(output);
 
 	beforeEach(() => {
 		console.log = mockedLog;
@@ -411,9 +403,8 @@ describe('Reporting configuration - level=warning', () => {
 
 describe('Reporting configuration - level=fail', () => {
 	const originalLog = console.log;
-	const mockedLog = output => consoleOutput = stripAnsi(output);
-
 	let consoleOutput = '';
+	const mockedLog = output => consoleOutput = stripAnsi(output);
 
 	beforeEach(() => {
 		console.log = mockedLog;
@@ -462,9 +453,8 @@ describe('Reporting configuration - level=fail', () => {
 
 describe('Reporting configuration - level=none', () => {
 	const originalLog = console.log;
-	const mockedLog = output => consoleOutput = stripAnsi(output);
-
 	let consoleOutput = '';
+	const mockedLog = output => consoleOutput = stripAnsi(output);
 
 	beforeEach(() => {
 		console.log = mockedLog;
@@ -513,9 +503,8 @@ describe('Reporting configuration - level=none', () => {
 
 describe('Reporting configuration - defaults to title log level when invalid init', () => {
 	const originalLog = console.log;
-	const mockedLog = output => consoleOutput = stripAnsi(output);
-
 	let consoleOutput = '';
+	const mockedLog = output => consoleOutput = stripAnsi(output);
 
 	beforeEach(() => {
 		console.log = mockedLog;
