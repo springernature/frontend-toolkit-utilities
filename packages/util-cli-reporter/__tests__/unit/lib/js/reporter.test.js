@@ -17,6 +17,10 @@ describe('Reporter Basics', () => {
 		expect(reporter.fail).toBeInstanceOf(Function);
 	});
 
+	test('has a `warning` method', () => {
+		expect(reporter.warning).toBeInstanceOf(Function);
+	});
+
 	test('has a `success` method', () => {
 		expect(reporter.success).toBeInstanceOf(Function);
 	});
@@ -47,6 +51,13 @@ describe('Reporting configuration - no init', () => {
 
 		expect.assertions(1);
 		expect(consoleOutput).toEqual('fail type this is my message to you');
+	});
+
+	test('prints to cli from `warning` method', () => {
+		reporter.warning('type', 'this is my message', 'to you');
+
+		expect.assertions(1);
+		expect(consoleOutput).toEqual('warning type this is my message to you');
 	});
 
 	test('prints to cli from `success` method', () => {
@@ -90,6 +101,13 @@ describe('Reporting configuration - no comment', () => {
 		expect(consoleOutput).toEqual('fail type this is my message');
 	});
 
+	test('prints to cli from `warning` method', () => {
+		reporter.warning('type', 'this is my message');
+
+		expect.assertions(1);
+		expect(consoleOutput).toEqual('warning type this is my message');
+	});
+
 	test('prints to cli from `success` method', () => {
 		reporter.success('type', 'this is my message');
 
@@ -124,6 +142,13 @@ describe('Reporting configuration - no message', () => {
 		expect(consoleOutput).toEqual('fail type');
 	});
 
+	test('prints to cli from `warning` method', () => {
+		reporter.warning('type');
+
+		expect.assertions(1);
+		expect(consoleOutput).toEqual('warning type');
+	});
+
 	test('prints to cli from `success` method', () => {
 		reporter.success('type');
 
@@ -156,6 +181,13 @@ describe('Reporting configuration - no message, but comment', () => {
 
 		expect.assertions(1);
 		expect(consoleOutput).toEqual('fail type comment');
+	});
+
+	test('prints to cli from `warning` method', () => {
+		reporter.warning('type', null, 'comment');
+
+		expect.assertions(1);
+		expect(consoleOutput).toEqual('warning type comment');
 	});
 
 	test('prints to cli from `success` method', () => {
@@ -193,6 +225,13 @@ describe('Reporting configuration - level=title', () => {
 
 		expect.assertions(1);
 		expect(consoleOutput).toEqual('fail type this is my message to you');
+	});
+
+	test('prints to cli from `warning` method', () => {
+		reporter.warning('type', 'this is my message', 'to you');
+
+		expect.assertions(1);
+		expect(consoleOutput).toEqual('warning type this is my message to you');
 	});
 
 	test('prints to cli from `success` method', () => {
@@ -239,6 +278,13 @@ describe('Reporting configuration - level=info', () => {
 		expect(consoleOutput).toEqual('fail type this is my message to you');
 	});
 
+	test('prints to cli from `warning` method', () => {
+		reporter.warning('type', 'this is my message', 'to you');
+
+		expect.assertions(1);
+		expect(consoleOutput).toEqual('warning type this is my message to you');
+	});
+
 	test('prints to cli from `success` method', () => {
 		reporter.success('type', 'this is my message', 'to you');
 
@@ -283,11 +329,69 @@ describe('Reporting configuration - level=success', () => {
 		expect(consoleOutput).toEqual('fail type this is my message to you');
 	});
 
+	test('prints to cli from `warning` method', () => {
+		reporter.warning('type', 'this is my message', 'to you');
+
+		expect.assertions(1);
+		expect(consoleOutput).toEqual('warning type this is my message to you');
+	});
+
 	test('prints to cli from `success` method', () => {
 		reporter.success('type', 'this is my message', 'to you');
 
 		expect.assertions(1);
 		expect(consoleOutput).toEqual('success type this is my message to you');
+	});
+
+	test('does not print to cli from `info` method', () => {
+		reporter.info('type', 'this is my message', 'to you');
+
+		expect.assertions(1);
+		expect(consoleOutput).toEqual('');
+	});
+
+	test('does not print to cli from `title` method', () => {
+		reporter.title('string');
+
+		expect.assertions(1);
+		expect(consoleOutput).toEqual('');
+	});
+});
+
+describe('Reporting configuration - level=warning', () => {
+	const originalLog = console.log;
+	const mockedLog = output => consoleOutput = stripAnsi(output);
+
+	let consoleOutput = '';
+
+	beforeEach(() => {
+		console.log = mockedLog;
+		reporter.init('warning');
+	});
+	afterEach(() => {
+		console.log = originalLog;
+		consoleOutput = '';
+	});
+
+	test('prints to cli from `fail` method', () => {
+		reporter.fail('type', 'this is my message', 'to you');
+
+		expect.assertions(1);
+		expect(consoleOutput).toEqual('fail type this is my message to you');
+	});
+
+	test('prints to cli from `warning` method', () => {
+		reporter.warning('type', 'this is my message', 'to you');
+
+		expect.assertions(1);
+		expect(consoleOutput).toEqual('warning type this is my message to you');
+	});
+
+	test('does not print to cli from `success` method', () => {
+		reporter.success('type', 'this is my message', 'to you');
+
+		expect.assertions(1);
+		expect(consoleOutput).toEqual('');
 	});
 
 	test('does not print to cli from `info` method', () => {
@@ -325,6 +429,13 @@ describe('Reporting configuration - level=fail', () => {
 
 		expect.assertions(1);
 		expect(consoleOutput).toEqual('fail type this is my message to you');
+	});
+
+	test('does not print to cli from `warning` method', () => {
+		reporter.warning('type', 'this is my message', 'to you');
+
+		expect.assertions(1);
+		expect(consoleOutput).toEqual('');
 	});
 
 	test('does not print to cli from `success` method', () => {
@@ -366,6 +477,13 @@ describe('Reporting configuration - level=none', () => {
 
 	test('does not print to cli from `fail` method', () => {
 		reporter.fail('type', 'this is my message', 'to you');
+
+		expect.assertions(1);
+		expect(consoleOutput).toEqual('');
+	});
+
+	test('does not print to cli from `warning` method', () => {
+		reporter.warning('type', 'this is my message', 'to you');
 
 		expect.assertions(1);
 		expect(consoleOutput).toEqual('');
@@ -413,6 +531,13 @@ describe('Reporting configuration - defaults to title log level when invalid ini
 
 		expect.assertions(1);
 		expect(consoleOutput).toEqual('fail type this is my message to you');
+	});
+
+	test('prints to cli from `warning` method', () => {
+		reporter.warning('type', 'this is my message', 'to you');
+
+		expect.assertions(1);
+		expect(consoleOutput).toEqual('warning type this is my message to you');
 	});
 
 	test('prints to cli from `success` method', () => {
