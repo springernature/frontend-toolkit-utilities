@@ -10,6 +10,7 @@ const report = {};
 const colors = {
 	info: kleur.green,
 	success: kleur.green().bold,
+	warning: kleur.yellow,
 	fail: kleur.red().bold,
 	description: kleur.magenta,
 	message: kleur.white,
@@ -18,15 +19,16 @@ const colors = {
 
 // Logging levels
 const logging = {
-	TITLE: 4,
-	INFO: 3,
-	SUCCESS: 2,
+	TITLE: 5,
+	INFO: 4,
+	SUCCESS: 3,
+	WARNING: 2,
 	FAIL: 1,
 	NONE: 0
 };
 
 // Default logging level
-let logLevel = 4;
+let logLevel = 5;
 
 /**
  * Clean whitespace from output
@@ -92,6 +94,23 @@ report.fail = (description, message = null, comment = null) => {
 
 /**
  * Output to CLI
+ * Type: Warning
+ * @param {String} description output description
+ * @param {String} [message=null] the main message
+ * @param {String} [comment=null] additional comment
+ */
+report.warning = (description, message = null, comment = null) => {
+	if (logLevel >= logging.WARNING) {
+		console.log(
+			cleanWhitespace(
+				configureOutput('warning', description, message, comment)
+			)
+		);
+	}
+};
+
+/**
+ * Output to CLI
  * Type: Success
  * @param {String} description output description
  * @param {String} [message=null] the main message
@@ -142,7 +161,7 @@ report.title = string => {
 /**
  * Initialise with a logging level
  * Defaults to title
- * @param {String} level none (0), fail (1), success (2), info (3), title (4)
+ * @param {String} level none (0), fail (1), warning(2), success (3), info (4), title (5)
  */
 report.init = level => {
 	const levelUp = level.toUpperCase();
@@ -151,7 +170,7 @@ report.init = level => {
 	if (Object.prototype.hasOwnProperty.call(logging, levelUp)) {
 		logLevel = logging[levelUp];
 	} else {
-		logLevel = 4;
+		logLevel = 5;
 	}
 };
 

@@ -31,6 +31,10 @@ reporter.success('description');
 reporter.success('description', 'this is my message');
 reporter.success('description', 'this is my message', 'to you');
 
+reporter.warning('description');
+reporter.warning('description', 'this is my message');
+reporter.warning('description', 'this is my message', 'to you');
+
 reporter.fail('description');
 reporter.fail('description', 'this is my message');
 reporter.fail('description', 'this is my message', 'to you');
@@ -42,30 +46,35 @@ By running the `reporter.init()` function you can set the following logging leve
 
 #### `reporter.init('title')`
 
-* Prints all reporting types - `title`, `info`, `success`, `fail`
+* Prints all reporting types - `title`, `info`, `success`, `warning`, `fail`
 
 #### `reporter.init('info')`
 
-* Prints the reporting types - `info`, `success`, `fail`
+* Prints the reporting types - `info`, `success`, `warning`, `fail`
 * Ignores the reporting types - `title`
 
 #### `reporter.init('success')`
 
-* Prints the reporting types - `success`, `fail`
+* Prints the reporting types - `success`, `warning`, `fail`
 * Ignores the reporting types - `title`, `info`
+
+#### `reporter.init('warning')`
+
+* Prints the reporting types - `warning`, `fail`
+* Ignores the reporting types - `title`, `info`, `success`
 
 #### `reporter.init('fail')`
 
 * Prints the reporting types - `fail`
-* Ignores the reporting types - `title`, `info`, `success`
+* Ignores the reporting types - `title`, `info`, `success`, `warning`
 
 #### `reporter.init('none')`
 
-* Ignores all reporting types - `title`, `info`, `success`, `fail`
+* Ignores all reporting types - `title`, `info`, `success`, `warning`, `fail`
 
 ### Output
 
-![example output](img/cli-ouput.png)
+![example output](img/example.png)
 
 ## License
 

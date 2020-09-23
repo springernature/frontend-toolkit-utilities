@@ -1,5 +1,8 @@
 # History
 
+## 1.2.0 (2020-09-23)
+	* FEATURE: New 'warning' level for reporting
+
 ## 1.1.1 (2020-04-27)
 	* Replace `chalk` with `kleur`
 
