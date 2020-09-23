@@ -2,6 +2,7 @@
 
 const path = require('path');
 const rollup = require('rollup');
+const reporter = require('@springernature/util-cli-reporter');
 const file = require('./utils/file');
 
 const ERR_NO_PACKAGE_JS_FOUND = 'No JS found for package';
@@ -19,6 +20,8 @@ const transpileJS = async (packageRoot, demoCodeFolder) => {
 	let packageJS = await file.getContent(jsEntryPoint);
 	let outputBuffer = '';
 	let bundle;
+
+	reporter.info('generating transpiled javascript');
 
 	// Lack of packageJS should not be fatal
 	if (packageJS instanceof Error) {
@@ -45,7 +48,7 @@ const transpileJS = async (packageRoot, demoCodeFolder) => {
 	// Iterate through output and generate js string
 	rollupOutput.output.forEach(chunkOrAsset => {
 		if (chunkOrAsset.type === 'asset') {
-			console.log(`Rollup generated the asset: ${chunkOrAsset.fileName}`);
+			reporter.info('Rollup generated asset', chunkOrAsset.fileName);
 		} else {
 			outputBuffer += chunkOrAsset.code;
 		}

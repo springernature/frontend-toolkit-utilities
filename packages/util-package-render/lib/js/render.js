@@ -3,6 +3,7 @@
 const fs = require('fs').promises;
 const path = require('path');
 const npmInstall = require('@springernature/util-package-installer');
+const reporter = require('@springernature/util-cli-reporter');
 const handlebarsHelper = require('./handlebars-helper');
 const jsHelper = require('./js-helper');
 const sassHelper = require('./sass-helper');
@@ -41,6 +42,8 @@ const installDependencies = async (packageJSON, brandContext) => {
 	if (typeof packageJSON !== 'object') {
 		return;
 	}
+
+	reporter.info('installing package dependencies');
 
 	// Add optional brand context to dependencies
 	if (packageJSON.brandContext) {
@@ -114,7 +117,7 @@ const writeHtmlFile = async (packageRoot, distFolder, html) => {
 	}
 
 	const sizeInBytes = await file.getSizeInBytes(fullPath);
-	console.log(`written to ${path.relative(packageRoot, fullPath)}, size ${sizeInBytes}`);
+	reporter.success('rendered to file', path.relative(packageRoot, fullPath), sizeInBytes);
 };
 
 /**
@@ -133,14 +136,15 @@ const renderDemo = async (
 	brandContext = '@springernature/brand-context',
 	distFolder
 ) => {
-	// Confirm path of package to render
+	// Confirm path of package to render & get package.json
 	const packageRootPath = file.sanitisePath(packageRoot);
-	console.log(`PATH=${packageRootPath}`);
-	console.log('Switching to package path');
+	const packageJSON = getPackageJson(packageRootPath);
+
+	reporter.title(`Rendering demo of ${packageJSON.name}`);
+	reporter.info('path of package', packageRootPath);
 	process.chdir(packageRootPath);
 
 	// Install dependencies
-	const packageJSON = getPackageJson(packageRootPath);
 	await installDependencies(packageJSON, brandContext);
 
 	// Generate static HTML

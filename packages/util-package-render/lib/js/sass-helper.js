@@ -3,6 +3,7 @@
 const util = require('util');
 const path = require('path');
 const sass = require('node-sass');
+const reporter = require('@springernature/util-cli-reporter');
 const file = require('./utils/file');
 
 const render = util.promisify(sass.render);
@@ -21,6 +22,8 @@ const compileSASS = async (packageRoot, demoCodeFolder) => {
 	const sassEntryPoint = path.join(packageRoot, demoCodeFolder, 'main.scss');
 	let packageSASS = await file.getContent(sassEntryPoint);
 	let result;
+
+	reporter.info('generating compiled css');
 
 	// Lack of packageSASS should not be fatal
 	if (packageSASS instanceof Error) {

@@ -2,6 +2,7 @@
 
 const path = require('path');
 const Handlebars = require('handlebars');
+const reporter = require('@springernature/util-cli-reporter');
 const file = require('./utils/file');
 const baseTemplate = require('./template');
 
@@ -91,7 +92,9 @@ const getDemoContext = async (packageRoot, demoCodeFolder) => {
  */
 const compileTemplate = async config => {
 	const HBARS_CONTEXT_KEY = 'utilPackageRenderState';
-	const ERR_INVALID_CONTEXT_KEY_NAME = 'Invalid as a key name in package demo context, skipping package...';
+	const ERR_INVALID_CONTEXT_KEY_NAME = 'Invalid as a key name in context data file, skipping package...';
+
+	reporter.info('generating compiled static html');
 
 	// Get the demo template
 	const packageTemplate = await getDemoTemplate(config.packageRoot, config.demoCodeFolder);
