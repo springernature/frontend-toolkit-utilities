@@ -24,7 +24,7 @@ describe('util-package-installer', () => {
 
 	describe('dependenciesObject()', () => {
 		test('calls getValidDepdendencies', async () => {
-			await install.dependenciesObject(mockDependencies.oneValidDependency);
+			await install.dependenciesObject('type', mockDependencies.oneValidDependency, '', 'none');
 			expect.assertions(1);
 			expect(dependenciesObjectSpy).toHaveBeenCalledTimes(1);
 		});
@@ -32,7 +32,7 @@ describe('util-package-installer', () => {
 		test('with no dependencies, returns an error', async () => {
 			let result;
 			try {
-				result = await install.dependenciesObject({});
+				result = await install.dependenciesObject('type', {}, '', 'none');
 			} catch (error) {
 				result = error;
 			}
@@ -41,19 +41,19 @@ describe('util-package-installer', () => {
 		});
 
 		test('with one valid dep, calls child_process.spawn once with correct args', async () => {
-			await install.dependenciesObject(mockDependencies.oneValidDependency);
+			await install.dependenciesObject('type', mockDependencies.oneValidDependency, '', 'none');
 			expect.assertions(2);
 			expect(child_process.spawn).toHaveBeenCalledWith(
-				'npm', ['install', 'foo@1.0.0 - 2.9999.9999']
+				'npm', ['install', '', 'foo@1.0.0 - 2.9999.9999']
 			);
 			expect(child_process.spawn).toHaveBeenCalledTimes(1);
 		});
 
 		test('with two valid deps, calls child_process.exec once with correct args', async () => {
-			await install.dependenciesObject(mockDependencies.twoValidDependencies);
+			await install.dependenciesObject('type', mockDependencies.twoValidDependencies, '', 'none');
 			expect.assertions(2);
 			expect(child_process.spawn).toHaveBeenCalledWith(
-				'npm', ['install', 'foo@1.0.0 - 2.9999.9999 bar@>=1.0.2 <2.1.2']
+				'npm', ['install', '', 'foo@1.0.0 - 2.9999.9999 bar@>=1.0.2 <2.1.2']
 			);
 			expect(child_process.spawn).toHaveBeenCalledTimes(1);
 		});
@@ -86,7 +86,7 @@ describe('util-package-installer', () => {
 
 			let result;
 			try {
-				result = await install.dependenciesObject(mockDependencies.oneValidDependency);
+				result = await install.dependenciesObject('type', mockDependencies.oneValidDependency, '', 'none');
 			} catch (error) {
 				result = error;
 			}

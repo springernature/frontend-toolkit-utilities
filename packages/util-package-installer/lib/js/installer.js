@@ -26,7 +26,10 @@ const VERSION_RANGE_MAXLENGTH = 50;
 module.exports = {
 	/**
 	 * Main method which actually installs given depdendencies.
+	 * @param  {String} type what are we installing: dependencies/devDependencies/peerDependencies
 	 * @param  {Dependencies} dependencies={}
+	 * @param  {String} options any parameters to pass to npm install e.g. --no-save
+	 * @param  {String} logLevel amount of logging from @springernature/util-cli-reporter
 	 * @returns {Promise} resolves with "npm install" command stdout data.
 	 * @throws {Error} message is contents of "npm install" command stderr, or some other operational error.
 	 */
@@ -85,6 +88,8 @@ module.exports = {
 	/**
 	 * Helper to install just the dependencies in a parsed package.json
 	 * @param  {PackageJSON} packageJSON={}
+	 * @param  {String} options any parameters to pass to npm install e.g. --no-save
+	 * @param  {String} logLevel amount of logging from @springernature/util-cli-reporter
 	 */
 	dependencies: async (packageJSON = {}, options = '', logLevel = 'title') =>
 		module.exports.dependenciesObject('dependencies', packageJSON.dependencies, options, logLevel),
@@ -92,6 +97,8 @@ module.exports = {
 	/**
 	 * Helper to install just the devDependencies in a parsed package.json
 	 * @param  {PackageJSON} packageJSON={}
+	 * @param  {String} options any parameters to pass to npm install e.g. --no-save
+	 * @param  {String} logLevel amount of logging from @springernature/util-cli-reporter
 	 */
 	devDependencies: async (packageJSON = {}, options = '', logLevel = 'title') =>
 		module.exports.dependenciesObject('devDependencies', packageJSON.devDependencies, options, logLevel),
@@ -99,6 +106,8 @@ module.exports = {
 	/**
 	 * Helper to install just the peerDependencies in a parsed package.json
 	 * @param  {PackageJSON} packageJSON={}
+	 * @param  {String} options any parameters to pass to npm install e.g. --no-save
+	 * @param  {String} logLevel amount of logging from @springernature/util-cli-reporter
 	 */
 	peerDependencies: async (packageJSON = {}, options = '', logLevel = 'title') =>
 		module.exports.dependenciesObject('peerDependencies', packageJSON.peerDependencies, options, logLevel),
