@@ -56,7 +56,7 @@ const installDependencies = async (packageJSON, brandContext) => {
 	// Install dependencies
 	if (packageJSON.dependencies) {
 		try {
-			await npmInstall.dependencies(packageJSON);
+			await npmInstall.dependencies(packageJSON, '--no-save', 'info');
 			reporter.success('dependencies installed');
 		} catch (error) {
 			reporter.fail('dependency installation');
