@@ -29,15 +29,15 @@ const args = {
 	selector: '[data-component-autocomplete]',
 	onSelect: onSelect,
 	searchError: onError,
-	endPoint: 'autocomplete?q=',
+	endpoint: 'autocomplete?q=',
 	timeout: 2000,		// OPTIONAL: Set a timeout for the fetch request, onError will be called if fetch request timeouts, default is 2000
-	minCars: 1,			// OPTIONAL: Minimum characters to be typed before request is sent, default is 0
+	minChars: 1,		// OPTIONAL: Minimum characters to be typed before request is sent, default is 0
 	inputDelay: 300,	// OPTIONAL: Delay between keypress and request being sent, default is 300
 	headers: {
 		Accept: 'application/json; version=2'
 	},
-	resultsContainerSelector: 'c-results-container',
-	resultSelector: 'c-results-container__result',
+	resultsContainerSelector: '.c-results-container',
+	resultSelector: '.c-results-container__result',
 	resultsCallBack: showResults
 };
 

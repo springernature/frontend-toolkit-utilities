@@ -12,7 +12,7 @@ module.exports = (key, content) => {
 			{{{${key}.style}}}
 		</style>
 	</head>
-	<body>
+	<body style="padding:2%">
 		${content}
 	</body>
 </html>`;
