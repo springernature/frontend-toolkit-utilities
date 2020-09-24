@@ -23,10 +23,14 @@
     "/lib/js/installer.js"
   ],
   "scripts": {
-    "test": "echo \"Run tests from the repository root please.\" && exit 1"
+    "test": "echo \"Run tests from the repository root please.\" && exit 1",
+    "jsdoc": "jsdoc ./lib/js/installer.js -d docs"
   },
   "dependencies": {
     "@springernature/util-cli-reporter": "^1.2.0",
     "validate-npm-package-name": "^3.0.0"
+  },
+  "devDependencies": {
+    "jsdoc": "^3.6.6"
   }
 }
