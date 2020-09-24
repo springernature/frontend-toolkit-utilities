@@ -96,53 +96,60 @@ const generateHTML = async (packageRootPath, demoCodeFolder, name) => {
  * @async
  * @private
  * @function writeHtmlFile
- * @param {String} packageRoot path of the package to render
- * @param {String} distFolder path to write the index.html file
+ * @param {String} distFolderPath absolute path to write the index.html file
+ * @param {String} distFolderPathRelative relative path to report the index.html file
  * @param {String} html content to be written to file
  * @return {Promise}
  */
-const writeHtmlFile = async (packageRoot, distFolder, html) => {
-	const fullPath = path.join(distFolder, 'index.html');
+const writeHtmlFile = async (distFolderPath, distFolderPathRelative, html) => {
+	const htmlFilePath = path.join(distFolderPath, 'index.html');
+	const htmlFilePathRelative = path.join(distFolderPathRelative, 'index.html');
 
 	try {
-		const distFolderExists = await file.isDir(distFolder);
+		const distFolderExists = await file.isDir(distFolderPath);
 
 		if (!distFolderExists) {
-			await fs.mkdir(distFolder);
+			await fs.mkdir(distFolderPath);
 		}
 
-		await fs.writeFile(fullPath, html);
+		await fs.writeFile(htmlFilePath, html);
 	} catch (error) {
-		reporter.fail('writing file', fullPath);
+		reporter.fail('writing file', htmlFilePath);
 		throw error;
 	}
 
-	const sizeInBytes = await file.getSizeInBytes(fullPath);
-	reporter.success('rendered to file', path.relative(packageRoot, fullPath), sizeInBytes);
+	const sizeInBytes = await file.getSizeInBytes(htmlFilePath);
+	reporter.success('rendered to file', htmlFilePathRelative, sizeInBytes);
 };
 
 /**
  * Render a package using code from a demo folder
  * @async
  * @function renderDemo
- * @param {String} packageRoot path of the package to render
- * @param {String} demoCodeFolder name of folder where demo code stored
+ * @param {String} [demoCodeFolder='demo'] name of folder where demo code stored
  * @param {String} [brandContext='@springernature/brand-context'] name of the brand context package on NPM
- * @param {String} [distFolder] path to write the index.html file
+ * @param {String} [reportingLevel='title'] amount of reporting, defaults to all
+ * @param {String} packageRoot path of the package to render
+ * @param {String} [distFolderPath] path to write the index.html file
  * @return {Promise}
  */
-const renderDemo = async (
-	packageRoot,
-	demoCodeFolder,
+const renderDemo = async ({
+	demoCodeFolder = 'demo',
 	brandContext = '@springernature/brand-context',
-	distFolder
-) => {
+	reportingLevel = 'title',
+	packageRoot,
+	distFolderPath
+}) => {
 	// Confirm path of package to render & get package.json
 	const packageRootPath = file.sanitisePath(packageRoot);
 	const packageJSON = getPackageJson(packageRootPath);
+	const demoCodePath = path.join(packageRootPath, demoCodeFolder);
+	const distFolderPathRelative = (distFolderPath) ? path.relative(process.cwd(), distFolderPath) : undefined;
 
+	// Set reporting level and switch to package dir
+	reporter.init(reportingLevel);
 	reporter.title(`Rendering demo of ${packageJSON.name}`);
-	reporter.info('path of package', packageRootPath);
+	reporter.info('demo code location', path.relative(process.cwd(), demoCodePath));
 	process.chdir(packageRootPath);
 
 	// Install dependencies
@@ -152,8 +159,9 @@ const renderDemo = async (
 	const html = await generateHTML(packageRootPath, demoCodeFolder, packageJSON.name);
 
 	// Write html to file
-	if (distFolder) {
-		writeHtmlFile(packageRootPath, distFolder, html);
+	if (distFolderPath) {
+		writeHtmlFile(distFolderPath, distFolderPathRelative, html);
+		return;
 	}
 
 	// Return the html content
