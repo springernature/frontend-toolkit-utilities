@@ -1,5 +1,6 @@
 'use strict';
 const cp = require('child_process');
+const reporter = require('@springernature/util-cli-reporter');
 const validatePackageName = require('validate-npm-package-name');
 
 /**
@@ -29,17 +30,21 @@ module.exports = {
 	 * @returns {Promise} resolves with "npm install" command stdout data.
 	 * @throws {Error} message is contents of "npm install" command stderr, or some other operational error.
 	 */
-	dependenciesObject: async (dependencies = {}) => {
+	dependenciesObject: async (type, dependencies = {}, options, logLevel) => {
 		const validDepdendencies = module.exports.getValidDepdendencies(dependencies);
 		const packageListAsStr = validDepdendencies.map(dep => dep.join('@')).join(' ');
-		console.log(`npm-install packageListAsStr: ${packageListAsStr}`);
+
+		reporter.init(logLevel);
+		reporter.title(`installing ${type}`);
+		reporter.info('npm-install', packageListAsStr);
 
 		if (!packageListAsStr || packageListAsStr === '') {
-			throw new Error('invalid package list');
+			reporter.fail('invalid package list');
+			throw new Error(`Invalid: ${packageListAsStr}`);
 		}
 
 		const spawnPromiseResolution = await new Promise((resolve, reject) => {
-			const child = cp.spawn('npm', ['install', packageListAsStr]);
+			const child = cp.spawn('npm', ['install', options, packageListAsStr]);
 
 			let childStdout = '';
 			child.stdout.on('data', chunk => childStdout += chunk); // eslint-disable-line no-return-assign
@@ -81,19 +86,22 @@ module.exports = {
 	 * Helper to install just the dependencies in a parsed package.json
 	 * @param  {PackageJSON} packageJSON={}
 	 */
-	dependencies: async (packageJSON = {}) => module.exports.dependenciesObject(packageJSON.dependencies),
+	dependencies: async (packageJSON = {}, options = '', logLevel = 'title') =>
+		module.exports.dependenciesObject('dependencies', packageJSON.dependencies, options, logLevel),
 
 	/**
 	 * Helper to install just the devDependencies in a parsed package.json
 	 * @param  {PackageJSON} packageJSON={}
 	 */
-	devDependencies: async (packageJSON = {}) => module.exports.dependenciesObject(packageJSON.devDependencies),
+	devDependencies: async (packageJSON = {}, options = '', logLevel = 'title') =>
+		module.exports.dependenciesObject('devDependencies', packageJSON.devDependencies, options, logLevel),
 
 	/**
 	 * Helper to install just the peerDependencies in a parsed package.json
 	 * @param  {PackageJSON} packageJSON={}
 	 */
-	peerDependencies: async (packageJSON = {}) => module.exports.dependenciesObject(packageJSON.peerDependencies),
+	peerDependencies: async (packageJSON = {}, options = '', logLevel = 'title') =>
+		module.exports.dependenciesObject('peerDependencies', packageJSON.peerDependencies, options, logLevel),
 
 	/** Maximum permitted length of a package version range string */
 	VERSION_RANGE_MAXLENGTH: VERSION_RANGE_MAXLENGTH
