@@ -23,7 +23,7 @@ const compileSASS = async (packageRoot, demoCodeFolder) => {
 	let packageSASS = await file.getContent(sassEntryPoint);
 	let result;
 
-	reporter.info('generating compiled css');
+	reporter.info('starting node-sass', null, 'generating compiled css');
 
 	// Lack of packageSASS should not be fatal
 	if (packageSASS instanceof Error) {

@@ -96,7 +96,7 @@ const compileTemplate = async config => {
 	const HBARS_CONTEXT_KEY = 'utilPackageRenderState';
 	const ERR_INVALID_CONTEXT_KEY_NAME = 'invalid as a key name in context data file, skipping package...';
 
-	reporter.info('generating compiled static html');
+	reporter.info('starting handlebars', null, 'generating compiled static html');
 
 	// Get the demo template
 	const packageTemplate = await getDemoTemplate(config.packageRoot, config.demoCodeFolder);

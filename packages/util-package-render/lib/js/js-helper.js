@@ -21,7 +21,7 @@ const transpileJS = async (packageRoot, demoCodeFolder) => {
 	let outputBuffer = '';
 	let bundle;
 
-	reporter.info('generating transpiled javascript');
+	reporter.info('starting rollup', null, 'generating transpiled javascript');
 
 	// Lack of packageJS should not be fatal
 	if (packageJS instanceof Error) {
@@ -32,7 +32,10 @@ const transpileJS = async (packageRoot, demoCodeFolder) => {
 	// Create a rollup bundle
 	try {
 		bundle = await rollup.rollup({
-			input: path.join(packageRoot, demoCodeFolder, 'main.js')
+			input: path.join(packageRoot, demoCodeFolder, 'main.js'),
+			onwarn: function (message) {
+				reporter.warning('rollup', message);
+			}
 		});
 	} catch (error) {
 		reporter.fail('rollup', 'could not create rollup bundle');
