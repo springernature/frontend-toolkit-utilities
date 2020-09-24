@@ -1,6 +1,6 @@
 {
   "name": "@springernature/util-package-installer",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Dynamically installs NPM packages",
   "main": "./lib/js/installer.js",
   "repository": {
@@ -8,7 +8,10 @@
     "url": "git+https://github.com/springernature/frontend-toolkit-utilities.git"
   },
   "keywords": [
-    "springernature", "npm", "install", "installer"
+    "springernature",
+    "npm",
+    "install",
+    "installer"
   ],
   "author": "jpw",
   "license": "MIT",
@@ -20,9 +23,13 @@
     "/lib/js/installer.js"
   ],
   "scripts": {
-    "test": "echo \"Run tests from the repository root please.\" && exit 1"
+    "test": "echo \"Run tests from the repository root please.\" && exit 1",
+    "jsdoc": "jsdoc ./lib/js/installer.js -d docs"
   },
   "dependencies": {
     "validate-npm-package-name": "^3.0.0"
+  },
+  "devDependencies": {
+    "jsdoc": "^3.6.6"
   }
 }
