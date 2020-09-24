@@ -27,7 +27,6 @@
     "jsdoc": "jsdoc ./lib/js/installer.js -d docs"
   },
   "dependencies": {
-    "@springernature/util-cli-reporter": "^1.2.0",
     "validate-npm-package-name": "^3.0.0"
   },
   "devDependencies": {

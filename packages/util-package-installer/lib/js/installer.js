@@ -1,6 +1,5 @@
 'use strict';
 const cp = require('child_process');
-const reporter = require('@springernature/util-cli-reporter');
 const validatePackageName = require('validate-npm-package-name');
 
 /**
@@ -26,24 +25,19 @@ const VERSION_RANGE_MAXLENGTH = 50;
 module.exports = {
 	/**
 	 * Main method which actually installs given depdendencies.
-	 * @param  {String} type what are we installing: dependencies/devDependencies/peerDependencies
 	 * @param  {Dependencies} dependencies={}
-	 * @param  {String} options any parameters to pass to npm install e.g. --no-save
-	 * @param  {String} logLevel amount of logging from @springernature/util-cli-reporter
+	 * @param  {String} options='' any parameters to pass to npm install e.g. --no-save
 	 * @returns {Promise} resolves with "npm install" command stdout data.
 	 * @throws {Error} message is contents of "npm install" command stderr, or some other operational error.
 	 */
-	dependenciesObject: async (type, dependencies = {}, options, logLevel) => {
+	dependenciesObject: async (dependencies = {}, options = '') => {
 		const validDepdendencies = module.exports.getValidDepdendencies(dependencies);
 		const packageListAsStr = validDepdendencies.map(dep => dep.join('@')).join(' ');
 
-		reporter.init(logLevel);
-		reporter.title(`installing ${type}`);
-		reporter.info('npm-install', packageListAsStr);
+		console.log(`npm-install: ${packageListAsStr}`);
 
 		if (!packageListAsStr || packageListAsStr === '') {
-			reporter.fail('invalid package list');
-			throw new Error(`Invalid: ${packageListAsStr}`);
+			throw new Error('invalid package list');
 		}
 
 		const spawnPromiseResolution = await new Promise((resolve, reject) => {
@@ -88,29 +82,26 @@ module.exports = {
 	/**
 	 * Helper to install just the dependencies in a parsed package.json
 	 * @param  {PackageJSON} packageJSON={}
-	 * @param  {String} options='' any parameters to pass to npm install e.g. --no-save
-	 * @param  {String} logLevel=title amount of logging from @springernature/util-cli-reporter
+	 * @param  {String} options any parameters to pass to npm install e.g. --no-save
 	 */
-	dependencies: async (packageJSON = {}, options = '', logLevel = 'title') =>
-		module.exports.dependenciesObject('dependencies', packageJSON.dependencies, options, logLevel),
+	dependencies: async (packageJSON = {}, options) =>
+		module.exports.dependenciesObject(packageJSON.dependencies, options),
 
 	/**
 	 * Helper to install just the devDependencies in a parsed package.json
 	 * @param  {PackageJSON} packageJSON={}
 	 * @param  {String} options='' any parameters to pass to npm install e.g. --no-save
-	 * @param  {String} logLevel=title amount of logging from @springernature/util-cli-reporter
 	 */
-	devDependencies: async (packageJSON = {}, options = '', logLevel = 'title') =>
-		module.exports.dependenciesObject('devDependencies', packageJSON.devDependencies, options, logLevel),
+	devDependencies: async (packageJSON = {}, options) =>
+		module.exports.dependenciesObject(packageJSON.devDependencies, options),
 
 	/**
 	 * Helper to install just the peerDependencies in a parsed package.json
 	 * @param  {PackageJSON} packageJSON={}
 	 * @param  {String} options='' any parameters to pass to npm install e.g. --no-save
-	 * @param  {String} logLevel=title amount of logging from @springernature/util-cli-reporter
 	 */
-	peerDependencies: async (packageJSON = {}, options = '', logLevel = 'title') =>
-		module.exports.dependenciesObject('peerDependencies', packageJSON.peerDependencies, options, logLevel),
+	peerDependencies: async (packageJSON = {}, options) =>
+		module.exports.dependenciesObject(packageJSON.peerDependencies, options),
 
 	/** Maximum permitted length of a package version range string */
 	VERSION_RANGE_MAXLENGTH: VERSION_RANGE_MAXLENGTH
