@@ -1,22 +1,37 @@
-const autoComplete = args => {
+const autoComplete = arguments_ => {
+	const {
+		selector,
+		resultSelector,
+		resultsContainerSelector,
+		endpoint,
+		staticResultsData,
+		minChars = 0,
+		componentName,
+		onSelect,
+		inputDelay = 300,
+		requestTimeout = 2000,
+		headers = {},
+		httpMethod = 'GET',
+		bodyTemplate,
+		searchError,
+		resultsCallBack,
+		selectOnSuggestionBrowsing = true
+	} = arguments_;
+
+	if (!selector || !resultsCallBack || !resultSelector || !resultsContainerSelector || (!endpoint && !staticResultsData)) {
+		console.error('Please provide selector, resultsCallBack, and endpoint or staticResultsData');
+		return;
+	}
+
+	const input = document.querySelector(selector);
 	const container = () => {
-		return document.querySelector(`.${args.resultsContainerSelector}`);
+		return document.querySelector(`${resultsContainerSelector}`);
 	};
 	const suggestions = () => {
-		return Array.from(document.querySelectorAll(`.${args.resultSelector}`));
+		return Array.from(document.querySelectorAll(`${resultSelector}`));
 	};
 
-	const input = document.querySelector(args.selector);
-	const endpoint = args.endPoint;
-	const minChars = args.minChars || 0;
-	const componentName = args.componentName;
-	const onSelect = args.onSelect;
-	const inputDelay = (args.inputDelay === undefined) ? 300 : args.inputDelay;
-	const requestTimeout = args.timeout || 2000;
-	const headers = args.headers || {};
-	const searchError = args.searchError;
-	const resultsCallBack = args.resultsCallBack;
-	const eventKeys = ['ArrowDown', 'ArrowUp', 'Escape', 'Enter', 'Tab'];
+	const eventKeys = ['ArrowDown', 'Down', 'ArrowUp', 'Up', 'Escape', 'Enter', 'Tab'];
 
 	let inputTimer = null;
 	let fetchTimer = null;
@@ -24,11 +39,13 @@ const autoComplete = args => {
 
 	// Keyboard Event Listeners for text input
 	const inputEvents = event => {
-		if (event.key === 'ArrowDown') {
+		if (/ArrowDown|Down/.test(event.key)) {
 			event.preventDefault();
 			if (suggestions().length > 0) {
 				suggestions()[0].focus();
-				input.value = suggestions()[0].innerText;
+				if (selectOnSuggestionBrowsing) {
+					input.value = suggestions()[0].textContent;
+				}
 			}
 		}
 	};
@@ -51,57 +68,57 @@ const autoComplete = args => {
 		}
 
 		container().addEventListener('keydown', event => {
-			if (['Escape', 'ArrowUp', 'ArrowDown'].includes(event.key)) {
+			if (['Escape', 'ArrowUp', 'Up', 'ArrowDown', 'Down'].includes(event.key)) {
 				event.preventDefault();
 				event.stopPropagation();
 			}
 
 			let activeElement = document.activeElement;
 			let nextSibling = activeElement.nextSibling;
-			let prevSibling = activeElement.previousSibling;
-			let currentIndex = parseInt(activeElement.dataset.index, 10);
+			let previousSibling = activeElement.previousSibling;
+			let currentIndex = Array.from(activeElement.parentNode.children).indexOf(activeElement);
 
-			switch (event.key) {
-				case 'ArrowDown':
-					if (nextSibling) {
-						input.value = ((currentIndex + 1) < suggestions().length) ? nextSibling.innerText : currentSearchTerm;
-						nextSibling.focus();
+			if (/ArrowDown|Down/.test(event.key)) {
+				if (nextSibling) {
+					if (selectOnSuggestionBrowsing) {
+						if ((currentIndex + 1) < suggestions().length) {
+							input.value = nextSibling.textContent;
+						} else {
+							input.value = currentSearchTerm;
+						}
 					}
-					break;
-
-				case 'ArrowUp':
-					if (prevSibling) {
-						input.value = prevSibling.innerText;
-						prevSibling.focus();
-					} else {
-						input.focus();
+					nextSibling.focus();
+				}
+			} else if (/ArrowUp|Up/.test(event.key)) {
+				if (previousSibling) {
+					if (selectOnSuggestionBrowsing) {
+						input.value = previousSibling.textContent;
+					}
+					previousSibling.focus();
+				} else {
+					input.focus();
+					if (selectOnSuggestionBrowsing) {
 						input.value = currentSearchTerm;
 					}
-					break;
-
-				case 'Escape':
-					removeSuggestions();
-					input.value = currentSearchTerm;
-					break;
-				default:
-					break;
+				}
+			} else if (event.key === 'Escape') {
+				removeSuggestions();
+				input.value = currentSearchTerm;
 			}
 		});
 
-		suggestions().forEach(el => {
-			el.addEventListener('click', () => {
+		suggestions().forEach(element => {
+			element.addEventListener('click', () => {
 				if (onSelect) {
-					onSelect(el.textContent);
+					onSelect(element.textContent);
 				}
-				input.value = '';
 				removeSuggestions();
 			});
-			el.addEventListener('keyup', event => {
+			element.addEventListener('keyup', event => {
 				if (event.key === 'Enter') {
 					if (onSelect) {
-						onSelect(el.textContent);
+						onSelect(element.textContent);
 					}
-					input.value = '';
 					removeSuggestions();
 				}
 			});
@@ -110,26 +127,34 @@ const autoComplete = args => {
 
 	const generateSuggestions = data => {
 		removeSuggestions();
-		let resultsLength = data.length;
-		if (resultsLength > 0) {
-			input.addEventListener('keyup', inputEvents);
-		} else {
-			data.push('No results');
-		}
-
 		document.addEventListener('click', removeSuggestions);
+		input.addEventListener('keyup', inputEvents);
 		resultsCallBack.call(this, data);
-		if (resultsLength > 0) {
-			addSuggestionEventListeners();
-		}
+		addSuggestionEventListeners();
 	};
 
-	const sendQuery = term => {
-		let getSuggestions = new Promise((resolve, reject) => {
-			fetch(endpoint + term, {
+	const handleData = term => {
+		if (staticResultsData) {
+			generateSuggestions(staticResultsData);
+			return;
+		}
+
+		const fetchData = new Promise((resolve, reject) => {
+			let fetchURL;
+			const fetchParameters = {
 				'content-type': 'application/json',
-				headers
-			}).then(response => {
+				headers,
+				method: httpMethod
+			};
+
+			if (bodyTemplate) {
+				fetchURL = endpoint;
+				fetchParameters.body = JSON.stringify(bodyTemplate(term));
+			} else {
+				fetchURL = endpoint + term;
+			}
+
+			fetch(fetchURL, fetchParameters).then(response => {
 				if (response.status === 200 && response.ok) {
 					return response.json();
 				}
@@ -140,28 +165,24 @@ const autoComplete = args => {
 				} else {
 					searchError();
 				}
-			}).catch(err => {
-				reject(err);
+			}).catch(error => {
+				reject(error);
 			});
 		});
 
-		if (requestTimeout) {
-			let fetchTimeout = new Promise((resolve, reject) => {
-				fetchTimer = setTimeout(() => {
-					clearTimeout(fetchTimer);
-					reject(new Error('Timed out'));
-				}, requestTimeout);
-			});
+		let fetchTimeout = new Promise((resolve, reject) => {
+			fetchTimer = setTimeout(() => {
+				clearTimeout(fetchTimer);
+				reject(new Error('Timed out'));
+			}, requestTimeout);
+		});
 
-			Promise.race([
-				getSuggestions,
-				fetchTimeout
-			]).catch(err => {
-				searchError(err);
-			});
-		} else {
-			return getSuggestions;
-		}
+		Promise.race([
+			fetchData,
+			fetchTimeout
+		]).catch(error => {
+			searchError(error);
+		});
 	};
 
 	const listenForInput = event => {
@@ -171,7 +192,7 @@ const autoComplete = args => {
 				inputTimer = setTimeout(() => {
 					window.clearTimeout(inputTimer);
 					inputTimer = null;
-					sendQuery(input.value, generateSuggestions);
+					handleData(input.value);
 				}, inputDelay);
 			}
 		}
@@ -201,4 +222,4 @@ const autoComplete = args => {
 	};
 };
 
-export {autoComplete};
+export default autoComplete;

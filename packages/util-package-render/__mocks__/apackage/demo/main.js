@@ -1,4 +1,4 @@
-import {autoComplete} from '../js/index.js';
+import autoComplete from '../js/index.js';
 
 const showResults = results => {
 	// Update UI with results returned from server, e.g.
@@ -6,6 +6,10 @@ const showResults = results => {
 	const resultsContainer = document.createElement('div');
 	resultsContainer.className = 'c-results-container';
 
+	// Assuming results is an array
+	if (results.length === 0) {
+		results.push('No results');
+	}
 	results.forEach(datum => {
 		const result = document.createElement('div');
 		result.textContent = datum;
@@ -43,17 +47,19 @@ const args = {
 
 const myAutoComplete = autoComplete(args);
 
-// hack window.fetch for local demoimg
+/* End example. Code below is just for this demo */
+
+//  the following code hacks window.fetch for local demoimg
 const response = {
 	status: 200,
 	ok: true,
 	json: () => {
-		const term = window.lastQuery.replace(args.endPoint, '').toLowerCase();
+		const term = window.lastQuery.replace(args.endpoint, '').toLowerCase();
 		return animalsList.filter(animal => animal.toLowerCase().includes(term));
 	}
 }
-window.fetch = (endPointAndTerm) => {
-	window.lastQuery = endPointAndTerm;
+window.fetch = (endpointAndTerm) => {
+	window.lastQuery = endpointAndTerm;
 	return Promise.resolve(response);
 }
 

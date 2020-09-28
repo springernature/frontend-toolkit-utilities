@@ -56,6 +56,8 @@ const installDependencies = async (packageJSON, brandContext) => {
 	// Install dependencies
 	if (packageJSON.dependencies) {
 		try {
+			// Don't save back to dependencies in package.json
+			// If brand-context is used we don't want that added
 			await npmInstall.dependencies(packageJSON, '--no-save');
 			reporter.success('dependencies installed');
 		} catch (error) {
