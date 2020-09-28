@@ -142,7 +142,7 @@ const renderDemo = async ({
 	reportingLevel = 'title',
 	packageRoot,
 	distFolderPath
-}) => {
+} = {}) => {
 	// Confirm path of package to render & get package.json
 	const packageRootPath = file.sanitisePath(packageRoot);
 	const packageJSON = getPackageJson(packageRootPath);

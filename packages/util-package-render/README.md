@@ -1,45 +1,57 @@
 # Package Renderer
 
-Renders an Elements-compatible package into an HTML file with all resources inline.
+Renders an Elements-compatible package into HTML with all resources inlined.  
+Optionally write the result to disk as `index.html`.
 
-## Example usage
+## Usage
+
+```js
+const renderer = require('@springernature/util-package-render');
+await renderer(config);
+```
+
+### Config
+
+| Parameter              | Default Value                   | Type    | Required | Description                                     |
+|------------------------|---------------------------------|---------|----------|-------------------------------------------------|
+| config.demoCodeFolder  | 'demo'                          | String  | Yes      | Name of demo code folder within your package    |
+| config.brandContext    | '@springernature/brand-context' | String  | Yes      | Name of the brand-context package on NPM        |
+| config.reportingLevel  | 'title'                         | String  | Yes      | Amount of reporting for util-cli-reporter       |
+| config.packageRoot     | '.'                             | String  | Yes      | Full path to the package to render              |
+| config.distFolderPath  | null                            | String  | No       | Full path to where index.html should be written |
+
+## Full examples
+
+A working implementation can also be found in [`runner.js`](runner.js).
+
+### Using default config
 
 ```js
 'use strict';
-
-// Sample usage, useful when working on the renderer itself
-const path = require('path');
 const renderer = require('@springernature/util-package-render');
 
-// Path to the package you want to render
-const workdir = './__mocks__/apackage/';
-const fulldir = path.join(path.resolve(__dirname), workdir);
-
-// Name of folder containing demo code to compile
-const demoFolderName = 'demo';
-
-// Name of brand context on NPM if it exists
-const brandContext = '@springernature/brand-context';
-
-// Full path to write the HTML
-const distFolder = path.join(fulldir, 'dist');
-
+// By default no distFolder is defined and the result is returned as a String
 (async () => {
-	// Write the result to index.html in the distFolder
 	try {
-		await renderer({
-			demoCodeFolder: demoFolderName,
-			reportingLevel: 'title',
-			packageRoot: fulldir,
-			brandContext: brandContext,
-			distFolderPath: distFolder
-		});
+		const result = await renderer();
+		console.log(result);
 	} catch (error) {
 		console.error(error);
 	}
+})();
+```
 
-	// Return the contents as a String
-	// Does not write any file
+### Return result as String, with config
+
+```js
+const path = require('path');
+const renderer = require('@springernature/util-package-render');
+
+const fulldir = path.join(path.resolve(__dirname), './__mocks__/apackage/');
+const demoFolderName = 'demo';
+const brandContext = '@springernature/brand-context';
+
+(async () => {
 	try {
 		const result = await renderer({
 			demoCodeFolder: demoFolderName,
@@ -48,6 +60,32 @@ const distFolder = path.join(fulldir, 'dist');
 			brandContext: brandContext
 		});
 		console.log(result);
+	} catch (error) {
+		console.error(error);
+	}
+})();
+```
+
+### Write result to disk, with config
+
+```js
+const path = require('path');
+const renderer = require('@springernature/util-package-render');
+
+const fulldir = path.join(path.resolve(__dirname), './__mocks__/apackage/');
+const demoFolderName = 'demo';
+const brandContext = '@springernature/brand-context';
+const distFolder = path.join(fulldir, 'dist');
+
+(async () => {
+	try {
+		await renderer({
+			demoCodeFolder: demoFolderName,
+			reportingLevel: 'title',
+			packageRoot: fulldir,
+			brandContext: brandContext,
+			distFolderPath: distFolder
+		});
 	} catch (error) {
 		console.error(error);
 	}
