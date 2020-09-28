@@ -12,7 +12,7 @@ describe('Utility: file', () => {
 	});
 
 	describe('sanitisePath', () => {
-		[true, [], {}, 0, NaN, null, undefined].forEach(nonString => {
+		[true, [], {}, 0, NaN, null].forEach(nonString => {
 			test(`non-string param "${nonString}" throws`, () => {
 				expect.assertions(1);
 				expect(() => {
@@ -20,6 +20,12 @@ describe('Utility: file', () => {
 				}).toThrow();
 			});
 		})
+
+		test('undefined converts to "."', () => {
+			expect.assertions(1);
+			let result = file.sanitisePath();
+			expect(result).toBe('.');
+		});
 
 		test('empty string converts to "."', () => {
 			expect.assertions(1);

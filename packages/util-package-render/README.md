@@ -14,11 +14,11 @@ await renderer(config);
 
 | Parameter              | Default Value                   | Type    | Required | Description                                     |
 |------------------------|---------------------------------|---------|----------|-------------------------------------------------|
-| config.demoCodeFolder  | 'demo'                          | String  | Yes      | Name of demo code folder within your package    |
-| config.brandContext    | '@springernature/brand-context' | String  | Yes      | Name of the brand-context package on NPM        |
-| config.reportingLevel  | 'title'                         | String  | Yes      | Amount of reporting for util-cli-reporter       |
-| config.packageRoot     | '.'                             | String  | Yes      | Full path to the package to render              |
-| config.distFolderPath  | null                            | String  | No       | Full path to where index.html should be written |
+| config.demoCodeFolder  | 'demo'                          | String  | Yes      | Name of demo code folder within your package |
+| config.brandContext    | '@springernature/brand-context' | String  | Yes      | Name of the brand-context package on NPM     |
+| config.reportingLevel  | 'title'                         | String  | Yes      | Amount of reporting for util-cli-reporter    |
+| config.packageRoot     | '.'                             | String  | Yes      | Path to the package to render                |
+| config.distFolderPath  | null                            | String  | No       | Path to where index.html should be written   |
 
 ## Full examples
 

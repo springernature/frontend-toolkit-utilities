@@ -144,7 +144,7 @@ const renderDemo = async ({
 	distFolderPath
 } = {}) => {
 	// Confirm path of package to render & get package.json
-	const packageRootPath = file.sanitisePath(packageRoot);
+	const packageRootPath = path.resolve(file.sanitisePath(packageRoot));
 	const packageJSON = getPackageJson(packageRootPath);
 	const demoCodePath = path.join(packageRootPath, demoCodeFolder);
 	const distFolderPathRelative = (distFolderPath) ? path.relative(process.cwd(), distFolderPath) : undefined;

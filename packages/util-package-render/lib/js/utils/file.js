@@ -30,7 +30,7 @@ const api = {
 		}
 
 		if (str === '') {
-			path.resolve('.');
+			return '.';
 		}
 
 		// fold dots, stop traversal
@@ -39,7 +39,7 @@ const api = {
 		// allow alphanumerics & underscore, hyphen, dot, fwd slash
 		candidate = candidate.replace(/[^\w-./]+/g, '');
 
-		return path.resolve(candidate);
+		return candidate;
 	},
 
 	// Check if path is a directory that exists
