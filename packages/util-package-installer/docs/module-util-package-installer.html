@@ -183,7 +183,7 @@ This package provides a wrapper around that functionality.</div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="installer.js.html">installer.js</a>, <a href="installer.js.html#line99">line 99</a>
+        <a href="installer.js.html">installer.js</a>, <a href="installer.js.html#line107">line 107</a>
     </li></ul></dd>
     
 
@@ -273,7 +273,7 @@ This package provides a wrapper around that functionality.</div>
     
 
     
-    <h4 class="name" id=".dependencies"><span class="type-signature">(static) </span>dependencies<span class="signature">(packageJSON)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".dependencies"><span class="type-signature">(static) </span>dependencies<span class="signature">(packageJSON, options)</span><span class="type-signature"></span></h4>
     
 
     
@@ -345,6 +345,33 @@ This package provides a wrapper around that functionality.</div>
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">any parameters to pass to npm install e.g. --no-save</td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -382,7 +409,7 @@ This package provides a wrapper around that functionality.</div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="installer.js.html">installer.js</a>, <a href="installer.js.html#line84">line 84</a>
+        <a href="installer.js.html">installer.js</a>, <a href="installer.js.html#line87">line 87</a>
     </li></ul></dd>
     
 
@@ -418,7 +445,7 @@ This package provides a wrapper around that functionality.</div>
     
 
     
-    <h4 class="name" id=".dependenciesObject"><span class="type-signature">(static) </span>dependenciesObject<span class="signature">(dependencies)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+    <h4 class="name" id=".dependenciesObject"><span class="type-signature">(static) </span>dependenciesObject<span class="signature">(dependencies, options)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
     
 
     
@@ -490,6 +517,35 @@ This package provides a wrapper around that functionality.</div>
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    ''
+                
+                </td>
+            
+
+            <td class="description last">any parameters to pass to npm install e.g. --no-save</td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -527,7 +583,7 @@ This package provides a wrapper around that functionality.</div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="installer.js.html">installer.js</a>, <a href="installer.js.html#line32">line 32</a>
+        <a href="installer.js.html">installer.js</a>, <a href="installer.js.html#line33">line 33</a>
     </li></ul></dd>
     
 
@@ -614,7 +670,7 @@ This package provides a wrapper around that functionality.</div>
     
 
     
-    <h4 class="name" id=".devDependencies"><span class="type-signature">(static) </span>devDependencies<span class="signature">(packageJSON)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".devDependencies"><span class="type-signature">(static) </span>devDependencies<span class="signature">(packageJSON, options)</span><span class="type-signature"></span></h4>
     
 
     
@@ -686,6 +742,33 @@ This package provides a wrapper around that functionality.</div>
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">any parameters to pass to npm install e.g. --no-save</td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -723,7 +806,7 @@ This package provides a wrapper around that functionality.</div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="installer.js.html">installer.js</a>, <a href="installer.js.html#line90">line 90</a>
+        <a href="installer.js.html">installer.js</a>, <a href="installer.js.html#line95">line 95</a>
     </li></ul></dd>
     
 
@@ -868,7 +951,7 @@ This package provides a wrapper around that functionality.</div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="installer.js.html">installer.js</a>, <a href="installer.js.html#line68">line 68</a>
+        <a href="installer.js.html">installer.js</a>, <a href="installer.js.html#line70">line 70</a>
     </li></ul></dd>
     
 
@@ -926,7 +1009,7 @@ This package provides a wrapper around that functionality.</div>
     
 
     
-    <h4 class="name" id=".peerDependencies"><span class="type-signature">(static) </span>peerDependencies<span class="signature">(packageJSON)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".peerDependencies"><span class="type-signature">(static) </span>peerDependencies<span class="signature">(packageJSON, options)</span><span class="type-signature"></span></h4>
     
 
     
@@ -998,6 +1081,33 @@ This package provides a wrapper around that functionality.</div>
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">any parameters to pass to npm install e.g. --no-save</td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -1035,7 +1145,7 @@ This package provides a wrapper around that functionality.</div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="installer.js.html">installer.js</a>, <a href="installer.js.html#line96">line 96</a>
+        <a href="installer.js.html">installer.js</a>, <a href="installer.js.html#line103">line 103</a>
     </li></ul></dd>
     
 
@@ -1235,7 +1345,7 @@ This package provides a wrapper around that functionality.</div>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Tue Sep 24 2019 15:17:35 GMT+0100 (British Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Thu Sep 24 2020 16:31:57 GMT+0100 (British Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>

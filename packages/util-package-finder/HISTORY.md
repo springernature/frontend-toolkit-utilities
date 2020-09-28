@@ -1,10 +1,13 @@
 # History
 
-## 0.3.0 (2019-10-01)
+## 0.4.1 (2020-04-27)
+	* Replace `chalk` with `kleur`
+
+## 0.4.0 (2019-10-01)
     * No longer accepts "deprecated" flag
     * Uses registry.npmjs.com to get list of packages
 
-## 0.2.0 (2019-07-03)
+## 0.3.0 (2019-07-03)
     * Now returns `date` field in results
 
 ## 0.2.0 (2018-09-14)

@@ -26,20 +26,22 @@ module.exports = {
 	/**
 	 * Main method which actually installs given depdendencies.
 	 * @param  {Dependencies} dependencies={}
+	 * @param  {String} options='' any parameters to pass to npm install e.g. --no-save
 	 * @returns {Promise} resolves with "npm install" command stdout data.
 	 * @throws {Error} message is contents of "npm install" command stderr, or some other operational error.
 	 */
-	dependenciesObject: async (dependencies = {}) => {
+	dependenciesObject: async (dependencies = {}, options = '') => {
 		const validDepdendencies = module.exports.getValidDepdendencies(dependencies);
 		const packageListAsStr = validDepdendencies.map(dep => dep.join('@')).join(' ');
-		console.log(`npm-install packageListAsStr: ${packageListAsStr}`);
+
+		console.log(`npm-install: ${packageListAsStr}`);
 
 		if (!packageListAsStr || packageListAsStr === '') {
 			throw new Error('invalid package list');
 		}
 
 		const spawnPromiseResolution = await new Promise((resolve, reject) => {
-			const child = cp.spawn('npm', ['install', packageListAsStr]);
+			const child = cp.spawn('npm', ['install', options, packageListAsStr]);
 
 			let childStdout = '';
 			child.stdout.on('data', chunk => childStdout += chunk); // eslint-disable-line no-return-assign
@@ -80,22 +82,28 @@ module.exports = {
 	/**
 	 * Helper to install just the dependencies in a parsed package.json
 	 * @param  {PackageJSON} packageJSON={}
+	 * @param  {String} options any parameters to pass to npm install e.g. --no-save
 	 */
-	dependencies: async (packageJSON = {}) => module.exports.dependenciesObject(packageJSON.dependencies),
+	dependencies: async (packageJSON = {}, options) =>
+		module.exports.dependenciesObject(packageJSON.dependencies, options),
 
 	/**
 	 * Helper to install just the devDependencies in a parsed package.json
 	 * @param  {PackageJSON} packageJSON={}
+	 * @param  {String} options any parameters to pass to npm install e.g. --no-save
 	 * TODO: should pass --save-dev flag
 	 */
-	devDependencies: async (packageJSON = {}) => module.exports.dependenciesObject(packageJSON.devDependencies),
+	devDependencies: async (packageJSON = {}, options) =>
+		module.exports.dependenciesObject(packageJSON.devDependencies, options),
 
 	/**
 	 * Helper to install just the peerDependencies in a parsed package.json
 	 * @param  {PackageJSON} packageJSON={}
+	 * @param  {String} options any parameters to pass to npm install e.g. --no-save
 	 * TODO: this will mangle the depedencies
 	 */
-	peerDependencies: async (packageJSON = {}) => module.exports.dependenciesObject(packageJSON.peerDependencies),
+	peerDependencies: async (packageJSON = {}, options) =>
+		module.exports.dependenciesObject(packageJSON.peerDependencies, options),
 
 	/** Maximum permitted length of a package version range string */
 	VERSION_RANGE_MAXLENGTH: VERSION_RANGE_MAXLENGTH

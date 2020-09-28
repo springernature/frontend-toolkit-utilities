@@ -4,17 +4,31 @@
  */
 'use strict';
 
-const chalk = require('chalk');
+const kleur = require('kleur');
 
 const report = {};
 const colors = {
-	info: chalk.green,
-	success: chalk.green.bold,
-	fail: chalk.red.bold,
-	description: chalk.magenta,
-	message: chalk.white,
-	comment: chalk.white.dim
+	info: kleur.green,
+	success: kleur.green().bold,
+	warning: kleur.yellow,
+	fail: kleur.red().bold,
+	description: kleur.magenta,
+	message: kleur.white,
+	comment: kleur.white().dim
 };
+
+// Logging levels
+const logging = {
+	TITLE: 5,
+	INFO: 4,
+	SUCCESS: 3,
+	WARNING: 2,
+	FAIL: 1,
+	NONE: 0
+};
+
+// Default logging level
+let logLevel = 5;
 
 /**
  * Clean whitespace from output
@@ -49,28 +63,50 @@ function configureTitle(string) {
  * @return {String}
  */
 function configureOutput(type, description, message, comment) {
-	return `
-		${colors[type](type)}
-		${colors.description(description)}
-		${(message) ? colors.message(message) : ''}
-		${(comment) ? colors.comment(comment) : ''}
-	`
-		.replace(/\n/g, ' ').trim();
+	type = colors[type](type);
+	description = colors.description(description);
+	message = (message) ? colors.message(message) : null;
+	comment = (comment) ? colors.comment(comment) : null;
+
+	// Concatenate non-null strings
+	return [type, description, message, comment]
+		.filter(Boolean)
+		.join(' ')
+		.trim('');
 }
 
 /**
  * Output to CLI
- * Type: Info
+ * Type: Fail
  * @param {String} description output description
  * @param {String} [message=null] the main message
  * @param {String} [comment=null] additional comment
  */
-report.info = (description, message = null, comment = null) => {
-	console.log(
-		cleanWhitespace(
-			configureOutput('info', description, message, comment)
-		)
-	);
+report.fail = (description, message = null, comment = null) => {
+	if (logLevel >= logging.FAIL) {
+		console.log(
+			cleanWhitespace(
+				configureOutput('fail', description, message, comment)
+			)
+		);
+	}
+};
+
+/**
+ * Output to CLI
+ * Type: Warning
+ * @param {String} description output description
+ * @param {String} [message=null] the main message
+ * @param {String} [comment=null] additional comment
+ */
+report.warning = (description, message = null, comment = null) => {
+	if (logLevel >= logging.WARNING) {
+		console.log(
+			cleanWhitespace(
+				configureOutput('warning', description, message, comment)
+			)
+		);
+	}
 };
 
 /**
@@ -81,26 +117,30 @@ report.info = (description, message = null, comment = null) => {
  * @param {String} [comment=null] additional comment
  */
 report.success = (description, message = null, comment = null) => {
-	console.log(
-		cleanWhitespace(
-			configureOutput('success', description, message, comment)
-		)
-	);
+	if (logLevel >= logging.SUCCESS) {
+		console.log(
+			cleanWhitespace(
+				configureOutput('success', description, message, comment)
+			)
+		);
+	}
 };
 
 /**
  * Output to CLI
- * Type: Fail
+ * Type: Info
  * @param {String} description output description
  * @param {String} [message=null] the main message
  * @param {String} [comment=null] additional comment
  */
-report.fail = (description, message = null, comment = null) => {
-	console.log(
-		cleanWhitespace(
-			configureOutput('fail', description, message, comment)
-		)
-	);
+report.info = (description, message = null, comment = null) => {
+	if (logLevel >= logging.INFO) {
+		console.log(
+			cleanWhitespace(
+				configureOutput('info', description, message, comment)
+			)
+		);
+	}
 };
 
 /**
@@ -109,11 +149,29 @@ report.fail = (description, message = null, comment = null) => {
  * @param {String} string the title text to output
  */
 report.title = string => {
-	console.log(
-		cleanWhitespace(
-			configureTitle(string)
-		)
-	);
+	if (logLevel >= logging.TITLE) {
+		console.log(
+			cleanWhitespace(
+				configureTitle(string)
+			)
+		);
+	}
+};
+
+/**
+ * Initialise with a logging level
+ * Defaults to title
+ * @param {String} level none (0), fail (1), warning(2), success (3), info (4), title (5)
+ */
+report.init = level => {
+	const levelUp = level.toUpperCase();
+
+	// Set if valid level
+	if (Object.prototype.hasOwnProperty.call(logging, levelUp)) {
+		logLevel = logging[levelUp];
+	} else {
+		logLevel = 5;
+	}
 };
 
 module.exports = report;

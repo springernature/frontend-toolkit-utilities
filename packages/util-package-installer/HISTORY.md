@@ -1,5 +1,9 @@
 # History
 
+## 0.3.0 (2020-09-24)
+    * FEATURE: add standard SN custom logging
+	* FEATURE: optionally pass config to npm install
+
 ## 0.2.2 (2019-09-26)
     * Updates README
 

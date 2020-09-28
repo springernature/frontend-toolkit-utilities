@@ -1,5 +1,15 @@
 # History
 
+## 1.2.0 (2020-09-23)
+	* FEATURE: New 'warning' level for reporting
+
+## 1.1.1 (2020-04-27)
+	* Replace `chalk` with `kleur`
+
+## 1.1.0 (2019-10-14)
+	* Add customisable logging levels
+	* Fix a spacing bug when you have a comment but no message
+
 ## 1.0.0 (2019-10-09)
 	* Allow the message to be optional
 	* Major version as used in production on package manager

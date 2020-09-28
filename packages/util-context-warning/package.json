@@ -1,0 +1,21 @@
+{
+  "name": "@springernature/util-context-warning",
+  "version": "0.0.5",
+  "description": "CLI messaging for installing Elements context dependencies",
+  "author": "Alex Kilgour",
+  "license": "MIT",
+  "main": "./lib/index.js",
+  "bin": {
+    "SNutilContextWarning": "./bin/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/springernature/frontend-toolkit-utilities.git"
+  },
+  "homepage": "https://github.com/springernature/frontend-toolkit-utilities/tree/master/packages/util-context-warning#readme",
+  "dependencies": {
+    "boxen": "^4.2.0",
+    "kleur": "^3.0.3",
+    "yargs": "^15.1.0"
+  }
+}

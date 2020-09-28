@@ -2,7 +2,7 @@
 'use strict';
 
 const boxen = require('boxen');
-const chalk = require('chalk');
+const kleur = require('kleur');
 const figures = require('figures');
 const chunk = require('lodash/chunk');
 const meow = require('meow');
@@ -79,7 +79,7 @@ const formatVersions = versions => {
  */
 const printCli = response => {
 	console.log(boxen(
-		chalk.yellow(`${figures.star} ${chalk.bold(response.length)} packages found ${figures.star}`),
+		kleur.yellow(`${figures.star} ${kleur.bold(response.length)} packages found ${figures.star}`),
 		{
 			padding: 1,
 			margin: {
@@ -92,13 +92,13 @@ const printCli = response => {
 	));
 
 	response.forEach(item => {
-		const status = chalk.dim(`[${item.status}]`);
+		const status = kleur.dim(`[${item.status}]`);
 		const name = item.name;
 
-		console.log(chalk.cyan(` ${name} ${status} ${chalk.green.bold.dim(item.latest)}`));
+		console.log(kleur.cyan(` ${name} ${status} ${kleur.green().bold().dim(item.latest)}`));
 
 		if (params.versions) {
-			console.log(`${chalk.dim(formatVersions(item.versions))}`);
+			console.log(`${kleur.dim(formatVersions(item.versions))}`);
 		}
 	});
 };
