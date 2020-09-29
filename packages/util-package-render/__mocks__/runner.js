@@ -2,10 +2,10 @@
 
 // Sample usage, useful when working on the renderer itself
 const path = require('path');
-const renderer = require('./lib/js/render');
+const renderer = require('../lib/js/render');
 
 // Path to the package you want to render
-const workdir = './__mocks__/apackage/';
+const workdir = './apackage/';
 const fulldir = path.join(path.resolve(__dirname), workdir);
 
 // Name of folder containing demo code to compile

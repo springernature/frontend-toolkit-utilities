@@ -22,7 +22,7 @@ await renderer(config);
 
 ## Full examples
 
-A working implementation can also be found in [`runner.js`](runner.js).
+A working implementation can also be found in [`runner.js`](./__mocks__/runner.js).
 
 ### Using default config
 
@@ -47,7 +47,7 @@ const renderer = require('@springernature/util-package-render');
 const path = require('path');
 const renderer = require('@springernature/util-package-render');
 
-const fulldir = path.join(path.resolve(__dirname), './__mocks__/apackage/');
+const fulldir = path.resolve(__dirname, 'apackage');
 const demoFolderName = 'demo';
 const brandContext = '@springernature/brand-context';
 
@@ -72,7 +72,7 @@ const brandContext = '@springernature/brand-context';
 const path = require('path');
 const renderer = require('@springernature/util-package-render');
 
-const fulldir = path.join(path.resolve(__dirname), './__mocks__/apackage/');
+const fulldir = path.resolve(__dirname, 'apackage');
 const demoFolderName = 'demo';
 const brandContext = '@springernature/brand-context';
 const distFolder = path.join(fulldir, 'dist');
