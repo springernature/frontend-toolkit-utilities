@@ -26,7 +26,7 @@ const api = {
 	// Sanitise the path to the package
 	sanitisePath: (str = '') => {
 		if (typeof str !== 'string') {
-			throw new TypeError(`The "path" argument must be of type string. Received type number (${str})`);
+			throw new TypeError(`The "path" argument must be of type string. Received type ${typeof str} (${str})`);
 		}
 
 		if (str === '') {

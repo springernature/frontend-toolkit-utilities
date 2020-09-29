@@ -9,10 +9,11 @@ module.exports = (key, content) => {
 			{{{${key}.script}}}
 		</script>
 		<style>
+			body{padding:2%}
 			{{{${key}.style}}}
 		</style>
 	</head>
-	<body style="padding:2%">
+	<body>
 		${content}
 	</body>
 </html>`;
