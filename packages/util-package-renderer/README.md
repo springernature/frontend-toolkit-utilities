@@ -6,7 +6,7 @@ Optionally write the result to disk as `index.html`.
 ## Usage
 
 ```js
-const renderer = require('@springernature/util-package-render');
+const renderer = require('@springernature/util-package-renderer');
 await renderer(config);
 ```
 
@@ -28,7 +28,7 @@ A working implementation can also be found in [`runner.js`](./__mocks__/runner.j
 
 ```js
 'use strict';
-const renderer = require('@springernature/util-package-render');
+const renderer = require('@springernature/util-package-renderer');
 
 // By default no distFolder is defined and the result is returned as a String
 (async () => {
@@ -45,7 +45,7 @@ const renderer = require('@springernature/util-package-render');
 
 ```js
 const path = require('path');
-const renderer = require('@springernature/util-package-render');
+const renderer = require('@springernature/util-package-renderer');
 
 const fulldir = path.resolve(__dirname, 'apackage');
 const demoFolderName = 'demo';
@@ -70,7 +70,7 @@ const brandContext = '@springernature/brand-context';
 
 ```js
 const path = require('path');
-const renderer = require('@springernature/util-package-render');
+const renderer = require('@springernature/util-package-renderer');
 
 const fulldir = path.resolve(__dirname, 'apackage');
 const demoFolderName = 'demo';

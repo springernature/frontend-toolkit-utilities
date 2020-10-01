@@ -1,7 +1,7 @@
 {
   "name": "@springernature/util-package-renderer",
-  "version": "0.0.1",
-  "description": "Renders a Package that passes SN package validation",
+  "version": "0.0.2",
+  "description": "Renders a package that passes SN package validation",
   "main": "./lib/js/render.js",
   "scripts": {
     "test": "echo \"Run tests from the top of the repo please.\" && exit 1"
@@ -19,9 +19,6 @@
     "url": "https://github.com/springernature/frontend-toolkit-utilities/issues"
   },
   "homepage": "https://github.com/springernature/frontend-toolkit-utilities#readme",
-  "files": [
-    "./lib/js/"
-  ],
   "dependencies": {
     "@springernature/brand-context": "^3.2.4",
     "@springernature/util-cli-reporter": "^1.2.0",
