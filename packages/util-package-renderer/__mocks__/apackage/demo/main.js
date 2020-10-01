@@ -1,3 +1,4 @@
+// eslint-disable-next-line unicorn/import-index
 import autoComplete from '../js/index.js';
 
 const showResults = results => {
@@ -20,14 +21,14 @@ const showResults = results => {
 	document.querySelector('[data-component-autocomplete]').insertAdjacentElement('afterend', resultsContainer);
 };
 
-const onSelect = result => {
+const onSelect = _result => {
 	// Update UI with selected result
-}
+};
 
-const onError = error => {
+const onError = _error => {
 	// Update UI with error state
 	// Optionally call myAutoComplete.disable();
-}
+};
 
 const args = {
 	selector: '[data-component-autocomplete]',
@@ -55,17 +56,19 @@ const response = {
 	ok: true,
 	json: () => {
 		const term = window.lastQuery.replace(args.endpoint, '').toLowerCase();
+		// eslint-disable-next-line no-use-before-define
 		return animalsList.filter(animal => animal.toLowerCase().includes(term));
 	}
-}
-window.fetch = (endpointAndTerm) => {
+};
+
+window.fetch = endpointAndTerm => {
 	window.lastQuery = endpointAndTerm;
 	return Promise.resolve(response);
-}
+};
 
 document.addEventListener('DOMContentLoaded', () => {
 	document.querySelector('#searchForm button').style.display = 'none';
-})
+});
 
 myAutoComplete.enable();
 
@@ -512,5 +515,5 @@ const animalsList = [
 	'Yak',
 	'Yellow perch',
 	'Zebra finch',
-	'Zebra',
-]
+	'Zebra'
+];
