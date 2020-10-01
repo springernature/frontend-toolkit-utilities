@@ -91,6 +91,7 @@ module.exports = {
 	 * Helper to install just the devDependencies in a parsed package.json
 	 * @param  {PackageJSON} packageJSON={}
 	 * @param  {String} options any parameters to pass to npm install e.g. --no-save
+	 * TODO: should pass --save-dev flag
 	 */
 	devDependencies: async (packageJSON = {}, options) =>
 		module.exports.dependenciesObject(packageJSON.devDependencies, options),
@@ -99,6 +100,7 @@ module.exports = {
 	 * Helper to install just the peerDependencies in a parsed package.json
 	 * @param  {PackageJSON} packageJSON={}
 	 * @param  {String} options any parameters to pass to npm install e.g. --no-save
+	 * TODO: this will mangle the depedencies
 	 */
 	peerDependencies: async (packageJSON = {}, options) =>
 		module.exports.dependenciesObject(packageJSON.peerDependencies, options),

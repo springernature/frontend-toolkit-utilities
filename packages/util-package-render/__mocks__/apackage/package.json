@@ -1,0 +1,10 @@
+{
+  "name": "@springernature/nature-mock-component",
+  "version": "2.2.3",
+  "description": "A mock component for testing the component renderer",
+  "license": "MIT",
+  "brandContext": "^3.0.0",
+  "dependencies": {
+    "@springernature/brand-context": "^3.2.4"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "name": "@springernature/util-package-renderer",
+  "version": "0.0.1",
+  "description": "Renders a Package that passes SN package validation",
+  "main": "./lib/js/render.js",
+  "scripts": {
+    "test": "echo \"Run tests from the top of the repo please.\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/springernature/frontend-toolkit-utilities.git"
+  },
+  "keywords": [
+    "springernature"
+  ],
+  "author": "jpw, ajk",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/springernature/frontend-toolkit-utilities/issues"
+  },
+  "homepage": "https://github.com/springernature/frontend-toolkit-utilities#readme",
+  "files": [
+    "./lib/js/"
+  ],
+  "dependencies": {
+    "@springernature/brand-context": "^3.2.4",
+    "@springernature/util-cli-reporter": "^1.2.0",
+    "@springernature/util-package-installer": "^0.3.0",
+    "filesize": "^5.0.3",
+    "handlebars": "^4.4.3",
+    "node-sass": "^4.12.0",
+    "rollup": "^1.23.1"
+  }
+}

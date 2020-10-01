@@ -1,0 +1,9 @@
+@charset "UTF-8";
+
+// we must not add node modules to the SASS includePaths config,
+//   so do relative paths in this file. Paths should be relative to this file.
+@import '../node_modules/@springernature/brand-context/default/scss/core.scss';
+@import '../node_modules/@springernature/brand-context/default/scss/enhanced.scss';
+
+// component SCSS
+@import '../scss/index.scss';
