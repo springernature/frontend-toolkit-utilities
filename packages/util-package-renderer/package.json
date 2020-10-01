@@ -2,6 +2,8 @@
   "name": "@springernature/util-package-renderer",
   "version": "0.0.2",
   "description": "Renders a package that passes SN package validation",
+  "author": "jpw, ajk",
+  "license": "MIT",
   "main": "./lib/js/render.js",
   "scripts": {
     "test": "echo \"Run tests from the top of the repo please.\" && exit 1"
@@ -13,8 +15,6 @@
   "keywords": [
     "springernature"
   ],
-  "author": "jpw, ajk",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/springernature/frontend-toolkit-utilities/issues"
   },
