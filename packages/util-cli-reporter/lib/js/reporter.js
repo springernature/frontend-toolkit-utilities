@@ -164,6 +164,11 @@ report.title = string => {
  * @param {String} level none (0), fail (1), warning(2), success (3), info (4), title (5)
  */
 report.init = level => {
+	// Logging level must be of type string
+	if (typeof level !== 'string') {
+		return;
+	}
+
 	const levelUp = level.toUpperCase();
 
 	// Set if valid level

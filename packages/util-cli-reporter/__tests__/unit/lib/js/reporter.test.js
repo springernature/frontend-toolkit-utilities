@@ -550,3 +550,53 @@ describe('Reporting configuration - defaults to title log level when invalid ini
 		expect(consoleOutput).toEqual('------\nstring\n------');
 	});
 });
+
+describe('Reporting configuration - defaults to title log level when invalid init[type]', () => {
+	const originalLog = console.log;
+	let consoleOutput = '';
+	const mockedLog = output => consoleOutput = stripAnsi(output);
+
+	beforeEach(() => {
+		console.log = mockedLog;
+		reporter.init(15);
+	});
+	afterEach(() => {
+		console.log = originalLog;
+		consoleOutput = '';
+	});
+
+	test('prints to cli from `fail` method', () => {
+		reporter.fail('type', 'this is my message', 'to you');
+
+		expect.assertions(1);
+		expect(consoleOutput).toEqual('fail type this is my message to you');
+	});
+
+	test('prints to cli from `warning` method', () => {
+		reporter.warning('type', 'this is my message', 'to you');
+
+		expect.assertions(1);
+		expect(consoleOutput).toEqual('warning type this is my message to you');
+	});
+
+	test('prints to cli from `success` method', () => {
+		reporter.success('type', 'this is my message', 'to you');
+
+		expect.assertions(1);
+		expect(consoleOutput).toEqual('success type this is my message to you');
+	});
+
+	test('prints to cli from `info` method', () => {
+		reporter.info('type', 'this is my message', 'to you');
+
+		expect.assertions(1);
+		expect(consoleOutput).toEqual('info type this is my message to you');
+	});
+
+	test('prints to cli from `title` method', () => {
+		reporter.title('string');
+
+		expect.assertions(1);
+		expect(consoleOutput).toEqual('------\nstring\n------');
+	});
+});
