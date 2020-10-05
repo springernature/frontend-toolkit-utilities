@@ -144,15 +144,18 @@ const renderDemo = async ({
 	distFolderPath
 } = {}) => {
 	// Confirm path of package to render & get package.json
+	const cwd = process.cwd();
 	const packageRootPath = path.resolve(file.sanitisePath(packageRoot));
 	const packageJSON = getPackageJson(packageRootPath);
 	const demoCodePath = path.join(packageRootPath, demoCodeFolder);
-	const distFolderPathRelative = (distFolderPath) ? path.relative(process.cwd(), distFolderPath) : undefined;
+	const distFolderPathRelative = (distFolderPath) ? path.relative(cwd, distFolderPath) : undefined;
 
 	// Set reporting level and switch to package dir
 	reporter.init(reportingLevel);
 	reporter.title(`Rendering demo of ${packageJSON.name}`);
-	reporter.info('demo code location', path.relative(process.cwd(), demoCodePath));
+	reporter.info('demo code location', path.relative(cwd, demoCodePath));
+
+	// Switch to the package path
 	process.chdir(packageRootPath);
 
 	// Install dependencies
@@ -163,11 +166,14 @@ const renderDemo = async ({
 
 	// Write html to file
 	if (distFolderPath) {
-		writeHtmlFile(distFolderPath, distFolderPathRelative, html);
+		await writeHtmlFile(distFolderPath, distFolderPathRelative, html);
+		process.chdir(cwd);
 		return;
 	}
 
+	// Switch back to original dir
 	// Return the html content
+	process.chdir(cwd);
 	return html;
 };
 

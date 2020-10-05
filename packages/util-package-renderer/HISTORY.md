@@ -1,5 +1,8 @@
 # History
 
+## 0.0.3 (2020-10-05)
+    * BUG: Switches to package dir and now switches back to cwd for better integration
+
 ## 0.0.2 (2020-10-01)
     * BUG: Incorrect use of `files` field meant nothing was published
 
