@@ -1,5 +1,8 @@
 # History
 
+## 1.2.1 (2020-10-05)
+	* BUG: Fallback to default when init() type is not String
+
 ## 1.2.0 (2020-09-23)
 	* FEATURE: New 'warning' level for reporting
 
