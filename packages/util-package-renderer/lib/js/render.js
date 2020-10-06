@@ -78,20 +78,18 @@ const installDependencies = async (packageJSON, brandContext) => {
  * @return {Promise<String>}
  */
 const generateHTML = async (packageRootPath, demoCodeFolder, name) => {
-	try {
-		const transpiledPackageJS = await jsHelper(packageRootPath, demoCodeFolder);
-		const compiledPackageCSS = await sassHelper(packageRootPath, demoCodeFolder);
+	const transpiledPackageJS = await jsHelper(packageRootPath, demoCodeFolder);
+	const compiledPackageCSS = await sassHelper(packageRootPath, demoCodeFolder);
 
-		return await handlebarsHelper({
-			packageRoot: packageRootPath,
-			js: transpiledPackageJS,
-			css: compiledPackageCSS,
-			demoCodeFolder: demoCodeFolder,
-			name: name
-		});
-	} catch (error) {
-		throw error;
-	}
+	const html = await handlebarsHelper({
+		packageRoot: packageRootPath,
+		js: transpiledPackageJS,
+		css: compiledPackageCSS,
+		demoCodeFolder: demoCodeFolder,
+		name: name
+	});
+
+	return html;
 };
 
 /**
@@ -173,6 +171,7 @@ const renderDemo = async ({
 
 	// Switch back to original dir
 	// Return the html content
+	reporter.success('static demo', 'successfully compiled');
 	process.chdir(cwd);
 	return html;
 };
