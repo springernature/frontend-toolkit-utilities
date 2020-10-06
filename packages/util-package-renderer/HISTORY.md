@@ -1,5 +1,9 @@
 # History
 
+## 0.0.4 (2020-10-06)
+    * Code style changes
+	* Better reporting
+
 ## 0.0.3 (2020-10-05)
     * BUG: Switches to package dir and now switches back to cwd for better integration
 
