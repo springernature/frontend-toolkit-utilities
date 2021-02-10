@@ -1,5 +1,8 @@
 # History
 
+## 0.4.2 (2021-02-10)
+	* Updates dependencies
+
 ## 0.4.1 (2020-04-27)
 	* Replace `chalk` with `kleur`
 
