@@ -29,7 +29,7 @@ $ npx @springernature/util-context-warning [options]
 ```
 $ npx @springernature/util-context-warning \
       -p @springernature/global-article@1.0.0 \
-	  -v 1.0.0 2.0.0
+	  -v 2.0.0 2.5.0
 ```
 
 ![example output](https://raw.githubusercontent.com/springernature/frontend-toolkit-utilities/master/packages/util-context-warning/img/cli-standard.png)
