@@ -39,7 +39,7 @@ $ npx @springernature/util-context-warning \
 ```
 $ npx @springernature/util-context-warning \
       -p @springernature/global-article@1.0.0 \
-	  -v 1.0.0 2.0.0 \
+	  -v 2.0.0 2.5.0 \
 	  -c @otherscope/othername
 ```
 
