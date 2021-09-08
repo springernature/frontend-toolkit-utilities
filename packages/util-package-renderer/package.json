@@ -20,12 +20,14 @@
   },
   "homepage": "https://github.com/springernature/frontend-toolkit-utilities#readme",
   "dependencies": {
+    "@rollup/plugin-commonjs": "^20.0.0",
+    "@rollup/plugin-node-resolve": "^13.0.4",
     "@springernature/brand-context": "^3.2.4",
     "@springernature/util-cli-reporter": "^1.2.0",
     "@springernature/util-package-installer": "^0.3.0",
     "filesize": "^5.0.3",
     "handlebars": "^4.4.3",
     "node-sass": "^4.12.0",
-    "rollup": "^1.23.1"
+    "rollup": "^2.42.0"
   }
 }

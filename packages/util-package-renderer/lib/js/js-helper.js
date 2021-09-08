@@ -2,6 +2,8 @@
 
 const path = require('path');
 const rollup = require('rollup');
+const nodeResolve = require('@rollup/plugin-node-resolve').nodeResolve;
+const commonjs = require('@rollup/plugin-commonjs');
 const reporter = require('@springernature/util-cli-reporter');
 const file = require('./utils/file');
 
@@ -33,6 +35,7 @@ const transpileJS = async (packageRoot, demoCodeFolder) => {
 	try {
 		bundle = await rollup.rollup({
 			input: path.join(packageRoot, demoCodeFolder, 'main.js'),
+			plugins: [nodeResolve(), commonjs()], // handle import and require
 			onwarn: function (message) {
 				reporter.warning('rollup', message);
 			}
