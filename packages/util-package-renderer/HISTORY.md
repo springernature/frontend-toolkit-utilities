@@ -1,5 +1,13 @@
 # History
 
+## 1.0.0 (2021-09-09)
+    * In production use for some time so create the first major version
+    * Includes the following NEW FEATURES:
+        * Support different module import methods
+        * Locate modules using the Node resolution algorithm, for using third party modules in node_modules
+        * Transpile javascript and export as IIFE (Immediately Invoked Function Expression)
+        * Optional minification of JS and CSS
+
 ## 0.0.4 (2020-10-06)
     * Code style changes
 	* Better reporting
