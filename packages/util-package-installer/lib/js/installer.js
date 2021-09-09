@@ -32,7 +32,8 @@ module.exports = {
 	 */
 	dependenciesObject: async (dependencies = {}, options = '') => {
 		const validDepdendencies = module.exports.getValidDepdendencies(dependencies);
-		const packageListAsStr = validDepdendencies.map(dep => dep.join('@')).join(' ');
+		const packageList = validDepdendencies.map(dep => dep.join('@'));
+		const packageListAsStr = packageList.join(' ');
 
 		console.log(`npm-install: ${packageListAsStr}`);
 
@@ -41,7 +42,8 @@ module.exports = {
 		}
 
 		const spawnPromiseResolution = await new Promise((resolve, reject) => {
-			const child = cp.spawn('npm', ['install', options, packageListAsStr]);
+			const installCommand = ['install', options];
+			const child = cp.spawn('npm', installCommand.concat(packageList));
 
 			let childStdout = '';
 			child.stdout.on('data', chunk => childStdout += chunk); // eslint-disable-line no-return-assign

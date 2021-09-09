@@ -53,7 +53,7 @@ describe('util-package-installer', () => {
 			await install.dependenciesObject(mockDependencies.twoValidDependencies);
 			expect.assertions(2);
 			expect(child_process.spawn).toHaveBeenCalledWith(
-				'npm', ['install', '', 'foo@1.0.0 - 2.9999.9999 bar@>=1.0.2 <2.1.2']
+				'npm', ['install', '', 'foo@1.0.0 - 2.9999.9999', 'bar@>=1.0.2 <2.1.2']
 			);
 			expect(child_process.spawn).toHaveBeenCalledTimes(1);
 		});

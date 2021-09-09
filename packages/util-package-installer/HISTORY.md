@@ -1,5 +1,8 @@
 # History
 
+## 0.3.1 (2021-09-08)
+    * BUG: multiple dependencies were not being installed correctly
+
 ## 0.3.0 (2020-09-24)
     * FEATURE: add standard SN custom logging
 	* FEATURE: optionally pass config to npm install
