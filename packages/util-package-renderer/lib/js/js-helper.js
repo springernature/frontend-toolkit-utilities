@@ -4,6 +4,7 @@ const path = require('path');
 const rollup = require('rollup');
 const nodeResolve = require('@rollup/plugin-node-resolve').nodeResolve;
 const commonjs = require('@rollup/plugin-commonjs');
+const babel = require('@rollup/plugin-babel').babel;
 const reporter = require('@springernature/util-cli-reporter');
 const file = require('./utils/file');
 
@@ -32,10 +33,20 @@ const transpileJS = async (packageRoot, demoCodeFolder) => {
 	}
 
 	// Create a rollup bundle
+	// - Handle import and require
+	// - Transpile using babel
 	try {
 		bundle = await rollup.rollup({
 			input: path.join(packageRoot, demoCodeFolder, 'main.js'),
-			plugins: [nodeResolve(), commonjs()], // handle import and require
+			plugins: [commonjs({
+				sourcemap: false
+			}),
+			nodeResolve(),
+			babel({
+				configFile: path.resolve(__dirname, '.babelrc'),
+				babelHelpers: 'bundled',
+				inputSourceMap: false
+			})],
 			onwarn: function (message) {
 				reporter.warning('rollup', message);
 			}
@@ -45,10 +56,12 @@ const transpileJS = async (packageRoot, demoCodeFolder) => {
 		throw error;
 	}
 
-	// Output as ES module file, for inclusion in a <script type="module"> tag
+	// Output as iife for the browser
 	const rollupOutput = await bundle.generate({
 		output: {
-			format: 'esm'
+			format: 'iife',
+			name: 'component',
+			sourcemap: false
 		}
 	});
 
