@@ -75,11 +75,12 @@ const installDependencies = async (packageJSON, brandContext) => {
  * @param {Object} packageRootPath path of the package to render
  * @param {String} demoCodeFolder name of folder where demo code stored
  * @param {String} name of the package to be rendered
+ * @param {Boolean} minify should we minify the javascript and CSS
  * @return {Promise<String>}
  */
-const generateHTML = async (packageRootPath, demoCodeFolder, name) => {
-	const transpiledPackageJS = await jsHelper(packageRootPath, demoCodeFolder);
-	const compiledPackageCSS = await sassHelper(packageRootPath, demoCodeFolder);
+const generateHTML = async (packageRootPath, demoCodeFolder, name, minify) => {
+	const transpiledPackageJS = await jsHelper(packageRootPath, demoCodeFolder, minify);
+	const compiledPackageCSS = await sassHelper(packageRootPath, demoCodeFolder, minify);
 
 	const html = await handlebarsHelper({
 		packageRoot: packageRootPath,
@@ -130,6 +131,7 @@ const writeHtmlFile = async (distFolderPath, distFolderPathRelative, html) => {
  * @param {String} [demoCodeFolder='demo'] name of folder where demo code stored
  * @param {String} [brandContext='@springernature/brand-context'] name of the brand context package on NPM
  * @param {String} [reportingLevel='title'] amount of reporting, defaults to all
+ * @param {String} [minify=false] minify the JS and SASS
  * @param {String} packageRoot path of the package to render
  * @param {String} [distFolderPath] path to write the index.html file
  * @return {Promise}
@@ -138,6 +140,7 @@ const renderDemo = async ({
 	demoCodeFolder = 'demo',
 	brandContext = '@springernature/brand-context',
 	reportingLevel = 'title',
+	minify = false,
 	packageRoot,
 	distFolderPath
 } = {}) => {
@@ -152,6 +155,7 @@ const renderDemo = async ({
 	reporter.init(reportingLevel);
 	reporter.title(`Rendering demo of ${packageJSON.name}`);
 	reporter.info('demo code location', path.relative(cwd, demoCodePath));
+	reporter.info('minify asset output', minify.toString());
 
 	// Switch to the package path
 	process.chdir(packageRootPath);
@@ -160,7 +164,7 @@ const renderDemo = async ({
 	await installDependencies(packageJSON, brandContext);
 
 	// Generate static HTML
-	const html = await generateHTML(packageRootPath, demoCodeFolder, packageJSON.name);
+	const html = await generateHTML(packageRootPath, demoCodeFolder, packageJSON.name, minify);
 
 	// Write html to file
 	if (distFolderPath) {

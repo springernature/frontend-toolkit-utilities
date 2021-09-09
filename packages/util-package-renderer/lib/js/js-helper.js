@@ -5,6 +5,7 @@ const rollup = require('rollup');
 const nodeResolve = require('@rollup/plugin-node-resolve').nodeResolve;
 const commonjs = require('@rollup/plugin-commonjs');
 const babel = require('@rollup/plugin-babel').babel;
+const terser = require('rollup-plugin-terser').terser;
 const reporter = require('@springernature/util-cli-reporter');
 const file = require('./utils/file');
 
@@ -16,9 +17,10 @@ const ERR_NO_PACKAGE_JS_FOUND = 'no JS found for package';
  * @function transpileJS
  * @param {String} packageRoot path of the package to render
  * @param {String} demoCodeFolder render using code in this folder
+ * @param {Boolean} minify should we minify the javascript
  * @return {Promise<String>}
  */
-const transpileJS = async (packageRoot, demoCodeFolder) => {
+const transpileJS = async (packageRoot, demoCodeFolder, minify) => {
 	const jsEntryPoint = path.join(packageRoot, demoCodeFolder, 'main.js');
 	let packageJS = await file.getContent(jsEntryPoint);
 	let outputBuffer = '';
@@ -42,6 +44,7 @@ const transpileJS = async (packageRoot, demoCodeFolder) => {
 				sourcemap: false
 			}),
 			nodeResolve(),
+			...minify ? [terser()] : [],
 			babel({
 				configFile: path.resolve(__dirname, '.babelrc'),
 				babelHelpers: 'bundled',
@@ -61,7 +64,8 @@ const transpileJS = async (packageRoot, demoCodeFolder) => {
 		output: {
 			format: 'iife',
 			name: 'component',
-			sourcemap: false
+			sourcemap: false,
+			compact: Boolean(minify)
 		}
 	});
 
