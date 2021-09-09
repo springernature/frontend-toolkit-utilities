@@ -46,7 +46,7 @@ const transpileJS = async (packageRoot, demoCodeFolder, minify) => {
 			nodeResolve(),
 			...minify ? [terser()] : [],
 			babel({
-				configFile: path.resolve(__dirname, '.babelrc'),
+				configFile: path.resolve(__dirname, 'babel.config.json'),
 				babelHelpers: 'bundled',
 				inputSourceMap: false
 			})],
