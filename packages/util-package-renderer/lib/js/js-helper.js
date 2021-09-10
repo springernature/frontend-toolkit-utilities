@@ -40,7 +40,8 @@ const transpileJS = async (packageRoot, demoCodeFolder, minify) => {
 	try {
 		bundle = await rollup.rollup({
 			input: path.join(packageRoot, demoCodeFolder, 'main.js'),
-			plugins: [commonjs({
+			plugins: [
+						commonjs({
 				sourcemap: false
 			}),
 			nodeResolve(),
