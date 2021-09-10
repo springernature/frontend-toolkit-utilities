@@ -41,17 +41,18 @@ const transpileJS = async (packageRoot, demoCodeFolder, minify) => {
 		bundle = await rollup.rollup({
 			input: path.join(packageRoot, demoCodeFolder, 'main.js'),
 			plugins: [
-						commonjs({
-				sourcemap: false
-			}),
-			nodeResolve(),
-			...minify ? [terser()] : [],
-			babel({
-				configFile: path.resolve(__dirname, 'babel.config.json'),
-				babelHelpers: 'bundled',
-				inputSourceMap: false
-			})
-		],
+				commonjs({
+					sourcemap: false
+				}),
+				nodeResolve(),
+				// Add the result of the ternary to the array
+				...(minify ? [terser()] : []),
+				babel({
+					configFile: path.resolve(__dirname, 'babel.config.json'),
+					babelHelpers: 'bundled',
+					inputSourceMap: false
+				})
+			],
 			onwarn: function (message) {
 				reporter.warning('rollup', message);
 			}
