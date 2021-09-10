@@ -131,7 +131,7 @@ const writeHtmlFile = async (distFolderPath, distFolderPathRelative, html) => {
  * @param {String} [demoCodeFolder='demo'] name of folder where demo code stored
  * @param {String} [brandContext='@springernature/brand-context'] name of the brand context package on NPM
  * @param {String} [reportingLevel='title'] amount of reporting, defaults to all
- * @param {String} [minify=false] minify the JS and SASS
+ * @param {Boolean} [minify=false] minify the JS and SASS
  * @param {String} packageRoot path of the package to render
  * @param {String} [distFolderPath] path to write the index.html file
  * @return {Promise}
