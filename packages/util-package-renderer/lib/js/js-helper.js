@@ -49,7 +49,8 @@ const transpileJS = async (packageRoot, demoCodeFolder, minify) => {
 				configFile: path.resolve(__dirname, 'babel.config.json'),
 				babelHelpers: 'bundled',
 				inputSourceMap: false
-			})],
+			})
+		],
 			onwarn: function (message) {
 				reporter.warning('rollup', message);
 			}
