@@ -5,19 +5,15 @@ module.exports = (key, content) => {
 	<head>
 		<meta charset="utf-8">
 		<title>{{${key}.title}}</title>
-		<script type="module">
-			{{{${key}.script}}}
-		</script>
-		<style>
-			/* demo page styles */
-			body{padding:2%}
-		</style>
 		<style>
 			{{{${key}.style}}}
 		</style>
 	</head>
-	<body>
+	<body style="padding:2%">
 		${content}
+		<script>
+			{{{${key}.script}}}
+		</script>
 	</body>
 </html>`;
 };

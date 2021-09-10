@@ -16,9 +16,10 @@ const ERR_NO_PACKAGE_SASS_FOUND = 'no sass found for package';
  * @function compileSASS
  * @param {String} packageRoot path of the package to render
  * @param {String} demoCodeFolder render using code in this folder
+ * @param {Boolean} minify should we minify the CSS output
  * @return {Promise<String>}
  */
-const compileSASS = async (packageRoot, demoCodeFolder) => {
+const compileSASS = async (packageRoot, demoCodeFolder, minify) => {
 	const sassEntryPoint = path.join(packageRoot, demoCodeFolder, 'main.scss');
 	let packageSASS = await file.getContent(sassEntryPoint);
 	let result;
@@ -35,7 +36,7 @@ const compileSASS = async (packageRoot, demoCodeFolder) => {
 	try {
 		result = await render({
 			data: packageSASS,
-			outputStyle: 'expanded',
+			outputStyle: (minify) ? 'compressed' : 'expanded',
 			indentType: 'tab',
 			indentWidth: 1,
 			includePaths: [
