@@ -1,5 +1,8 @@
 # History
 
+## 1.0.1 (2021-09-13)
+    * BUG: Update readme and example with below features
+
 ## 1.0.0 (2021-09-09)
     * In production use for some time so create the first major version
     * Includes the following NEW FEATURES:

@@ -22,6 +22,7 @@ const distFolder = path.join(fulldir, 'dist');
 		await renderer({
 			demoCodeFolder: demoFolderName,
 			reportingLevel: 'title',
+			minify: true,
 			packageRoot: fulldir,
 			brandContext: brandContext,
 			distFolderPath: distFolder
