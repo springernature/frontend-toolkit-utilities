@@ -142,15 +142,14 @@ const renderDemo = async ({
 	// Generate static HTML
 	const transpiledPackageJS = await jsHelper(packageRootPath, demoCodeFolder, minify);
 	const compiledPackageCSS = await sassHelper(packageRootPath, demoCodeFolder, minify);
-	const staticHtmlConfig = {
+	const html = await handlebarsHelper({
 		packageRoot: packageRootPath,
 		startingLocation: dynamicTemplateLocation,
 		js: transpiledPackageJS,
 		css: compiledPackageCSS,
 		demoCodeFolder: demoCodeFolder,
 		name: packageJSON.name
-	};
-	const html = await handlebarsHelper(staticHtmlConfig);
+	});
 
 	// Write html to file
 	if (distFolderPath) {
