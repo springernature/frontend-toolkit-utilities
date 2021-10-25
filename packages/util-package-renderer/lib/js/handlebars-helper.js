@@ -3,7 +3,7 @@
 const path = require('path');
 const Handlebars = require('handlebars');
 const reporter = require('@springernature/util-cli-reporter');
-const dynamicPartials = require('../../../util-dynamic-partial/lib/js');
+const dynamicPartials = require('@springernature/util-dynamic-partial');
 const file = require('./utils/file');
 const baseTemplate = require('./template');
 
@@ -116,12 +116,9 @@ const compileTemplate = async config => {
 		throw new Error(`"${HBARS_CONTEXT_KEY}" ${ERR_INVALID_CONTEXT_KEY_NAME}`);
 	}
 
-	// Are dynamic partials defined
+	// Register all dynamic partials
 	if (packageContextJSON.dynamicPartials) {
-		// Register all dynamic partials
 		dynamicPartials.registerDynamicPartials(Handlebars, config.startingLocation, packageContextJSON.dynamicPartials);
-		// Register the dynamicPartial helper for use
-		dynamicPartials.registerPartialHelper(Handlebars);
 	}
 
 	// Add title, css, js information to context data
