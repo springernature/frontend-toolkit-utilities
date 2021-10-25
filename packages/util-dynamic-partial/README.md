@@ -28,21 +28,29 @@ $ npm install @springernature/util-dynamic-partial
 ```js
 const Handlebars = require('handlebars');
 const dynamicPartials = require('@springernature/util-dynamic-partial');
+const config = require('./context.json');
+
 // Register all dynamic partials
-dynamicPartials.registerDynamicPartials(Handlebars, startingLocation, context.dynamicPartials);
-// Register the dynamicPartial helper for use
-dynamicPartials.registerPartialHelper(Handlebars);
+(async () => {
+  try {
+    await dynamicPartials(Handlebars, config.dynamicPartials);
+  } catch (error) {
+    console.error(error);
+  }
+})();
 ```
 
 **HTML (handlebars)**
 ```handlebars
 <h2>Include the dynamic partial below</h2>
-{{> (dynamicPartial "partialName") }}
+{{> partialName }}
 ```
+
+> Find a more complete example in [the demo folder](./demo/README.md).
 
 ## API
 
-### registerDynamicPartials(Handlebars, startingLocation, dynamicPartials)
+### registerDynamicPartials(Handlebars, dynamicPartials, startingLocation)
 
 Return: `Promise`<br/>
 Register any number of [handlebars partial files](https://handlebarsjs.com/guide/partials.html) as defined within a JSON object
@@ -51,32 +59,20 @@ Register any number of [handlebars partial files](https://handlebarsjs.com/guide
 
 #### Handlebars
 
-Type: `Function`<br/>
+Type: `Object`<br/>
 Required: `true`<br/>
 The handlebars instance with which to register the partials
-
-#### startingLocation
-Type: `String`<br/>
-Required: `true`<br/>
-Path to start looking for the partial templates
 
 #### dynamicPartials
 Type: `Object`<br/>
 Required: `true`<br/>
 Key/Value pairs that define the name of the dynamic partial, and the location relative to `startingLocation`
 
-### registerPartialHelper(Handlebars)
-
-Return: `Promise`<br/>
-Register a handlebars helper called `dynamicPartial` that can be used to reference each partial by name
-
-### options
-
-#### Handlebars
-
-Type: `Function`<br/>
+#### startingLocation
+Type: `String`<br/>
 Required: `true`<br/>
-The handlebars instance with which to register the helper
+Default: `.`<br/>
+Path to start looking for the partial templates
 
 ## License
 

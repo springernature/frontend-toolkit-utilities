@@ -1,0 +1,7 @@
+{
+  "title": "I am the second partial",
+  "dynamicPartials": {
+    "partialName": "./partialName.hbs",
+    "otherPartialName": "./otherPartialName.hbs"
+  }
+}
