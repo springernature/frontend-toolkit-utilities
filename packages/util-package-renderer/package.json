@@ -1,6 +1,6 @@
 {
   "name": "@springernature/util-package-renderer",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "Renders a package that passes SN package validation",
   "author": "jpw, ajk",
   "license": "MIT",

@@ -1,5 +1,9 @@
 # History
 
+## 2.0.0 (2021-10-25)
+    * FEATURE: add new dependency on `util-dynamic-partial`
+        * Look for dynamic partials and render them with the demo
+
 ## 1.0.1 (2021-09-13)
     * BUG: Update readme and example with below features
 
