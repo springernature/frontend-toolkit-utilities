@@ -118,7 +118,7 @@ const compileTemplate = async config => {
 
 	// Register all dynamic partials
 	if (packageContextJSON.dynamicPartials) {
-		dynamicPartials.registerDynamicPartials(Handlebars, config.startingLocation, packageContextJSON.dynamicPartials);
+		await dynamicPartials(Handlebars, packageContextJSON.dynamicPartials, config.startingLocation);
 	}
 
 	// Add title, css, js information to context data
