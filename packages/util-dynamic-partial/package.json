@@ -21,6 +21,8 @@
   },
   "homepage": "https://github.com/springernature/frontend-toolkit-utilities#readme",
   "dependencies": {
+    "@babel/core": "^7.15.5",
+    "@babel/preset-env": "^7.15.4",
     "@springernature/util-cli-reporter": "^1.2.1",
     "handlebars": "^4.4.3"
   }
