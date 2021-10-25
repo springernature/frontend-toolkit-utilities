@@ -1,0 +1,27 @@
+{
+  "name": "@springernature/util-dynamic-partial",
+  "version": "0.0.1",
+  "description": "Dynamically reference handlebars partials",
+  "author": "ajk",
+  "license": "MIT",
+  "main": "./lib/js/index.js",
+  "scripts": {
+    "test": "echo \"Run tests from the top of the repo please.\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/springernature/frontend-toolkit-utilities.git"
+  },
+  "keywords": [
+    "springernature",
+    "handlebars"
+  ],
+  "bugs": {
+    "url": "https://github.com/springernature/frontend-toolkit-utilities/issues"
+  },
+  "homepage": "https://github.com/springernature/frontend-toolkit-utilities#readme",
+  "dependencies": {
+    "@springernature/util-cli-reporter": "^1.2.1",
+    "handlebars": "^4.4.3"
+  }
+}
