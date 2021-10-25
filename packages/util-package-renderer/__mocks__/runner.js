@@ -24,6 +24,7 @@ const distFolder = path.join(fulldir, 'dist');
 			reportingLevel: 'title',
 			minify: true,
 			packageRoot: fulldir,
+			startingLocation: fulldir,
 			brandContext: brandContext,
 			distFolderPath: distFolder
 		});

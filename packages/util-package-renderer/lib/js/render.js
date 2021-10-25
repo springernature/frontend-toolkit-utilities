@@ -78,12 +78,14 @@ const installDependencies = async (packageJSON, brandContext) => {
  * @param {Boolean} minify should we minify the javascript and CSS
  * @return {Promise<String>}
  */
-const generateHTML = async (packageRootPath, demoCodeFolder, name, minify) => {
+// eslint-disable-next-line max-params
+const generateHTML = async (packageRootPath, demoCodeFolder, name, minify, startingLocation) => {
 	const transpiledPackageJS = await jsHelper(packageRootPath, demoCodeFolder, minify);
 	const compiledPackageCSS = await sassHelper(packageRootPath, demoCodeFolder, minify);
 
 	const html = await handlebarsHelper({
 		packageRoot: packageRootPath,
+		startingLocation: startingLocation,
 		js: transpiledPackageJS,
 		css: compiledPackageCSS,
 		demoCodeFolder: demoCodeFolder,
@@ -142,6 +144,7 @@ const renderDemo = async ({
 	reportingLevel = 'title',
 	minify = false,
 	packageRoot,
+	startingLocation,
 	distFolderPath
 } = {}) => {
 	// Confirm path of package to render & get package.json
@@ -164,7 +167,7 @@ const renderDemo = async ({
 	await installDependencies(packageJSON, brandContext);
 
 	// Generate static HTML
-	const html = await generateHTML(packageRootPath, demoCodeFolder, packageJSON.name, minify);
+	const html = await generateHTML(packageRootPath, demoCodeFolder, packageJSON.name, minify, startingLocation);
 
 	// Write html to file
 	if (distFolderPath) {
