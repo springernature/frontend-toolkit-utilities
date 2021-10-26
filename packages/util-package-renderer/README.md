@@ -12,14 +12,15 @@ await renderer(config);
 
 ### Config
 
-| Parameter              | Default Value                   | Type     | Required | Description                                  |
-|------------------------|---------------------------------|----------|----------|----------------------------------------------|
-| config.demoCodeFolder  | 'demo'                          | String   | Yes      | Name of demo code folder within your package |
-| config.brandContext    | '@springernature/brand-context' | String   | Yes      | Name of the brand-context package on NPM     |
-| config.reportingLevel  | 'title'                         | String   | Yes      | Amount of reporting for util-cli-reporter    |
-| config.minify          | false                           | Boolean  | Yes      | Minify the JS and CSS output                 |
-| config.packageRoot     | '.'                             | String   | Yes      | Path to the package to render                |
-| config.distFolderPath  | null                            | String   | No       | Path to where index.html should be written   |
+| Parameter                       | Default Value                   | Type     | Required | Description                                              |
+|---------------------------------|---------------------------------|----------|----------|----------------------------------------------------------|
+| config.demoCodeFolder           | demo                          | String   | Yes      | Name of demo code folder within your package               |
+| config.brandContext             | @springernature/brand-context | String   | Yes      | Name of the brand-context package on NPM                   |
+| config.reportingLevel           | title                         | String   | Yes      | Amount of reporting for util-cli-reporter                  |
+| config.dynamicTemplateLocation  | .                             | String   | Yes      | Where to start looking for dynamic handlebars templates    |
+| config.minify                   | false                         | Boolean  | Yes      | Minify the JS and CSS output                               |
+| config.packageRoot              | .                             | String   | Yes      | Path to the package to render                              |
+| config.distFolderPath           | null                          | String   | No       | Path to where index.html should be written                 |
 
 ## Full examples
 
@@ -57,6 +58,7 @@ const brandContext = '@springernature/brand-context';
 		const result = await renderer({
 			demoCodeFolder: demoFolderName,
 			reportingLevel: 'title',
+			dynamicTemplateLocation: './path/to/location'
 			minify: true,
 			packageRoot: fulldir,
 			brandContext: brandContext
@@ -84,6 +86,7 @@ const distFolder = path.join(fulldir, 'dist');
 		await renderer({
 			demoCodeFolder: demoFolderName,
 			reportingLevel: 'title',
+			dynamicTemplateLocation: './path/to/location'
 			minify: true,
 			packageRoot: fulldir,
 			brandContext: brandContext,

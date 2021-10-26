@@ -1,3 +1,6 @@
 {
-	"data": "I am a data string from the supplied package context.json - Wow!"
+  "data": "I am a data string from the supplied package context.json - Wow!",
+  "dynamicPartials": {
+    "myPartial": "./demo/myPartial.hbs"
+  }
 }

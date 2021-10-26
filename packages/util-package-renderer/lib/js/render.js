@@ -68,32 +68,6 @@ const installDependencies = async (packageJSON, brandContext) => {
 };
 
 /**
- * generate static html from handlebars, sass, js
- * @async
- * @private
- * @function generateHTML
- * @param {Object} packageRootPath path of the package to render
- * @param {String} demoCodeFolder name of folder where demo code stored
- * @param {String} name of the package to be rendered
- * @param {Boolean} minify should we minify the javascript and CSS
- * @return {Promise<String>}
- */
-const generateHTML = async (packageRootPath, demoCodeFolder, name, minify) => {
-	const transpiledPackageJS = await jsHelper(packageRootPath, demoCodeFolder, minify);
-	const compiledPackageCSS = await sassHelper(packageRootPath, demoCodeFolder, minify);
-
-	const html = await handlebarsHelper({
-		packageRoot: packageRootPath,
-		js: transpiledPackageJS,
-		css: compiledPackageCSS,
-		demoCodeFolder: demoCodeFolder,
-		name: name
-	});
-
-	return html;
-};
-
-/**
  * Write content to HTML index file
  * @async
  * @private
@@ -131,6 +105,7 @@ const writeHtmlFile = async (distFolderPath, distFolderPathRelative, html) => {
  * @param {String} [demoCodeFolder='demo'] name of folder where demo code stored
  * @param {String} [brandContext='@springernature/brand-context'] name of the brand context package on NPM
  * @param {String} [reportingLevel='title'] amount of reporting, defaults to all
+ * @param {String} [dynamicTemplateLocation='.'] where to start looking for dynamic handlebars templates
  * @param {Boolean} [minify=false] minify the JS and SASS
  * @param {String} packageRoot path of the package to render
  * @param {String} [distFolderPath] path to write the index.html file
@@ -140,6 +115,7 @@ const renderDemo = async ({
 	demoCodeFolder = 'demo',
 	brandContext = '@springernature/brand-context',
 	reportingLevel = 'title',
+	dynamicTemplateLocation = '.',
 	minify = false,
 	packageRoot,
 	distFolderPath
@@ -164,7 +140,16 @@ const renderDemo = async ({
 	await installDependencies(packageJSON, brandContext);
 
 	// Generate static HTML
-	const html = await generateHTML(packageRootPath, demoCodeFolder, packageJSON.name, minify);
+	const transpiledPackageJS = await jsHelper(packageRootPath, demoCodeFolder, minify);
+	const compiledPackageCSS = await sassHelper(packageRootPath, demoCodeFolder, minify);
+	const html = await handlebarsHelper({
+		packageRoot: packageRootPath,
+		startingLocation: dynamicTemplateLocation,
+		js: transpiledPackageJS,
+		css: compiledPackageCSS,
+		demoCodeFolder: demoCodeFolder,
+		name: packageJSON.name
+	});
 
 	// Write html to file
 	if (distFolderPath) {

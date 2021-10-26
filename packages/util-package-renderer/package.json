@@ -1,6 +1,6 @@
 {
   "name": "@springernature/util-package-renderer",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "Renders a package that passes SN package validation",
   "author": "jpw, ajk",
   "license": "MIT",
@@ -27,6 +27,7 @@
     "@rollup/plugin-node-resolve": "^13.0.4",
     "@springernature/brand-context": "^3.2.4",
     "@springernature/util-cli-reporter": "^1.2.0",
+    "@springernature/util-dynamic-partial": "0.0.1",
     "@springernature/util-package-installer": "^0.3.1",
     "filesize": "^5.0.3",
     "handlebars": "^4.4.3",

@@ -3,6 +3,7 @@
 const path = require('path');
 const Handlebars = require('handlebars');
 const reporter = require('@springernature/util-cli-reporter');
+const dynamicPartials = require('@springernature/util-dynamic-partial');
 const file = require('./utils/file');
 const baseTemplate = require('./template');
 
@@ -86,6 +87,7 @@ const getDemoContext = async (packageRoot, demoCodeFolder) => {
  * @function compileTemplate
  * @param {Object} config configuration for compiling template
  * @param {String} config.packageRoot path of the package to render
+ * @param {String} config.startingLocation path to start looking for templates
  * @param {String} config.js transpiled Javascript
  * @param {String} config.css compiled CSS
  * @param {String} config.demoCodeFolder name of folder where demo code stored
@@ -112,6 +114,11 @@ const compileTemplate = async config => {
 	if (Object.prototype.hasOwnProperty.call(packageContextJSON, HBARS_CONTEXT_KEY)) {
 		reporter.fail('invalid key', 'in data file');
 		throw new Error(`"${HBARS_CONTEXT_KEY}" ${ERR_INVALID_CONTEXT_KEY_NAME}`);
+	}
+
+	// Register all dynamic partials
+	if (packageContextJSON.dynamicPartials) {
+		await dynamicPartials(Handlebars, packageContextJSON.dynamicPartials, config.startingLocation);
 	}
 
 	// Add title, css, js information to context data
