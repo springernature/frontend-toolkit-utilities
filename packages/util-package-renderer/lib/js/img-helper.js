@@ -30,9 +30,14 @@ const imageToDataUri = async (html, demoCodePath) => {
 	// Convert images to data-uri
 	for (const image of images) {
 		const fullImgPath = path.join(demoCodePath, image.src);
-		const encodedImg = await imageDataURI.encodeFromFile(fullImgPath);
-		image.el.attr('src', encodedImg);
-		reporter.success('convert image to data-uri', image.src);
+		try {
+			const encodedImg = await imageDataURI.encodeFromFile(fullImgPath);
+			reporter.success('converting image to data-uri', image.src);
+			image.el.attr('src', encodedImg);
+		} catch (error) {
+			reporter.fail('converting image to data-uri', image.src);
+			throw error;
+		}
 	}
 
 	return $.html();
