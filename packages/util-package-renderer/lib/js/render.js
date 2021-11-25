@@ -148,6 +148,7 @@ const renderDemo = async ({
 		js: transpiledPackageJS,
 		css: compiledPackageCSS,
 		demoCodeFolder: demoCodeFolder,
+		demoCodePath: demoCodePath,
 		name: packageJSON.name
 	});
 

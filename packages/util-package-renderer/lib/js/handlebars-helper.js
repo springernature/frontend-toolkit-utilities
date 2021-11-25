@@ -4,6 +4,7 @@ const path = require('path');
 const Handlebars = require('handlebars');
 const reporter = require('@springernature/util-cli-reporter');
 const dynamicPartials = require('@springernature/util-dynamic-partial');
+const imgHelper = require('./img-helper');
 const file = require('./utils/file');
 const baseTemplate = require('./template');
 
@@ -91,6 +92,7 @@ const getDemoContext = async (packageRoot, demoCodeFolder) => {
  * @param {String} config.js transpiled Javascript
  * @param {String} config.css compiled CSS
  * @param {String} config.demoCodeFolder name of folder where demo code stored
+ * @param {String} config.demoCodePath full path to the demo folder
  * @param {String} config.name of the package to be rendered
  * @return {Promise<String>}
  */
@@ -128,8 +130,13 @@ const compileTemplate = async config => {
 		style: config.css
 	};
 
+	// Render the template as html
+	// Inline images as data-uri
+	const rawHtml = compiledPage(packageContextJSON);
+	const html = await imgHelper(rawHtml, config.demoCodePath);
+
 	// Return rendered template
-	return compiledPage(packageContextJSON);
+	return html;
 };
 
 module.exports = compileTemplate;
