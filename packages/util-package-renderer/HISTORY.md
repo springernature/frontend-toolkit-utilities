@@ -1,5 +1,8 @@
 # History
 
+## 2.1.1 (2021-11-25)
+    * BUG: can't use devDependencies
+
 ## 2.1.0 (2021-11-25)
     * FEATURE: convert images to data-uri in demo folder
 

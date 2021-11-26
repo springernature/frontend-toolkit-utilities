@@ -1,6 +1,6 @@
 {
   "name": "@springernature/util-package-renderer",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Renders a package that passes SN package validation",
   "author": "jpw, ajk",
   "license": "MIT",
@@ -19,14 +19,12 @@
     "url": "https://github.com/springernature/frontend-toolkit-utilities/issues"
   },
   "homepage": "https://github.com/springernature/frontend-toolkit-utilities#readme",
-  "devDependencies": {
+  "dependencies": {
     "@babel/core": "^7.15.5",
     "@babel/preset-env": "^7.15.4",
     "@rollup/plugin-babel": "^5.3.0",
     "@rollup/plugin-commonjs": "^20.0.0",
-    "@rollup/plugin-node-resolve": "^13.0.4"
-  },
-  "dependencies": {
+    "@rollup/plugin-node-resolve": "^13.0.4",
     "@springernature/brand-context": "^3.2.4",
     "@springernature/util-cli-reporter": "^1.2.0",
     "@springernature/util-dynamic-partial": "0.0.1",
