@@ -1,5 +1,8 @@
 # History
 
+## 2.2.0 (2021-11-26)
+    * FEATURE: ignore hyperlinks when converting images
+
 ## 2.1.1 (2021-11-25)
     * BUG: can't use devDependencies
 
