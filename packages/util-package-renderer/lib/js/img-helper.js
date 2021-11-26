@@ -7,7 +7,6 @@ const reporter = require('@springernature/util-cli-reporter');
 
 /**
  * Check for hyperlinks
- * @async
  * @private
  * @function isURL
  * @param {String} value check if this is a valid URL
