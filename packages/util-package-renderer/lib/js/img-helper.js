@@ -6,6 +6,26 @@ const imageDataURI = require('image-data-uri');
 const reporter = require('@springernature/util-cli-reporter');
 
 /**
+ * Check for hyperlinks
+ * @async
+ * @private
+ * @function isURL
+ * @param {String} value check if this is a valid URL
+ * @return {Boolean}
+ */
+function isURL(value) {
+	let url;
+
+	try {
+		url = new URL(value);
+	} catch (_) {
+		return false;
+	}
+
+	return url.protocol === 'http:' || url.protocol === 'https:';
+}
+
+/**
  * Find images in HTML and convert to data-uri
  * @async
  * @function imageToDataUri
@@ -21,10 +41,14 @@ const imageToDataUri = async (html, demoCodePath) => {
 	$('body').find('img').each(function () {
 		const el = $(this);
 		const imgSrc = el.attr('src');
-		images.push({
-			el: el,
-			src: imgSrc
-		});
+
+		// Ignore hyperlinks
+		if (!isURL(imgSrc)) {
+			images.push({
+				el: el,
+				src: imgSrc
+			});
+		}
 	});
 
 	// Convert images to data-uri
