@@ -1,5 +1,8 @@
 # History
 
+## 2.1.0 (2021-11-25)
+    * FEATURE: convert images to data-uri in demo folder
+
 ## 2.0.0 (2021-10-25)
     * FEATURE: add new dependency on `util-dynamic-partial`
         * Look for dynamic partials and render them with the demo
