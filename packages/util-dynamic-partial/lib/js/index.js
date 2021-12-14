@@ -23,11 +23,16 @@ const registerDynamicPartials = async (Handlebars, partials, startingLocation = 
 
 	// Register each dynamic partial
 	for (const partialName of Object.keys(partials)) {
-		const partialFilePath = path.resolve(startingLocation, partials[partialName]);
-		const partialFile = await fs.readFile(partialFilePath, 'utf-8');
-		const partial = Handlebars.compile(partialFile);
-		Handlebars.registerPartial(partialName, partial);
-		reporter.info('dynamic partial found', partialName);
+		try {
+			const partialFilePath = path.resolve(startingLocation, partials[partialName]);
+			const partialFile = await fs.readFile(partialFilePath, 'utf-8');
+			const partial = Handlebars.compile(partialFile);
+			Handlebars.registerPartial(partialName, partial);
+			reporter.info('dynamic partial found', partialName);
+		} catch (error) {
+			reporter.fail('dynamic partial error', partialName, 'could not compile dynamic partial');
+			throw error;
+		}
 	}
 };
 
