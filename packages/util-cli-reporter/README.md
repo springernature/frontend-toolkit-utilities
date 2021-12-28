@@ -40,6 +40,8 @@ reporter.fail('description', 'this is my message');
 reporter.fail('description', 'this is my message', 'to you');
 ```
 
+> NOTE: you can run this demo from [demo/index.js](./demo/index.js)
+
 ### Logging levels
 
 By running the `reporter.init()` function you can set the following logging levels
