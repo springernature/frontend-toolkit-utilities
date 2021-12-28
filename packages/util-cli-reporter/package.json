@@ -11,7 +11,8 @@
   },
   "homepage": "https://github.com/springernature/frontend-toolkit-utilities/tree/master/packages/util-cli-reporter#readme",
   "dependencies": {
-    "kleur": "^3.0.3"
+    "kleur": "^4.1.4",
+    "log-symbols": "^4.1.0"
   },
   "devDependencies": {
     "strip-ansi": "5.2.0"
