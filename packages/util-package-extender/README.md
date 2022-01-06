@@ -4,6 +4,8 @@
 [![Node version][badge-node]][info-node]
 ![MIT License][badge-license]
 
+⚠️ **THIS PACKAGE IS NO LONGER USED** ⚠️
+
 This helper allows you to extend one Component Package (remote) with another (local). The helper merges files from the remote package with files from the local, ignoring any files in the remote that already exist at the local level.
 
 **Remote Package** - package being extended, published to NPM  
