@@ -1,6 +1,6 @@
 {
   "name": "@springernature/util-dynamic-partial",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Dynamically reference handlebars partials",
   "author": "ajk",
   "license": "MIT",
@@ -24,7 +24,7 @@
     "@babel/core": "^7.15.5",
     "@babel/plugin-transform-runtime": "^7.15.8",
     "@babel/preset-env": "^7.15.4",
-    "@springernature/util-cli-reporter": "^1.2.1",
+    "@springernature/util-cli-reporter": "^2.0.0",
     "handlebars": "^4.4.3"
   }
 }

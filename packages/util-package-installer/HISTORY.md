@@ -1,5 +1,8 @@
 # History
 
+## 0.4.0 (2022-01-06)
+    * FEATURE: use the util-cli-reporter to match other packages
+
 ## 0.3.1 (2021-09-08)
     * BUG: multiple dependencies were not being installed correctly
 

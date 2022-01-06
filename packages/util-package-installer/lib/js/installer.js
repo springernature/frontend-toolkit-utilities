@@ -1,5 +1,6 @@
 'use strict';
 const cp = require('child_process');
+const reporter = require('@springernature/util-cli-reporter');
 const validatePackageName = require('validate-npm-package-name');
 
 /**
@@ -35,7 +36,7 @@ module.exports = {
 		const packageList = validDepdendencies.map(dep => dep.join('@'));
 		const packageListAsStr = packageList.join(' ');
 
-		console.log(`npm-install: ${packageListAsStr}`);
+		reporter.info('npm install', packageListAsStr);
 
 		if (!packageListAsStr || packageListAsStr === '') {
 			throw new Error('invalid package list');
