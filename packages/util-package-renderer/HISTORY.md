@@ -1,5 +1,8 @@
 # History
 
+## 2.2.2 (2022-01-06)
+    * Update util-package-installer & util-dynamic-partial
+
 ## 2.2.1 (2021-11-26)
     * Update util-cli-reporter
 
