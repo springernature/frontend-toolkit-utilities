@@ -1,5 +1,10 @@
 # History
 
+## 2.0.0 (2021-12-28)
+	* FEATURE: add icons
+	* Change info color from green to blue
+	* Bold types
+
 ## 1.2.1 (2020-10-05)
 	* BUG: Fallback to default when init() type is not String
 

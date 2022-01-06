@@ -5,16 +5,25 @@
 'use strict';
 
 const kleur = require('kleur');
+const logSymbols = require('log-symbols');
 
 const report = {};
+
 const colors = {
-	info: kleur.green,
+	info: kleur.blue().bold,
 	success: kleur.green().bold,
-	warning: kleur.yellow,
+	warning: kleur.yellow().bold,
 	fail: kleur.red().bold,
 	description: kleur.magenta,
 	message: kleur.white,
 	comment: kleur.white().dim
+};
+
+const symbols = {
+	info: logSymbols.info,
+	success: logSymbols.success,
+	warning: logSymbols.warning,
+	fail: logSymbols.error
 };
 
 // Logging levels
@@ -34,23 +43,22 @@ let logLevel = 5;
  * Clean whitespace from output
  * Keeps reporter code a little cleaner
  * @private
- * @param {String} string the string to clean
+ * @param {String} text the text string to clean
  * @return {String}
  */
-function cleanWhitespace(string) {
-	return string.replace(/\t+|^\t*\n|\n\t*$/g, '');
+function cleanWhitespace(text) {
+	return text.replace(/\t+|^\t*\n|\n\t*$/g, '');
 }
 
 /**
  * Configure title output
- * With custom separator
  * @private
- * @param {String} string the string to clean
+ * @param {String} text the text string
  * @return {String}
  */
-function configureTitle(string) {
-	const separator = string.split('').fill('-').join('');
-	return `${separator}\n${string}\n${separator}`;
+function configureTitle(text) {
+	const separator = text.split('').fill('-').join('');
+	return `${separator}\n${text}\n${separator}`;
 }
 
 /**
@@ -63,7 +71,7 @@ function configureTitle(string) {
  * @return {String}
  */
 function configureOutput(type, description, message, comment) {
-	type = colors[type](type);
+	type = colors[type](`${symbols[type]} ${type}`);
 	description = colors.description(description);
 	message = (message) ? colors.message(message) : null;
 	comment = (comment) ? colors.comment(comment) : null;
