@@ -1,5 +1,8 @@
 # History
 
+## 2.2.1 (2021-11-26)
+    * Update util-cli-reporter
+
 ## 2.2.0 (2021-11-26)
     * FEATURE: ignore hyperlinks when converting images
 
