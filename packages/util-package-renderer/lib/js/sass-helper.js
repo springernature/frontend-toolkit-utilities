@@ -1,12 +1,9 @@
 'use strict';
 
-const util = require('util');
 const path = require('path');
-const sass = require('node-sass');
+const sass = require('sass');
 const reporter = require('@springernature/util-cli-reporter');
 const file = require('./utils/file');
-
-const render = util.promisify(sass.render);
 
 const ERR_NO_PACKAGE_SASS_FOUND = 'no sass found for package';
 
@@ -24,7 +21,7 @@ const compileSASS = async (packageRoot, demoCodeFolder, minify) => {
 	let packageSASS = await file.getContent(sassEntryPoint);
 	let result;
 
-	reporter.info('starting node-sass', null, 'generating compiled css');
+	reporter.info('starting sass', null, 'generating compiled css');
 
 	// Lack of packageSASS should not be fatal
 	if (packageSASS instanceof Error) {
@@ -34,12 +31,11 @@ const compileSASS = async (packageRoot, demoCodeFolder, minify) => {
 
 	// Render the SASS to CSS
 	try {
-		result = await render({
-			data: packageSASS,
-			outputStyle: (minify) ? 'compressed' : 'expanded',
+		result = sass.compileString(packageSASS, {
+			style: (minify) ? 'compressed' : 'expanded',
 			indentType: 'tab',
 			indentWidth: 1,
-			includePaths: [
+			loadPaths: [
 				// so that relative @import paths in demoCodeFolder/main.scss resolve
 				path.join(packageRoot, demoCodeFolder)
 			]
