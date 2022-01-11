@@ -1,32 +1,38 @@
 /**
  * render.js
- * Promisify SASS.render and add JSON output
+ * compile SASS and convert to JSON
  */
 'use strict';
 
-const util = require('util');
-
 const css2json = require('css2json');
-const sass = require('node-sass');
+const sass = require('sass');
 
-const sassRender = util.promisify(sass.render);
+// Using a compact/compressed output style allows you to use concise 'expected' CSS
+const defaultOpts = {
+	style: 'compressed'
+};
 
 /**
  * Generate a compiled SASS object
  * @param {Object} options node sass options
  * @return {Object}
  */
-module.exports.render = async options => {
+module.exports = async (options = {}) => {
+	let sassObject;
+	const opts = Object.assign(defaultOpts, options);
+
 	try {
-		const sassObject = await sassRender({
-			// Where node-sass should look for files when you use @import
-			includePaths: [__dirname],
-			// Using a compact/compressed output style allows you to use concise 'expected' CSS
-			outputStyle: 'compressed',
-			// Merge in any other options you pass when calling render
-			// Should include `file` or `data`
-			...options
-		});
+		if (typeof options.data === 'undefined' && typeof options.file === 'undefined') {
+			throw new TypeError('Expects Object.data or Object.file in arguments');
+		}
+
+		if (options.data) {
+			sassObject = sass.compileString(options.data, opts);
+		}
+
+		if (options.file) {
+			sassObject = sass.compile(options.file, opts);
+		}
 
 		// Return SASS object including JSON variant
 		return {
