@@ -3,6 +3,8 @@
 Renders an Elements-compatible package into HTML with all resources inlined.  
 Optionally write the result to disk as `index.html`.
 
+> **NOTE**: As of `v3.0.0` this package works with `dart-sass`, for `node-sass` support please continue using `v2.2.2`
+
 ## Usage
 
 ```js
