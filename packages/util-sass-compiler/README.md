@@ -1,3 +1,5 @@
+⚠️ **NOTE**: This package needs updating to `dart-sass` before it can be used again. See [this open issue](https://github.com/springernature/frontend-toolkit-utilities/issues/75). ⚠️
+
 # SASS Compiler
 
 [![NPM version][badge-npm]][info-npm]
