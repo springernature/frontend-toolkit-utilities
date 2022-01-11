@@ -1,5 +1,9 @@
 # History
 
+## 3.0.0 (2022-01-11)
+    * BREAKING: update to dart-sass
+    * For node-sass continue using v2.2.2
+
 ## 2.2.2 (2022-01-06)
     * Update util-package-installer & util-dynamic-partial
 
