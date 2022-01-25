@@ -1,5 +1,8 @@
 # History
 
+## 3.0.1 (2022-01-25)
+    * BUG: hyperlink check did not cater for protocol relative URLs
+
 ## 3.0.0 (2022-01-11)
     * BREAKING: update to dart-sass
     * For node-sass continue using v2.2.2
