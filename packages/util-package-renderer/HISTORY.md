@@ -1,5 +1,8 @@
 # History
 
+## 3.1.0 (2022-01-25)
+    * FEATURE: Add `.js` class to output `html` element
+
 ## 3.0.1 (2022-01-25)
     * BUG: hyperlink check did not cater for protocol relative URLs
 

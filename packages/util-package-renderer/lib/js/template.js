@@ -3,6 +3,9 @@ module.exports = (key, content) => {
 	return `<!doctype html>
 <html lang="en">
 	<head>
+		<script>
+    		(function(e){var t=e.documentElement,n=e.implementation;t.className='js';})(document)
+		</script>
 		<meta charset="utf-8">
 		<title>{{${key}.title}}</title>
 		<style>
