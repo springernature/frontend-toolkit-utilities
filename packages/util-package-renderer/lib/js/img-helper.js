@@ -42,7 +42,8 @@ const imageToDataUri = async (html, demoCodePath) => {
 		const imgSrc = el.attr('src');
 
 		// Ignore hyperlinks
-		if (!isURL(imgSrc)) {
+		// Including protocol relative links
+		if (!imgSrc.startsWith('//') && !isURL(imgSrc)) {
 			images.push({
 				el: el,
 				src: imgSrc
