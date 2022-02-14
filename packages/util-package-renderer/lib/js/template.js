@@ -7,6 +7,7 @@ module.exports = (key, content) => {
     		(function(e){var t=e.documentElement,n=e.implementation;t.className='js';})(document)
 		</script>
 		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>{{${key}.title}}</title>
 		<style>
 			{{{${key}.style}}}

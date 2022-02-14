@@ -1,5 +1,8 @@
 # History
 
+## 3.2.0 (2022-02-14)
+    * FEATURE: Adds viewport meta tag to demo template for responsive layout
+
 ## 3.1.0 (2022-01-25)
     * FEATURE: Add `.js` class to output `html` element
 
