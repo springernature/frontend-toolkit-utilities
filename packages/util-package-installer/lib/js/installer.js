@@ -28,13 +28,21 @@ module.exports = {
 	 * Main method which actually installs given depdendencies.
 	 * @param  {Dependencies} dependencies={}
 	 * @param  {String} options='' any parameters to pass to npm install e.g. --no-save
+	 * @param  {String} prefix path to custom install location
 	 * @returns {Promise} resolves with "npm install" command stdout data.
 	 * @throws {Error} message is contents of "npm install" command stderr, or some other operational error.
 	 */
-	dependenciesObject: async (dependencies = {}, options = '') => {
+	dependenciesObject: async (dependencies = {}, options = '', prefix) => {
 		const validDepdendencies = module.exports.getValidDepdendencies(dependencies);
 		const packageList = validDepdendencies.map(dep => dep.join('@'));
 		const packageListAsStr = packageList.join(' ');
+
+		// Generate prefix install command
+		if (prefix) {
+			prefix = ['--prefix', prefix];
+		} else {
+			prefix = [];
+		}
 
 		reporter.info('npm install', packageListAsStr);
 
@@ -43,7 +51,7 @@ module.exports = {
 		}
 
 		const spawnPromiseResolution = await new Promise((resolve, reject) => {
-			const installCommand = ['install', options];
+			const installCommand = prefix.concat(['install', options]);
 			const child = cp.spawn('npm', installCommand.concat(packageList));
 
 			let childStdout = '';
@@ -86,27 +94,30 @@ module.exports = {
 	 * Helper to install just the dependencies in a parsed package.json
 	 * @param  {PackageJSON} packageJSON={}
 	 * @param  {String} options any parameters to pass to npm install e.g. --no-save
+	 * @param  {String} prefix specify an install location
 	 */
-	dependencies: async (packageJSON = {}, options) =>
-		module.exports.dependenciesObject(packageJSON.dependencies, options),
+	dependencies: async (packageJSON = {}, options, prefix) =>
+		module.exports.dependenciesObject(packageJSON.dependencies, options, prefix),
 
 	/**
 	 * Helper to install just the devDependencies in a parsed package.json
 	 * @param  {PackageJSON} packageJSON={}
 	 * @param  {String} options any parameters to pass to npm install e.g. --no-save
+	 * @param  {String} prefix specify an install location
 	 * TODO: should pass --save-dev flag
 	 */
-	devDependencies: async (packageJSON = {}, options) =>
-		module.exports.dependenciesObject(packageJSON.devDependencies, options),
+	devDependencies: async (packageJSON = {}, options, prefix) =>
+		module.exports.dependenciesObject(packageJSON.devDependencies, options, prefix),
 
 	/**
 	 * Helper to install just the peerDependencies in a parsed package.json
 	 * @param  {PackageJSON} packageJSON={}
 	 * @param  {String} options any parameters to pass to npm install e.g. --no-save
+	 * @param  {String} prefix specify an install location
 	 * TODO: this will mangle the depedencies
 	 */
-	peerDependencies: async (packageJSON = {}, options) =>
-		module.exports.dependenciesObject(packageJSON.peerDependencies, options),
+	peerDependencies: async (packageJSON = {}, options, prefix) =>
+		module.exports.dependenciesObject(packageJSON.peerDependencies, options, prefix),
 
 	/** Maximum permitted length of a package version range string */
 	VERSION_RANGE_MAXLENGTH: VERSION_RANGE_MAXLENGTH

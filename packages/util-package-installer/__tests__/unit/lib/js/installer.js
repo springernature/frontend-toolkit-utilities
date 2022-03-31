@@ -29,7 +29,7 @@ describe('util-package-installer', () => {
 			expect(dependenciesObjectSpy).toHaveBeenCalledTimes(1);
 		});
 
-		test('with no dependencies, returns an error', async () => {
+		test('with no dependencies: returns an error', async () => {
 			let result;
 			try {
 				result = await install.dependenciesObject({});
@@ -40,7 +40,7 @@ describe('util-package-installer', () => {
 			expect(result instanceof Error).toStrictEqual(true);
 		});
 
-		test('with one valid dep, calls child_process.spawn once with correct args', async () => {
+		test('with one valid dep: calls child_process.spawn once with correct args', async () => {
 			await install.dependenciesObject(mockDependencies.oneValidDependency);
 			expect.assertions(2);
 			expect(child_process.spawn).toHaveBeenCalledWith(
@@ -49,7 +49,25 @@ describe('util-package-installer', () => {
 			expect(child_process.spawn).toHaveBeenCalledTimes(1);
 		});
 
-		test('with two valid deps, calls child_process.exec once with correct args', async () => {
+		test('with one valid dep and specify options: calls child_process.spawn once with correct args', async () => {
+			await install.dependenciesObject(mockDependencies.oneValidDependency, '--no-save');
+			expect.assertions(2);
+			expect(child_process.spawn).toHaveBeenCalledWith(
+				'npm', ['install', '--no-save', 'foo@1.0.0 - 2.9999.9999']
+			);
+			expect(child_process.spawn).toHaveBeenCalledTimes(1);
+		});
+
+		test('with one valid dep, specify options, prefix: calls child_process.spawn once with correct args', async () => {
+			await install.dependenciesObject(mockDependencies.oneValidDependency, '--no-save', './path/to/directory');
+			expect.assertions(2);
+			expect(child_process.spawn).toHaveBeenCalledWith(
+				'npm', ['--prefix', './path/to/directory', 'install', '--no-save', 'foo@1.0.0 - 2.9999.9999']
+			);
+			expect(child_process.spawn).toHaveBeenCalledTimes(1);
+		});
+
+		test('with two valid deps: calls child_process.exec once with correct args', async () => {
 			await install.dependenciesObject(mockDependencies.twoValidDependencies);
 			expect.assertions(2);
 			expect(child_process.spawn).toHaveBeenCalledWith(
@@ -58,7 +76,7 @@ describe('util-package-installer', () => {
 			expect(child_process.spawn).toHaveBeenCalledTimes(1);
 		});
 
-		test('with one valid dep, and spawn has an operational error, returns an error', async () => {
+		test('with one valid dep, and spawn has an operational error: returns an error', async () => {
 			// re-mock the mock, this should be done in a more DRY manner
 			const oldCPSpawn = child_process.spawn;
 			child_process.spawn = jest.fn((command, arArgs) => {
