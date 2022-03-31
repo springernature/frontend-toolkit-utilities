@@ -177,6 +177,26 @@ describe('util-package-installer', () => {
 			await install.devDependencies(mockDependencies.packageJSON);
 			expect(dependenciesObjectSpy).toHaveBeenCalledTimes(1);
 		});
+
+		test('calls dependenciesObjectSpy, calls child_process.spawn once with correct args', async () => {
+			await install.devDependencies(mockDependencies.packageJSON);
+			expect.assertions(3);
+			expect(dependenciesObjectSpy).toHaveBeenCalledTimes(1);
+			expect(child_process.spawn).toHaveBeenCalledWith(
+				'npm', ['install', '--save-dev', 'foo@1.0.0 - 2.9999.9999']
+			);
+			expect(child_process.spawn).toHaveBeenCalledTimes(1);
+		});
+
+		test('calls dependenciesObjectSpy, options, calls child_process.spawn once with correct args', async () => {
+			await install.devDependencies(mockDependencies.packageJSON, '--no-save');
+			expect.assertions(3);
+			expect(dependenciesObjectSpy).toHaveBeenCalledTimes(1);
+			expect(child_process.spawn).toHaveBeenCalledWith(
+				'npm', ['install', '--no-save', '--save-dev', 'foo@1.0.0 - 2.9999.9999']
+			);
+			expect(child_process.spawn).toHaveBeenCalledTimes(1);
+		});
 	});
 
 	describe('peerDependencies()', () => {

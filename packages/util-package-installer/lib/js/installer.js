@@ -36,6 +36,7 @@ module.exports = {
 		const validDepdendencies = module.exports.getValidDepdendencies(dependencies);
 		const packageList = validDepdendencies.map(dep => dep.join('@'));
 		const packageListAsStr = packageList.join(' ');
+		const optionsAsArr = options.trim().split(' ');
 
 		// Generate prefix install command
 		if (prefix) {
@@ -51,7 +52,7 @@ module.exports = {
 		}
 
 		const spawnPromiseResolution = await new Promise((resolve, reject) => {
-			const installCommand = prefix.concat(['install', options]);
+			const installCommand = prefix.concat(['install'], optionsAsArr);
 			const child = cp.spawn('npm', installCommand.concat(packageList));
 
 			let childStdout = '';
@@ -104,10 +105,13 @@ module.exports = {
 	 * @param  {PackageJSON} packageJSON={}
 	 * @param  {String} options any parameters to pass to npm install e.g. --no-save
 	 * @param  {String} prefix specify an install location
-	 * TODO: should pass --save-dev flag
 	 */
 	devDependencies: async (packageJSON = {}, options, prefix) =>
-		module.exports.dependenciesObject(packageJSON.devDependencies, options, prefix),
+		module.exports.dependenciesObject(
+			packageJSON.devDependencies,
+			(options) ? `${options} --save-dev` : '--save-dev',
+			prefix
+		),
 
 	/**
 	 * Helper to install just the peerDependencies in a parsed package.json
