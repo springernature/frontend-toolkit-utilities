@@ -1,5 +1,9 @@
 # History
 
+## 0.5.0 (2022-04-04)
+    * FEATURE: use --save-dev flag for devDependencies
+    * FEATURE: allow --prefix flag for setting install location
+
 ## 0.4.0 (2022-01-06)
     * FEATURE: use the util-cli-reporter to match other packages
 
