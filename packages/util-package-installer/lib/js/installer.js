@@ -36,7 +36,7 @@ module.exports = {
 		const validDepdendencies = module.exports.getValidDepdendencies(dependencies);
 		const packageList = validDepdendencies.map(dep => dep.join('@'));
 		const packageListAsStr = packageList.join(' ');
-		const optionsAsArr = options.trim().split(' ');
+		const optionsAsArr = (options && options.length > 0) ? options.trim().split(' ') : [];
 		const prefixInstallCommand = [];
 
 		// Generate prefix install command
