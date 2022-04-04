@@ -20,15 +20,16 @@
     "url": "https://github.com/springernature/frontend-toolkit-utilities/issues"
   },
   "homepage": "https://github.com/springernature/frontend-toolkit-utilities#readme",
-  "files": [
-    "/lib/js/installer.js"
-  ],
+  "bin": {
+    "SNutilContextInstaller": "./bin/index.js"
+  },
   "scripts": {
     "test": "echo \"Run tests from the repository root please.\" && exit 1"
   },
   "dependencies": {
     "@springernature/util-cli-reporter": "^2.0.0",
     "@springernature/util-package-installer": "^0.5.0",
-    "globby": "^11.0.3"
+    "globby": "^11.0.3",
+    "yargs": "^17.4.0"
   }
 }

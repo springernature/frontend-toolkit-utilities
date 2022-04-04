@@ -61,11 +61,11 @@ const getPackageJsonInfo = packageJsonPath => {
 /**
  * install brand-context dependency
  * @param {String} [installPath=__dirname] starting path for walking tree
- * @param {Boolean} [reporting=true] report results to the CLI
+ * @param {Boolean} [reporting=false] report results to the CLI
  * @param {String} [contextName='@springernature/brand-context'] name of the brand-context package
  * @return
  */
-module.exports = async (installPath = __dirname, reporting = true, contextName = '@springernature/brand-context') => {
+module.exports = async (installPath = __dirname, reporting = false, contextName = '@springernature/brand-context') => {
 	// Set cli reporting on/off
 	reporter.init((reporting) ? 'info' : 'none');
 	reporter.info('installing', 'brand-context');
@@ -87,6 +87,6 @@ module.exports = async (installPath = __dirname, reporting = true, contextName =
 			reporter.success(packageInfo.name, `${contextName}@${packageInfo.version}`);
 		}
 	})).catch(error => {
-		console.error(error);
+		throw error;
 	});
 };
