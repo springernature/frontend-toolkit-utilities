@@ -37,12 +37,11 @@ module.exports = {
 		const packageList = validDepdendencies.map(dep => dep.join('@'));
 		const packageListAsStr = packageList.join(' ');
 		const optionsAsArr = options.trim().split(' ');
+		const prefixInstallCommand = [];
 
 		// Generate prefix install command
 		if (prefix) {
-			prefix = ['--prefix', prefix];
-		} else {
-			prefix = [];
+			prefixInstallCommand.push('--prefix', prefix);
 		}
 
 		reporter.info('npm install', packageListAsStr);
@@ -52,7 +51,7 @@ module.exports = {
 		}
 
 		const spawnPromiseResolution = await new Promise((resolve, reject) => {
-			const installCommand = prefix.concat(['install'], optionsAsArr);
+			const installCommand = prefixInstallCommand.concat(['install'], optionsAsArr);
 			const child = cp.spawn('npm', installCommand.concat(packageList));
 
 			let childStdout = '';
