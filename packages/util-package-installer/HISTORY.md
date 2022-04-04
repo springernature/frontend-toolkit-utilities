@@ -1,6 +1,6 @@
 # History
 
-## 0.5.0 (2022-01-06)
+## 0.5.0 (2022-04-04)
     * FEATURE: use --save-dev flag for devDependencies
     * FEATURE: allow --prefix flag for setting install location
 
