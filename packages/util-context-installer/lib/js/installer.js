@@ -23,13 +23,11 @@ const installBrandContext = async (packageJsonPath, name, version) => {
 	const installPath = path.dirname(packageJsonPath);
 
 	try {
-		// Don't save back to dependencies in package.json
-		// If brand-context is used we don't want that added
 		await npmInstall.dependencies({
 			dependencies: {
 				[name]: version
 			}
-		}, '--no-save');
+		}, '--no-save', installPath);
 	} catch (error) {
 		reporter.fail(path.basename(installPath), 'brand-context installation');
 		throw error;
@@ -38,8 +36,8 @@ const installBrandContext = async (packageJsonPath, name, version) => {
 
 /**
  * Check package.json contents and return
- *   name
- *   brand context version
+ *  - name
+ *  - brand context version
  * @private
  * @function getPackageJsonInfo
  * @param {String} packageJsonPath path to the package.json file
@@ -80,7 +78,7 @@ module.exports = async (installPath = __dirname, reporting = true, contextName =
 		gitignore: true
 	});
 
-	// Loop through all paths
+	// Loop through all paths and install brand-context
 	Promise.all(paths.map(async packageJsonPath => {
 		const packageInfo = getPackageJsonInfo(packageJsonPath);
 
@@ -88,7 +86,7 @@ module.exports = async (installPath = __dirname, reporting = true, contextName =
 			await installBrandContext(packageJsonPath, contextName, packageInfo.version);
 			reporter.success(packageInfo.name, `${contextName}@${packageInfo.version}`);
 		}
-	})).catch(err => {
-		throw err;
+	})).catch(error => {
+		console.error(error);
 	});
 };
