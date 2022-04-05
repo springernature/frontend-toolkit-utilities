@@ -1,5 +1,9 @@
 # History
 
+## 1.0.0 (2022-04-05)
+    * BREAKING: change the way that options are passed
+    * FEATURE: add option to turn reporting off
+
 ## 0.5.0 (2022-04-04)
     * FEATURE: use --save-dev flag for devDependencies
     * FEATURE: allow --prefix flag for setting install location
