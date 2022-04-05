@@ -183,7 +183,7 @@ This package provides a wrapper around that functionality.</div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="installer.js.html">installer.js</a>, <a href="installer.js.html#line126">line 126</a>
+        <a href="installer.js.html">installer.js</a>, <a href="installer.js.html#line172">line 172</a>
     </li></ul></dd>
     
 
@@ -273,7 +273,7 @@ This package provides a wrapper around that functionality.</div>
     
 
     
-    <h4 class="name" id=".dependencies"><span class="type-signature">(static) </span>dependencies<span class="signature">(packageJSON, options, prefix)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".dependencies"><span class="type-signature">(static) </span>dependencies<span class="signature">(packageJSON, options)</span><span class="type-signature"></span></h4>
     
 
     
@@ -354,7 +354,7 @@ This package provides a wrapper around that functionality.</div>
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">Object</span>
 
 
             
@@ -365,10 +365,77 @@ This package provides a wrapper around that functionality.</div>
             
                 <td class="default">
                 
+                    {}
+                
                 </td>
             
 
+            <td class="description last">
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>arguments</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
             <td class="description last">any parameters to pass to npm install e.g. --no-save</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>reporting</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">show CLI reporting</td>
         </tr>
 
     
@@ -390,12 +457,15 @@ This package provides a wrapper around that functionality.</div>
             
 
             
-                <td class="default">
-                
-                </td>
-            
 
             <td class="description last">specify an install location</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -436,7 +506,7 @@ This package provides a wrapper around that functionality.</div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="installer.js.html">installer.js</a>, <a href="installer.js.html#line99">line 99</a>
+        <a href="installer.js.html">installer.js</a>, <a href="installer.js.html#line140">line 140</a>
     </li></ul></dd>
     
 
@@ -472,7 +542,7 @@ This package provides a wrapper around that functionality.</div>
     
 
     
-    <h4 class="name" id=".dependenciesObject"><span class="type-signature">(static) </span>dependenciesObject<span class="signature">(dependencies, options, prefix)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+    <h4 class="name" id=".dependenciesObject"><span class="type-signature">(static) </span>dependenciesObject<span class="signature">(dependencies, options)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
     
 
     
@@ -553,7 +623,7 @@ This package provides a wrapper around that functionality.</div>
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">Object</span>
 
 
             
@@ -564,39 +634,12 @@ This package provides a wrapper around that functionality.</div>
             
                 <td class="default">
                 
-                    ''
+                    {}
                 
                 </td>
             
 
-            <td class="description last">any parameters to pass to npm install e.g. --no-save</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>prefix</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-            
-            </td>
-
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last">path to custom install location</td>
+            <td class="description last">user settings for installation</td>
         </tr>
 
     
@@ -637,7 +680,7 @@ This package provides a wrapper around that functionality.</div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="installer.js.html">installer.js</a>, <a href="installer.js.html#line35">line 35</a>
+        <a href="installer.js.html">installer.js</a>, <a href="installer.js.html#line63">line 63</a>
     </li></ul></dd>
     
 
@@ -724,7 +767,7 @@ This package provides a wrapper around that functionality.</div>
     
 
     
-    <h4 class="name" id=".devDependencies"><span class="type-signature">(static) </span>devDependencies<span class="signature">(packageJSON, options, prefix)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".devDependencies"><span class="type-signature">(static) </span>devDependencies<span class="signature">(packageJSON, options)</span><span class="type-signature"></span></h4>
     
 
     
@@ -805,7 +848,7 @@ This package provides a wrapper around that functionality.</div>
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">Object</span>
 
 
             
@@ -816,10 +859,77 @@ This package provides a wrapper around that functionality.</div>
             
                 <td class="default">
                 
+                    {}
+                
                 </td>
             
 
+            <td class="description last">
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>arguments</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
             <td class="description last">any parameters to pass to npm install e.g. --no-save</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>reporting</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">show CLI reporting</td>
         </tr>
 
     
@@ -841,12 +951,15 @@ This package provides a wrapper around that functionality.</div>
             
 
             
-                <td class="default">
-                
-                </td>
-            
 
             <td class="description last">specify an install location</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -887,7 +1000,7 @@ This package provides a wrapper around that functionality.</div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="installer.js.html">installer.js</a>, <a href="installer.js.html#line108">line 108</a>
+        <a href="installer.js.html">installer.js</a>, <a href="installer.js.html#line151">line 151</a>
     </li></ul></dd>
     
 
@@ -1032,7 +1145,7 @@ This package provides a wrapper around that functionality.</div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="installer.js.html">installer.js</a>, <a href="installer.js.html#line81">line 81</a>
+        <a href="installer.js.html">installer.js</a>, <a href="installer.js.html#line120">line 120</a>
     </li></ul></dd>
     
 
@@ -1090,7 +1203,7 @@ This package provides a wrapper around that functionality.</div>
     
 
     
-    <h4 class="name" id=".peerDependencies"><span class="type-signature">(static) </span>peerDependencies<span class="signature">(packageJSON, options, prefix)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".peerDependencies"><span class="type-signature">(static) </span>peerDependencies<span class="signature">(packageJSON, options)</span><span class="type-signature"></span></h4>
     
 
     
@@ -1171,7 +1284,7 @@ This package provides a wrapper around that functionality.</div>
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">Object</span>
 
 
             
@@ -1182,10 +1295,77 @@ This package provides a wrapper around that functionality.</div>
             
                 <td class="default">
                 
+                    {}
+                
                 </td>
             
 
+            <td class="description last">
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>arguments</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
             <td class="description last">any parameters to pass to npm install e.g. --no-save</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>reporting</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">show CLI reporting</td>
         </tr>
 
     
@@ -1207,13 +1387,15 @@ This package provides a wrapper around that functionality.</div>
             
 
             
-                <td class="default">
-                
-                </td>
-            
 
-            <td class="description last">specify an install location
-TODO: this will mangle the depedencies</td>
+            <td class="description last">specify an install location</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     
@@ -1254,7 +1436,7 @@ TODO: this will mangle the depedencies</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="installer.js.html">installer.js</a>, <a href="installer.js.html#line122">line 122</a>
+        <a href="installer.js.html">installer.js</a>, <a href="installer.js.html#line168">line 168</a>
     </li></ul></dd>
     
 
@@ -1346,7 +1528,7 @@ TODO: this will mangle the depedencies</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="installer.js.html">installer.js</a>, <a href="installer.js.html#line21">line 21</a>
+        <a href="installer.js.html">installer.js</a>, <a href="installer.js.html#line50">line 50</a>
     </li></ul></dd>
     
 
@@ -1418,7 +1600,7 @@ TODO: this will mangle the depedencies</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="installer.js.html">installer.js</a>, <a href="installer.js.html#line17">line 17</a>
+        <a href="installer.js.html">installer.js</a>, <a href="installer.js.html#line46">line 46</a>
     </li></ul></dd>
     
 
@@ -1454,7 +1636,7 @@ TODO: this will mangle the depedencies</td>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Mon Apr 04 2022 11:01:44 GMT+0100 (British Summer Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.6</a> on Tue Apr 05 2022 18:42:13 GMT+0100 (British Summer Time)
 </footer>
 
 <script> prettyPrint(); </script>
