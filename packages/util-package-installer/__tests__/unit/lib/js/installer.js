@@ -4,6 +4,7 @@
 
 // Jest gotcha 1: node core modules must be explicitly require()d to spy on them
 const child_process = require('child_process');
+const reporter = require('@springernature/util-cli-reporter');
 const install = require('../../../../lib/js/installer');
 
 const mockDependencies = require('../../../../__mocks__/data/npm-dependencies');
@@ -13,13 +14,17 @@ console.log = jest.fn(); // silence log output from module under test
 
 describe('util-package-installer', () => {
 	let dependenciesObjectSpy;
+	let reporterSpy;
+
 	beforeEach(() => {
 		dependenciesObjectSpy = jest.spyOn(install, 'dependenciesObject');
+		reporterSpy = jest.spyOn(reporter, 'info');
 	});
 
 	afterEach(() => {
 		child_process.spawn.mockClear();
 		dependenciesObjectSpy.mockRestore();
+		reporterSpy.mockRestore();
 	});
 
 	describe('dependenciesObject()', () => {
@@ -49,8 +54,8 @@ describe('util-package-installer', () => {
 			expect(child_process.spawn).toHaveBeenCalledTimes(1);
 		});
 
-		test('with one valid dep and specify options: calls child_process.spawn once with correct args', async () => {
-			await install.dependenciesObject(mockDependencies.oneValidDependency, '--no-save');
+		test('with one valid dep and specify arguments: calls child_process.spawn once with correct args', async () => {
+			await install.dependenciesObject(mockDependencies.oneValidDependency, {arguments: ['--no-save']});
 			expect.assertions(2);
 			expect(child_process.spawn).toHaveBeenCalledWith(
 				'npm', ['install', '--no-save', 'foo@1.0.0 - 2.9999.9999']
@@ -58,8 +63,8 @@ describe('util-package-installer', () => {
 			expect(child_process.spawn).toHaveBeenCalledTimes(1);
 		});
 
-		test('with one valid dep, specify options, prefix: calls child_process.spawn once with correct args', async () => {
-			await install.dependenciesObject(mockDependencies.oneValidDependency, '--no-save', './path/to/directory');
+		test('with one valid dep, specify arguments, prefix: calls child_process.spawn once with correct args', async () => {
+			await install.dependenciesObject(mockDependencies.oneValidDependency, {arguments: ['--no-save'], prefix: './path/to/directory'});
 			expect.assertions(2);
 			expect(child_process.spawn).toHaveBeenCalledWith(
 				'npm', ['--prefix', './path/to/directory', 'install', '--no-save', 'foo@1.0.0 - 2.9999.9999']
@@ -67,17 +72,8 @@ describe('util-package-installer', () => {
 			expect(child_process.spawn).toHaveBeenCalledTimes(1);
 		});
 
-		test('with one valid dep, no options, prefix: calls child_process.spawn once with correct args', async () => {
-			await install.dependenciesObject(mockDependencies.oneValidDependency, null, './path/to/directory');
-			expect.assertions(2);
-			expect(child_process.spawn).toHaveBeenCalledWith(
-				'npm', ['--prefix', './path/to/directory', 'install', 'foo@1.0.0 - 2.9999.9999']
-			);
-			expect(child_process.spawn).toHaveBeenCalledTimes(1);
-		});
-
-		test('with one valid dep, empty options, prefix: calls child_process.spawn once with correct args', async () => {
-			await install.dependenciesObject(mockDependencies.oneValidDependency, '', './path/to/directory');
+		test('with one valid dep, empty arguments, prefix: calls child_process.spawn once with correct args', async () => {
+			await install.dependenciesObject(mockDependencies.oneValidDependency, {arguments: [], prefix: './path/to/directory'});
 			expect.assertions(2);
 			expect(child_process.spawn).toHaveBeenCalledWith(
 				'npm', ['--prefix', './path/to/directory', 'install', 'foo@1.0.0 - 2.9999.9999']
@@ -130,6 +126,68 @@ describe('util-package-installer', () => {
 			expect.assertions(1);
 			expect(result instanceof Error).toStrictEqual(true);
 			child_process.spawn = oldCPSpawn;
+		});
+
+		test('with invalid options key: returns an error', async () => {
+			let result;
+			try {
+				result = await install.dependenciesObject(mockDependencies.oneValidDependency, {invalidOption: true});
+			} catch (error) {
+				result = error;
+			}
+			expect.assertions(1);
+			expect(result instanceof Error).toStrictEqual(true);
+		});
+
+		test('with invalid options.argument type: returns an error', async () => {
+			let result;
+			try {
+				result = await install.dependenciesObject(mockDependencies.oneValidDependency, {arguments: 'string'});
+			} catch (error) {
+				result = error;
+			}
+			expect.assertions(1);
+			expect(result instanceof Error).toStrictEqual(true);
+		});
+
+		test('with invalid options.reporting type: returns an error', async () => {
+			let result;
+			try {
+				result = await install.dependenciesObject(mockDependencies.oneValidDependency, {reporting: 'string'});
+			} catch (error) {
+				result = error;
+			}
+			expect.assertions(1);
+			expect(result instanceof Error).toStrictEqual(true);
+		});
+
+		test('with invalid options.prefix type: returns an error', async () => {
+			let result;
+			try {
+				result = await install.dependenciesObject(mockDependencies.oneValidDependency, {prefix: []});
+			} catch (error) {
+				result = error;
+			}
+			expect.assertions(1);
+			expect(result instanceof Error).toStrictEqual(true);
+		});
+
+		test('reporting turned on by default: calls reporter', async () => {
+			await install.dependenciesObject(mockDependencies.oneValidDependency);
+			expect.assertions(1);
+			expect(reporterSpy).toHaveBeenCalledTimes(1);
+		});
+
+		test('reporting turned on via options: calls reporter', async () => {
+			await install.dependenciesObject(mockDependencies.oneValidDependency, {reporting: true});
+			expect.assertions(1);
+			expect(reporterSpy).toHaveBeenCalledTimes(1);
+		});
+
+		test('reporting turned off via options: does not call reporter', async () => {
+			await install.dependenciesObject(mockDependencies.oneValidDependency, {reporting: false});
+			expect.assertions(1);
+			expect(reporterSpy).toHaveBeenCalledTimes(0);
 		});
 	});
 
@@ -207,7 +265,7 @@ describe('util-package-installer', () => {
 		});
 
 		test('calls dependenciesObjectSpy, options, calls child_process.spawn once with correct args', async () => {
-			await install.devDependencies(mockDependencies.packageJSON, '--no-save');
+			await install.devDependencies(mockDependencies.packageJSON, {arguments: ['--no-save']});
 			expect.assertions(3);
 			expect(dependenciesObjectSpy).toHaveBeenCalledTimes(1);
 			expect(child_process.spawn).toHaveBeenCalledWith(
