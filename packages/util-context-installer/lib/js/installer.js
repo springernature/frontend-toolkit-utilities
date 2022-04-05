@@ -62,14 +62,17 @@ const getPackageJsonInfo = packageJsonPath => {
 /**
  * install brand-context dependency
  * @param {String} [installPath=__dirname] starting path for walking tree
- * @param {Boolean} [reporting=false] report results to the CLI
+ * @param {Boolean} [reporting='basic'] CLI reporting level
  * @param {String} [contextName='@springernature/brand-context'] name of the brand-context package
  * @return
  */
-module.exports = async (installPath = __dirname, reporting = false, contextName = '@springernature/brand-context') => {
-	// Set cli reporting on/off
-	reporter.init((reporting) ? 'info' : 'none');
-	reporter.info('installing', 'brand-context');
+module.exports = async (installPath = __dirname, reporting = 'basic', contextName = '@springernature/brand-context') => {
+	const reportingLevels = ['full', 'basic', 'none'];
+	reporting = reporting.toLowerCase();
+
+	if (typeof reporting !== 'string' || !reportingLevels.includes(reporting)) {
+		throw new Error(`${reporting} is not a valid reporting level. Must be one of ${reportingLevels.join(',')}`);
+	}
 
 	// Get list of package.json paths
 	const paths = await globby(installPath, {
@@ -79,15 +82,33 @@ module.exports = async (installPath = __dirname, reporting = false, contextName 
 		gitignore: true
 	});
 
+	// Reporting setup
+	if (reporting === 'none') {
+		reporter.init('none');
+	} else {
+		reporter.info('installing', 'brand-context');
+		reporter.info('found', `${paths.length} packages`);
+
+		if (reporting === 'basic') {
+			reporter.init('warning');
+		} else {
+			reporter.init('info');
+		}
+	}
+
 	// Loop through all paths and install brand-context
 	Promise.all(paths.map(async packageJsonPath => {
 		const packageInfo = getPackageJsonInfo(packageJsonPath);
 
 		if (packageInfo.version) {
 			await installBrandContext(packageJsonPath, contextName, packageInfo.version);
-			reporter.success(packageInfo.name, `${contextName}@${packageInfo.version}`);
 		}
-	})).catch(error => {
+	})).then(() => {
+		if (reporting !== 'none') {
+			reporter.init('success');
+		}
+		reporter.success('installation', 'complete');
+	}).catch(error => {
 		throw error;
 	});
 };
