@@ -44,10 +44,11 @@ const installBrandContext = async (packageJsonPath, name, version) => {
  * @return {String}
  */
 const getPackageJsonInfo = packageJsonPath => {
+	const fullPath = path.resolve(packageJsonPath);
 	let packageJSON;
 
 	try {
-		packageJSON = require(packageJsonPath);
+		packageJSON = require(fullPath);
 	} catch (error) {
 		reporter.warning('not found', packageJsonPath);
 	}
