@@ -8,20 +8,19 @@ const path = require('path');
 const globby = require('globby');
 const npmInstall = require('@springernature/util-package-installer');
 const reporter = require('@springernature/util-cli-reporter');
+const readPkg = require('read-pkg');
 
 /**
  * Install package dependencies
  * @async
  * @private
  * @function installBrandContext
- * @param {String} packageJsonPath path to the package.json file
+ * @param {String} packageJsonDir directory to the package.json file
  * @param {String} name brand context name on NPM
  * @param {String} version name of the brand context package on NPM
  * @return {Promise}
  */
-const installBrandContext = async (packageJsonPath, name, version) => {
-	const installPath = path.dirname(packageJsonPath);
-
+const installBrandContext = async (packageJsonDir, name, version) => {
 	try {
 		await npmInstall.dependencies({
 			dependencies: {
@@ -30,10 +29,10 @@ const installBrandContext = async (packageJsonPath, name, version) => {
 		}, {
 			arguments: ['--no-save'],
 			reporting: false,
-			prefix: installPath
+			prefix: packageJsonDir
 		});
 	} catch (error) {
-		reporter.fail(path.basename(installPath), 'brand-context installation');
+		reporter.fail(path.basename(packageJsonDir), 'brand-context installation');
 		throw error;
 	}
 };
@@ -44,23 +43,19 @@ const installBrandContext = async (packageJsonPath, name, version) => {
  *  - brand context version
  * @private
  * @function getPackageJsonInfo
- * @param {String} packageJsonPath path to the package.json file
+ * @param {String} packageJsonDir directory to the package.json file
  * @return {String}
  */
-const getPackageJsonInfo = packageJsonPath => {
-	const fullPath = path.resolve(packageJsonPath);
-	let packageJSON;
-
+const getPackageJsonInfo = async packageJsonDir => {
 	try {
-		packageJSON = require(fullPath);
-	} catch (error) {
-		reporter.warning('not found', packageJsonPath);
+		const packageJSON = await readPkg({cwd: path.resolve(packageJsonDir)});
+		return {
+			name: packageJSON.name,
+			version: packageJSON.brandContext
+		};
+	} catch (_error) {
+		reporter.warning('issue reading package.json', packageJsonDir);
 	}
-
-	return {
-		name: packageJSON.name,
-		version: packageJSON.brandContext
-	};
 };
 
 /**
@@ -78,15 +73,16 @@ module.exports = async (installPath = __dirname, contextName = '@springernature/
 		gitignore: true
 	});
 
-	reporter.info('installing', 'brand-context');
+	reporter.info('installing', contextName);
 	reporter.info('found', `${paths.length} packages`);
 
 	// Loop through all paths and install brand-context
-	Promise.all(paths.map(async packageJsonPath => {
-		const packageInfo = getPackageJsonInfo(packageJsonPath);
+	await Promise.all(paths.map(async packageJsonPath => {
+		const packageJsonDir = path.dirname(packageJsonPath);
+		const packageInfo = await getPackageJsonInfo(packageJsonDir);
 
-		if (packageInfo.version) {
-			await installBrandContext(packageJsonPath, contextName, packageInfo.version);
+		if (packageInfo && packageInfo.version) {
+			await installBrandContext(packageJsonDir, contextName, packageInfo.version);
 		}
 	})).then(() => {
 		reporter.success('installation', 'complete');

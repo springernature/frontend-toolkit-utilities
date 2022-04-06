@@ -30,6 +30,7 @@
     "@springernature/util-cli-reporter": "^2.0.0",
     "@springernature/util-package-installer": "^1.0.0",
     "globby": "^11.0.3",
+    "read-pkg": "^5.2.0",
     "yargs": "^17.4.0"
   }
 }
