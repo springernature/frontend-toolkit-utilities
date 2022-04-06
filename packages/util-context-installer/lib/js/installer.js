@@ -27,7 +27,11 @@ const installBrandContext = async (packageJsonPath, name, version) => {
 			dependencies: {
 				[name]: version
 			}
-		}, '--no-save', installPath);
+		}, {
+			arguments: ['--no-save'],
+			reporting: false,
+			prefix: installPath
+		});
 	} catch (error) {
 		reporter.fail(path.basename(installPath), 'brand-context installation');
 		throw error;
@@ -62,18 +66,10 @@ const getPackageJsonInfo = packageJsonPath => {
 /**
  * install brand-context dependency
  * @param {String} [installPath=__dirname] starting path for walking tree
- * @param {Boolean} [reporting='basic'] CLI reporting level
  * @param {String} [contextName='@springernature/brand-context'] name of the brand-context package
  * @return
  */
-module.exports = async (installPath = __dirname, reporting = 'basic', contextName = '@springernature/brand-context') => {
-	const reportingLevels = ['full', 'basic', 'none'];
-	reporting = reporting.toLowerCase();
-
-	if (typeof reporting !== 'string' || !reportingLevels.includes(reporting)) {
-		throw new Error(`${reporting} is not a valid reporting level. Must be one of ${reportingLevels.join(',')}`);
-	}
-
+module.exports = async (installPath = __dirname, contextName = '@springernature/brand-context') => {
 	// Get list of package.json paths
 	const paths = await globby(installPath, {
 		expandDirectories: {
@@ -82,19 +78,8 @@ module.exports = async (installPath = __dirname, reporting = 'basic', contextNam
 		gitignore: true
 	});
 
-	// Reporting setup
-	if (reporting === 'none') {
-		reporter.init('none');
-	} else {
-		reporter.info('installing', 'brand-context');
-		reporter.info('found', `${paths.length} packages`);
-
-		if (reporting === 'basic') {
-			reporter.init('warning');
-		} else {
-			reporter.init('info');
-		}
-	}
+	reporter.info('installing', 'brand-context');
+	reporter.info('found', `${paths.length} packages`);
 
 	// Loop through all paths and install brand-context
 	Promise.all(paths.map(async packageJsonPath => {
@@ -104,9 +89,6 @@ module.exports = async (installPath = __dirname, reporting = 'basic', contextNam
 			await installBrandContext(packageJsonPath, contextName, packageInfo.version);
 		}
 	})).then(() => {
-		if (reporting !== 'none') {
-			reporter.init('success');
-		}
 		reporter.success('installation', 'complete');
 	}).catch(error => {
 		throw error;
