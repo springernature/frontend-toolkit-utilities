@@ -1,0 +1,36 @@
+{
+  "name": "@springernature/util-context-installer",
+  "version": "0.1.0",
+  "description": "Dynamically installs brand-context package to dependencies",
+  "main": "./lib/js/installer.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/springernature/frontend-toolkit-utilities.git"
+  },
+  "keywords": [
+    "springernature",
+    "npm",
+    "install",
+    "installer",
+    "elements"
+  ],
+  "author": "ajk",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/springernature/frontend-toolkit-utilities/issues"
+  },
+  "homepage": "https://github.com/springernature/frontend-toolkit-utilities#readme",
+  "bin": {
+    "SNutilContextInstaller": "./bin/index.js"
+  },
+  "scripts": {
+    "test": "echo \"Run tests from the repository root please.\" && exit 1"
+  },
+  "dependencies": {
+    "@springernature/util-cli-reporter": "^2.0.0",
+    "@springernature/util-package-installer": "^1.0.0",
+    "globby": "^11.0.3",
+    "read-pkg": "^5.2.0",
+    "yargs": "^17.4.0"
+  }
+}
