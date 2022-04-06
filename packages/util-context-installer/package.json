@@ -1,6 +1,6 @@
 {
   "name": "@springernature/util-context-installer",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Dynamically installs brand-context package to dependencies",
   "main": "./lib/js/installer.js",
   "repository": {
@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/springernature/frontend-toolkit-utilities#readme",
   "bin": {
-    "SNutilContextInstaller": "./bin/index.js"
+    "sn-context-installer": "./bin/index.js"
   },
   "scripts": {
     "test": "echo \"Run tests from the repository root please.\" && exit 1"

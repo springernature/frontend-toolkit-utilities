@@ -73,8 +73,8 @@ module.exports = async (installPath = __dirname, contextName = '@springernature/
 		gitignore: true
 	});
 
-	reporter.info('installing', contextName);
 	reporter.info('found', `${paths.length} packages`);
+	reporter.info('installing', contextName);
 
 	// Loop through all paths and install brand-context
 	await Promise.all(paths.map(async packageJsonPath => {
