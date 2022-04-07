@@ -75,4 +75,13 @@ describe('util-package-installer', () => {
 		expect(cliReporterSpyFail).toHaveBeenCalledTimes(1);
 		expect(readPkgMock).toHaveBeenNthCalledWith(1, {"cwd": path.resolve("path/to/fail/package/")})
 	});
+
+	test('does not call npmInstall.dependencies when no packages found', async () => {
+		expect.assertions(3);
+		await expect(
+			install('nothing/here/')
+		).resolves.toEqual();
+		expect(dependenciesObjectSpy).toHaveBeenCalledTimes(0);
+		expect(readPkgMock).toHaveBeenCalledTimes(0);
+	});
 });

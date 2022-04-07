@@ -21,6 +21,9 @@ async function globby(globPath) {
 	if (globPath.includes('**/package-a')) {
 		return ['toolkits/toolkit1/packages/package-a/package.json'];
 	}
+	if (globPath.includes('nothing/here/')) {
+		return [];
+	}
 	return results;
 }
 
