@@ -60,11 +60,14 @@ const getPackageJsonInfo = async packageJsonDir => {
 
 /**
  * install brand-context dependency
- * @param {String} [installPath=__dirname] starting path for walking tree
+ * @param {String} [startingPath=__dirname] starting path for walking tree
  * @param {String} [contextName='@springernature/brand-context'] name of the brand-context package
+ * @param {String} packageName filter by particular package. Must be within startingPath directory tree
  * @return
  */
-module.exports = async (installPath = __dirname, contextName = '@springernature/brand-context') => {
+module.exports = async (startingPath = __dirname, contextName = '@springernature/brand-context', packageName) => {
+	const installPath = (packageName) ? `${startingPath}/**/${packageName}` : startingPath;
+
 	// Get list of package.json paths
 	const paths = await globby(installPath, {
 		expandDirectories: {

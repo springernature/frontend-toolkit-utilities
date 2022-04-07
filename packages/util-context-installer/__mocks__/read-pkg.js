@@ -4,7 +4,7 @@
  */
 'use strict';
 
-module.exports = async function (obj) {
+async function readPkg(obj) {
 	if (obj.cwd.includes('toolkits/toolkit1/packages/package-a')) {
 		return {name: 'package-a', brandContext: '^1.0.0'};
 	}
@@ -13,12 +13,12 @@ module.exports = async function (obj) {
 		return {name: 'package-b', brandContext: '^2.5.0'};
 	}
 
-	if (obj.cwd.includes('toolkits/toolkit2/packages/package-a')) {
-		return {name: 'package-a', brandContext: '^1.6.2'};
+	if (obj.cwd.includes('toolkits/toolkit2/packages/package-c')) {
+		return {name: 'package-c', brandContext: '^1.6.2'};
 	}
 
-	if (obj.cwd.includes('toolkits/toolkit3/packages/package-a')) {
-		return {name: 'package-a'};
+	if (obj.cwd.includes('toolkits/toolkit3/packages/package-d')) {
+		return {name: 'package-d'};
 	}
 
 	if (obj.cwd.includes('path/to/fail/package')) {
@@ -26,4 +26,6 @@ module.exports = async function (obj) {
 	}
 
 	throw new Error('error');
-};
+}
+
+module.exports = jest.fn(readPkg);
