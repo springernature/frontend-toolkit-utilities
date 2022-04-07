@@ -7,6 +7,8 @@ const npmInstall = require('@springernature/util-package-installer');
 const reporter = require('@springernature/util-cli-reporter');
 const install = require('../../../../lib/js/installer');
 
+const readPkgMock = require('../../../../__mocks__/read-pkg');
+
 console.log = jest.fn(); // silence log output from module under test
 
 describe('util-package-installer', () => {
@@ -29,27 +31,41 @@ describe('util-package-installer', () => {
 		dependenciesObjectSpy.mockRestore();
 		cliReporterSpyWarning.mockRestore();
 		cliReporterSpyFail.mockRestore();
+		readPkgMock.mockClear();
 	});
 
 	test('calls npmInstall.dependencies for each package found', async () => {
-		expect.assertions(2);
+		expect.assertions(5);
 		await expect(
 			install()
 		).resolves.toEqual();
 		expect(dependenciesObjectSpy).toHaveBeenCalledTimes(3);
+		expect(readPkgMock).toHaveBeenNthCalledWith(1, {"cwd": path.resolve("toolkits/toolkit1/packages/package-a")})
+		expect(readPkgMock).toHaveBeenNthCalledWith(2, {"cwd": path.resolve("toolkits/toolkit1/packages/package-b")})
+		expect(readPkgMock).toHaveBeenNthCalledWith(3, {"cwd": path.resolve("toolkits/toolkit2/packages/package-c")});
+	});
+
+	test('calls npmInstall.dependencies for each package found: filter by package name', async () => {
+		expect.assertions(3);
+		await expect(
+			install(undefined, undefined, 'package-a')
+		).resolves.toEqual();
+		expect(dependenciesObjectSpy).toHaveBeenCalledTimes(1);
+		expect(readPkgMock).toHaveBeenNthCalledWith(1, {"cwd": path.resolve("toolkits/toolkit1/packages/package-a")});
 	});
 
 	test('calls npmInstall.dependencies for each package found: error reading package.json', async () => {
-		expect.assertions(3);
+		expect.assertions(4);
 		await expect(
 			install('path/to/error/package/')
 		).resolves.toEqual();
 		expect(dependenciesObjectSpy).toHaveBeenCalledTimes(0);
 		expect(cliReporterSpyWarning).toHaveBeenCalledTimes(1);
+		expect(readPkgMock).toHaveBeenNthCalledWith(1, {"cwd": path.resolve("path/to/error/package/")})
 	});
 
 	test('calls npmInstall.dependencies for each package found: error installing brand context', async () => {
-		expect.assertions(3);
+		expect.assertions(4);
 		
 		await expect(
 			install('path/to/fail/package/')
@@ -57,5 +73,15 @@ describe('util-package-installer', () => {
 
 		expect(dependenciesObjectSpy).toHaveBeenCalledTimes(1);
 		expect(cliReporterSpyFail).toHaveBeenCalledTimes(1);
+		expect(readPkgMock).toHaveBeenNthCalledWith(1, {"cwd": path.resolve("path/to/fail/package/")})
+	});
+
+	test('does not call npmInstall.dependencies when no packages found', async () => {
+		expect.assertions(3);
+		await expect(
+			install('nothing/here/')
+		).resolves.toEqual();
+		expect(dependenciesObjectSpy).toHaveBeenCalledTimes(0);
+		expect(readPkgMock).toHaveBeenCalledTimes(0);
 	});
 });

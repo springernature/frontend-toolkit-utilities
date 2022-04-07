@@ -1,6 +1,6 @@
 {
   "name": "@springernature/util-context-installer",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Dynamically installs brand-context package to dependencies",
   "main": "./lib/js/installer.js",
   "repository": {

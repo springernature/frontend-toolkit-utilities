@@ -60,11 +60,14 @@ const getPackageJsonInfo = async packageJsonDir => {
 
 /**
  * install brand-context dependency
- * @param {String} [installPath=__dirname] starting path for walking tree
+ * @param {String} [startingPath=__dirname] starting path for walking tree
  * @param {String} [contextName='@springernature/brand-context'] name of the brand-context package
+ * @param {String} packageName filter by particular package. Must be within startingPath directory tree
  * @return
  */
-module.exports = async (installPath = __dirname, contextName = '@springernature/brand-context') => {
+module.exports = async (startingPath = __dirname, contextName = '@springernature/brand-context', packageName) => {
+	const installPath = (packageName) ? path.join(startingPath, `/**/${packageName}/package.json`) : startingPath;
+
 	// Get list of package.json paths
 	const paths = await globby(installPath, {
 		expandDirectories: {
@@ -73,8 +76,10 @@ module.exports = async (installPath = __dirname, contextName = '@springernature/
 		gitignore: true
 	});
 
-	reporter.info('found', `${paths.length} packages`);
-	reporter.info('installing', contextName);
+	reporter.info('found', (paths.length === 0 || paths.length > 1) ? `${paths.length} packages` : path.dirname(paths[0]));
+	if (paths.length > 0) {
+		reporter.info('installing', contextName);
+	}
 
 	// Loop through all paths and install brand-context
 	await Promise.all(paths.map(async packageJsonPath => {
@@ -85,7 +90,9 @@ module.exports = async (installPath = __dirname, contextName = '@springernature/
 			await installBrandContext(packageJsonDir, contextName, packageInfo.version);
 		}
 	})).then(() => {
-		reporter.success('installation', 'complete');
+		if (paths.length > 0) {
+			reporter.success('installation', 'complete');
+		}
 	}).catch(error => {
 		throw error;
 	});
