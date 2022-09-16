@@ -1,5 +1,8 @@
 # History
 
+## 3.3.0 (2022-09-15)
+    * FEATURE: Adds support for inlining SVGs that are referenced with the use directive
+
 ## 3.2.0 (2022-02-14)
     * FEATURE: Adds viewport meta tag to demo template for responsive layout
 
