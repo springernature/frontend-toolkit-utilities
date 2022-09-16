@@ -36,8 +36,8 @@ function isURL(value) {
  * @return {String}
  */
 function getHash(value) {
-	const extName = path.extname(value);
-	const hash = extName.split('#')[1];
+	const extensionName = path.extname(value);
+	const hash = extensionName.split('#')[1];
 
 	return hash;
 }
@@ -74,27 +74,27 @@ const imageToDataUri = async (html, demoCodePath) => {
 
 	// Find all images in HTML
 	$('body').find('img').each(function () {
-		const el = $(this);
-		const imgSrc = el.attr('src');
+		const element = $(this);
+		const imageSource = element.attr('src');
 
 		// Ignore hyperlinks
-		// Including protocol relative links
-		if (!imgSrc.startsWith('//') && !isURL(imgSrc)) {
+		// Including protocol relementative links
+		if (!imageSource.startsWith('//') && !isURL(imageSource)) {
 			images.push({
-				el: el,
-				src: imgSrc
+				element: element,
+				src: imageSource
 			});
 		}
 	});
 
 	// Find all SVGs in HTML that "use" external svg
 	$('body').find('svg use').each(function () {
-		const el = $(this);
-		const href = el.attr('xlink:href') || el.attr('href');
+		const element = $(this);
+		const href = element.attr('xlink:href') || element.attr('href');
 		const hash = getHash(href);
 
 		svgs.push({
-			el: el,
+			element: element,
 			src: href.split('#')[0],
 			hash: hash
 		});
@@ -107,7 +107,7 @@ const imageToDataUri = async (html, demoCodePath) => {
 		try {
 			const encodedImg = await imageDataURI.encodeFromFile(fullImgPath);
 			reporter.success('converting image to data-uri', image.src);
-			image.el.attr('src', encodedImg);
+			image.element.attr('src', encodedImg);
 		} catch (error) {
 			reporter.fail('converting image to data-uri', image.src);
 			throw new Error(error);
@@ -121,7 +121,7 @@ const imageToDataUri = async (html, demoCodePath) => {
 		try {
 			const svgData = await readFile(fullImgPath, 'utf8');
 			const svgFragment = getSvgContents(svgData, svg.hash);
-			svg.el.replaceWith(svgFragment);
+			svg.element.replaceWith(svgFragment);
 
 			reporter.success('inlining external svg', svg.src);
 		} catch (error) {
