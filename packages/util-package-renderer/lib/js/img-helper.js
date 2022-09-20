@@ -60,14 +60,14 @@ function getSvgContents(svgData, hash) {
 }
 
 /**
- * Find images in HTML and convert to data-uri
+ * Find images in HTML and convert to data-uri or inline SVG
  * @async
- * @function imageToDataUri
+ * @function inlineImages
  * @param {String} html parsed html to search
  * @param {String} demoCodePath full path to the demo folder
  * @return {Promise<String>}
  */
-const imageToDataUri = async (html, demoCodePath) => {
+const inlineImages = async (html, demoCodePath) => {
 	const $ = cheerio.load(html);
 	const images = [];
 	const svgs = [];
@@ -92,6 +92,11 @@ const imageToDataUri = async (html, demoCodePath) => {
 		const element = $(this);
 		const href = element.attr('xlink:href') || element.attr('href');
 		const hash = getHash(href);
+
+		// Ignore in-page use links
+		if (href.startsWith('#')) {
+			return;
+		}
 
 		svgs.push({
 			element: element,
@@ -133,4 +138,4 @@ const imageToDataUri = async (html, demoCodePath) => {
 	return $.html();
 };
 
-module.exports = imageToDataUri;
+module.exports = inlineImages;

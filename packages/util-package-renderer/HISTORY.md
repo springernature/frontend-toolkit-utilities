@@ -1,5 +1,8 @@
 # History
 
+## 3.3.1 (2022-09-20)
+    * BUG: Don't try and inline when svg is already in the page (referenced by just a hash)
+
 ## 3.3.0 (2022-09-15)
     * FEATURE: Adds support for inlining SVGs that are referenced with the use directive
 
