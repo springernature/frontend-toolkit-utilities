@@ -94,13 +94,14 @@ const getDemoContext = async (packageRoot, demoCodeFolder) => {
  * @param {String} config.demoCodeFolder name of folder where demo code stored
  * @param {String} config.demoCodePath full path to the demo folder
  * @param {String} config.name of the package to be rendered
+ * @param {String} reporterText report the correct process, demo or compilation
  * @return {Promise<String>}
  */
-const compileTemplate = async config => {
+const compileTemplate = async (config, reporterText) => {
 	const HBARS_CONTEXT_KEY = 'utilPackageRenderState';
 	const ERR_INVALID_CONTEXT_KEY_NAME = 'invalid as a key name in context data file, skipping package...';
 
-	reporter.info('starting handlebars', null, 'generating compiled static html');
+	reporter.info(reporterText, 'generating compiled static html from handlebars');
 
 	// Get the demo template
 	const packageTemplate = await getDemoTemplate(config.packageRoot, config.demoCodeFolder);
@@ -114,7 +115,7 @@ const compileTemplate = async config => {
 
 	// Reserved JSON key HBARS_CONTEXT_KEY
 	if (Object.prototype.hasOwnProperty.call(packageContextJSON, HBARS_CONTEXT_KEY)) {
-		reporter.fail('invalid key', 'in data file');
+		reporter.fail(reporterText, 'handlebars compilation error', 'invalid key in data file');
 		throw new Error(`"${HBARS_CONTEXT_KEY}" ${ERR_INVALID_CONTEXT_KEY_NAME}`);
 	}
 

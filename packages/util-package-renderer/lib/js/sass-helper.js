@@ -14,18 +14,19 @@ const ERR_NO_PACKAGE_SASS_FOUND = 'no sass found for package';
  * @param {String} packageRoot path of the package to render
  * @param {String} demoCodeFolder render using code in this folder
  * @param {Boolean} minify should we minify the CSS output
+ * @param {String} reporterText report the correct process, demo or compilation
  * @return {Promise<String>}
  */
-const compileSASS = async (packageRoot, demoCodeFolder, minify) => {
+const compileSASS = async (packageRoot, demoCodeFolder, minify, reporterText) => {
 	const sassEntryPoint = path.join(packageRoot, demoCodeFolder, 'main.scss');
 	let packageSASS = await file.getContent(sassEntryPoint);
 	let result;
 
-	reporter.info('starting sass', null, 'generating compiled css');
+	reporter.info(reporterText, 'generating compiled css');
 
 	// Lack of packageSASS should not be fatal
 	if (packageSASS instanceof Error) {
-		reporter.warning('missing sass', ERR_NO_PACKAGE_SASS_FOUND);
+		reporter.warning(reporterText, 'missing sass', ERR_NO_PACKAGE_SASS_FOUND);
 		packageSASS = `/* ${ERR_NO_PACKAGE_SASS_FOUND} */`;
 	}
 
@@ -41,7 +42,7 @@ const compileSASS = async (packageRoot, demoCodeFolder, minify) => {
 			]
 		});
 	} catch (error) {
-		reporter.fail('sass', 'could not compile sass to css');
+		reporter.fail(reporterText, 'could not compile sass to css');
 		throw error;
 	}
 

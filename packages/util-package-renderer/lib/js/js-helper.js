@@ -1,11 +1,6 @@
 'use strict';
 
-const path = require('path');
-const rollup = require('rollup');
-const nodeResolve = require('@rollup/plugin-node-resolve').nodeResolve;
-const commonjs = require('@rollup/plugin-commonjs');
-const babel = require('@rollup/plugin-babel').babel;
-const terser = require('rollup-plugin-terser').terser;
+const esbuild = require('esbuild');
 const reporter = require('@springernature/util-cli-reporter');
 const file = require('./utils/file');
 
@@ -15,18 +10,18 @@ const ERR_NO_PACKAGE_JS_FOUND = 'no JS found for package';
  * If JS is included, transpile to ES6
  * @async
  * @function transpileJS
- * @param {String} packageRoot path of the package to render
- * @param {String} demoCodeFolder render using code in this folder
+ * @param {String} jsEndpoint path to the JS endpoint for compilation
  * @param {Boolean} minify should we minify the javascript
+ * @param {String} reporterText report the correct process, demo or compilation
+ * @param {Boolean} renderForDemo rendering for the demo or just asset compilation
  * @return {Promise<String>}
  */
-const transpileJS = async (packageRoot, demoCodeFolder, minify) => {
-	const jsEntryPoint = path.join(packageRoot, demoCodeFolder, 'main.js');
-	let packageJS = await file.getContent(jsEntryPoint);
+const transpileJS = async (jsEndpoint, minify, reporterText, renderForDemo) => {
+	let packageJS = await file.getContent(jsEndpoint);
 	let outputBuffer = '';
 	let bundle;
 
-	reporter.info('starting rollup', null, 'generating transpiled javascript');
+	reporter.info(reporterText, 'generating transpiled javascript');
 
 	// Lack of packageJS should not be fatal
 	if (packageJS instanceof Error) {
@@ -34,52 +29,34 @@ const transpileJS = async (packageRoot, demoCodeFolder, minify) => {
 		return `// ${ERR_NO_PACKAGE_JS_FOUND}`;
 	}
 
-	// Create a rollup bundle
-	// - Handle import and require
-	// - Transpile using babel
+	// Create an esbuild bundle
 	try {
-		bundle = await rollup.rollup({
-			input: path.join(packageRoot, demoCodeFolder, 'main.js'),
-			plugins: [
-				commonjs({
-					sourcemap: false
-				}),
-				nodeResolve(),
-				// Add the result of the ternary to the array
-				...(minify ? [terser()] : []),
-				babel({
-					configFile: path.resolve(__dirname, 'babel.config.json'),
-					babelHelpers: 'bundled',
-					inputSourceMap: false
-				})
-			],
-			onwarn: function (message) {
-				reporter.warning('rollup', message);
-			}
+		bundle = esbuild.buildSync({
+			entryPoints: [jsEndpoint],
+			bundle: true,
+			minify: minify,
+			sourcemap: false,
+			write: false,
+			logLevel: 'silent',
+			format: (renderForDemo) ? 'iife' : 'esm',
+			// Browser support should match
+			// https://github.com/springernature/frontend-playbook/blob/main/practices/graded-browser-support.md
+			target: ['chrome76', 'firefox67', 'safari12', 'edge79', 'ios13', 'opera62']
 		});
 	} catch (error) {
-		reporter.fail('rollup', 'could not create rollup bundle');
+		reporter.fail(reporterText, 'could not create js bundle');
 		throw error;
 	}
 
-	// Output as iife for the browser
-	const rollupOutput = await bundle.generate({
-		output: {
-			format: 'iife',
-			name: 'component',
-			sourcemap: false,
-			compact: Boolean(minify)
-		}
-	});
+	// Report any warnings in the build process
+	for (let warning of bundle.warnings) {
+		reporter.warning(reporterText, warning.text, `${warning.location.file}:${warning.location.line}:${warning.location.column}`);
+	}
 
-	// Iterate through output and generate js string
-	rollupOutput.output.forEach(chunkOrAsset => {
-		if (chunkOrAsset.type === 'asset') {
-			reporter.info('Rollup generated asset', chunkOrAsset.fileName);
-		} else {
-			outputBuffer += chunkOrAsset.code;
-		}
-	});
+	// Concatenate the output
+	for (let out of bundle.outputFiles) {
+		outputBuffer += out.text;
+	}
 
 	return outputBuffer;
 };
