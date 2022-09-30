@@ -25,7 +25,7 @@
     "@springernature/brand-context": "^3.2.4",
     "@springernature/util-cli-reporter": "^2.0.0",
     "@springernature/util-dynamic-partial": "0.1.0",
-    "@springernature/util-package-installer": "^0.4.0",
+    "@springernature/util-package-installer": "^1.0.0",
     "cheerio": "^1.0.0-rc.10",
     "esbuild": "^0.15.9",
     "filesize": "^5.0.3",

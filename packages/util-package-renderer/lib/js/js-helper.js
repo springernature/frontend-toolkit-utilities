@@ -12,20 +12,19 @@ const ERR_NO_PACKAGE_JS_FOUND = 'no JS found for package';
  * @function transpileJS
  * @param {String} jsEndpoint path to the JS endpoint for compilation
  * @param {Boolean} minify should we minify the javascript
- * @param {String} reporterText report the correct process, demo or compilation
  * @param {Boolean} renderForDemo rendering for the demo or just asset compilation
  * @return {Promise<String>}
  */
-const transpileJS = async (jsEndpoint, minify, reporterText, renderForDemo) => {
+const transpileJS = async (jsEndpoint, minify, renderForDemo) => {
 	let packageJS = await file.getContent(jsEndpoint);
 	let outputBuffer = '';
 	let bundle;
 
-	reporter.info(reporterText, 'generating transpiled javascript');
+	reporter.info('package rendering', 'generating transpiled javascript');
 
 	// Lack of packageJS should not be fatal
 	if (packageJS instanceof Error) {
-		reporter.warning('missing JS', ERR_NO_PACKAGE_JS_FOUND);
+		reporter.warning('package rendering', 'missing JS', ERR_NO_PACKAGE_JS_FOUND);
 		return `// ${ERR_NO_PACKAGE_JS_FOUND}`;
 	}
 
@@ -44,13 +43,13 @@ const transpileJS = async (jsEndpoint, minify, reporterText, renderForDemo) => {
 			target: ['chrome76', 'firefox67', 'safari12', 'edge79', 'ios13', 'opera62']
 		});
 	} catch (error) {
-		reporter.fail(reporterText, 'could not create js bundle');
+		reporter.fail('package rendering', 'could not create js bundle');
 		throw error;
 	}
 
 	// Report any warnings in the build process
 	for (let warning of bundle.warnings) {
-		reporter.warning(reporterText, warning.text, `${warning.location.file}:${warning.location.line}:${warning.location.column}`);
+		reporter.warning('package rendering', warning.text, `${warning.location.file}:${warning.location.line}:${warning.location.column}`);
 	}
 
 	// Concatenate the output

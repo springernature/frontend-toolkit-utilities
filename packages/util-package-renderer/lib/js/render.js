@@ -30,42 +30,32 @@ const getPackageJson = packageRoot => {
 };
 
 /**
- * Install package dependencies
+ * Get the brand context abstracts content
  * @async
  * @private
- * @function installDependencies
- * @param {Object} packageJSON path of the package to render
- * @param {String} brandContext name of the brand context package on NPM
- * @param {String} reporterText report the correct process, demo or compilation
- * @return {Promise}
+ * @function getBrandContextContents
+ * @param {String} packageRoot path of the package to render
+ * @param {Object} brand the brand specified in the endpoint
+ * @return {String}
  */
-const installDependencies = async (packageJSON, brandContext, reporterText) => {
-	if (typeof packageJSON !== 'object') {
-		return;
+const getBrandContextContents = async (packageRoot, brand) => {
+	const brandContextPath = path.resolve(packageRoot, `node_modules/@springernature/brand-context/${brand}/scss/abstracts.scss`);
+	const result = await file.getContent(brandContextPath);
+
+	if (result instanceof Error) {
+		reporter.fail('package rendering', 'missing brand context', brandContextPath);
+		throw result;
 	}
 
-	reporter.info(reporterText, 'installing package dependencies');
-
-	// Add optional brand context to dependencies
-	if (packageJSON.brandContext) {
-		if (!packageJSON.dependencies) {
-			packageJSON.dependencies = {};
-		}
-		packageJSON.dependencies[brandContext] = packageJSON.brandContext;
+	if (brand === 'default') {
+		return result;
 	}
 
-	// Install dependencies
-	if (packageJSON.dependencies) {
-		try {
-			// Don't save back to dependencies in package.json
-			// If brand-context is used we don't want that added
-			await npmInstall.dependencies(packageJSON, '--no-save');
-			reporter.success(reporterText, 'dependencies installed');
-		} catch (error) {
-			reporter.fail(reporterText, 'dependency installation');
-			throw error;
-		}
-	}
+	// Always include default abstracts first
+	// This is a bit flakey. Better solution? include default abstracts in brand abstracts?
+	const defaultAbstractPath = '../../default/scss/abstracts.scss';
+	const defaultImports = `// must import default abstract first\n@import '${defaultAbstractPath}';`;
+	return `${defaultImports}\n\n${result}`;
 };
 
 /**
@@ -101,6 +91,46 @@ const writeHtmlFile = async (distFolderPath, distFolderPathRelative, html, repor
 };
 
 /**
+ * Install package dependencies relative to the package
+ * @async
+ * @function installPackageDependencies
+ * @param {Object} packageRoot package path on filesystem
+ * @param {String} contextName name of the brand context package on NPM
+ * @return {Promise}
+ */
+const installPackageDependencies = async (packageRoot, contextName) => {
+	const packageRootPath = path.resolve(file.sanitisePath(packageRoot));
+	const packageJSON = getPackageJson(packageRootPath);
+
+	if (typeof packageJSON !== 'object') {
+		return;
+	}
+
+	reporter.info('package rendering', 'installing package dependencies');
+
+	// Add optional brand context to dependencies
+	if (packageJSON.brandContext) {
+		if (!packageJSON.dependencies) {
+			packageJSON.dependencies = {};
+		}
+		packageJSON.dependencies[contextName] = packageJSON.brandContext;
+	}
+
+	// Install dependencies
+	if (packageJSON.dependencies) {
+		try {
+			// Don't save back to dependencies in package.json
+			// If brand-context is used we don't want that added
+			await npmInstall.dependencies(packageJSON, {arguments: ['--no-save'], prefix: packageRootPath});
+			reporter.success('package rendering', 'dependencies installed');
+		} catch (error) {
+			reporter.fail('package rendering', 'dependency installation');
+			throw error;
+		}
+	}
+};
+
+/**
  * Compile the assets for a package
  * @async
  * @function compilePackageAssets
@@ -109,6 +139,7 @@ const writeHtmlFile = async (distFolderPath, distFolderPathRelative, html, repor
  * @param {Boolean} [minify=false] minify the JS and SASS
  * @param {String} [brandContext='@springernature/brand-context'] name of the brand context package on NPM
  * @param {Object} assetConfig configuration to compile the component JS and SASS
+ * @param {Boolean} installDependencies Do we need to install the dependencies first
  * @return {Promise}
  */
 const compilePackageAssets = async ({
@@ -116,38 +147,48 @@ const compilePackageAssets = async ({
 	reportingLevel = 'title',
 	minify = false,
 	brandContext = '@springernature/brand-context',
-	assetConfig
+	assetConfig,
+	installDependencies = false
 } = {}) => {
-	// Confirm path of package to render & get package.json
-	const cwd = process.cwd();
-	const packageRootPath = path.resolve(file.sanitisePath(packageRoot));
-	const packageJSON = getPackageJson(packageRootPath);
-	const compilePackageAssetsText = 'compiling assets';
+	const result = {};
 
-	// Set reporting level and switch to package dir
+	// Set reporting level
 	reporter.init(reportingLevel);
-	reporter.title(compilePackageAssetsText, `compiling assets for ${packageJSON.name}`);
-	reporter.info(compilePackageAssetsText, 'minify asset output', minify.toString());
 
-	// Switch to the package path
-	process.chdir(packageRootPath);
+	// Optionally install dependencies
+	if (installDependencies) {
+		await installPackageDependencies(packageRoot, brandContext);
+	}
 
-	// Install dependencies
-	await installDependencies(packageJSON, brandContext, compilePackageAssetsText);
+	// Compile javascript
+	if (assetConfig && assetConfig.js) {
+		result.js = await jsHelper(assetConfig.js.endpoint, minify, false);
+	}
 
-	// Generate static assets
-	const transpiledPackageJS = await jsHelper(assetConfig.js.endpoint, minify, compilePackageAssetsText, false);
-	// const compiledPackageCSS = await sassHelper(packageRootPath, null, minify, assetConfig);
+	// Loop through all CSS endpoints and compile
+	if (assetConfig && assetConfig.css) {
+		for (let asset of assetConfig.css) {
+			const brandContext = await getBrandContextContents(packageRoot, asset.brand);
+			const loadPaths = [
+				path.resolve(packageRoot, `node_modules/@springernature/brand-context/${asset.brand}/scss`),
+				path.parse(asset.endpoint).dir
+			];
+			let compiledPackageCSS = await sassHelper(asset.endpoint, minify, loadPaths, brandContext);
 
-	// Switch back to original dir
-	reporter.success(compilePackageAssetsText, 'successfully compiled static assets');
-	process.chdir(cwd);
+			if (!Object.prototype.hasOwnProperty.call(result, 'css')) {
+				result.css = {};
+			}
+			result.css[asset.brand] = compiledPackageCSS;
+		}
+	}
+
+	// Report on successful compile
+	if (Object.entries(result).length !== 0) {
+		reporter.success('package rendering', 'successfully compiled static assets', (minify) ? 'minified' : 'unminified');
+	}
 
 	// Return the compiled assets
-	return {
-		js: transpiledPackageJS
-		// css: compiledPackageCSS
-	};
+	return result;
 };
 
 /**
@@ -194,8 +235,9 @@ const renderDemo = async ({
 
 	// Generate static HTML
 	const jsEntrypoint = path.join(packageRootPath, demoCodeFolder, 'main.js');
-	const transpiledPackageJS = await jsHelper(jsEntrypoint, minify, renderDemoText, true);
-	const compiledPackageCSS = await sassHelper(packageRootPath, demoCodeFolder, minify, renderDemoText);
+	const sassEntryPoint = path.join(packageRoot, demoCodeFolder, 'main.scss');
+	const transpiledPackageJS = await jsHelper(jsEntrypoint, minify, true);
+	const compiledPackageCSS = await sassHelper(sassEntryPoint, minify, true); // Can also do multi-brand demos at the same time
 	const html = await handlebarsHelper({
 		packageRoot: packageRootPath,
 		startingLocation: dynamicTemplateLocation,
@@ -222,6 +264,7 @@ const renderDemo = async ({
 };
 
 module.exports = {
+	installPackageDependencies,
 	compilePackageAssets,
 	renderDemo
 };
