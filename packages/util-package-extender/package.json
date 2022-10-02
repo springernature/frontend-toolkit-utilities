@@ -16,7 +16,7 @@
     "fs-extra": "^8.1.0",
     "gitignore-globs": "^0.1.1",
     "glob": "^7.1.4",
-    "got": "^9.6.0",
+    "got": "^12.5.1",
     "semver": "^6.3.0"
   },
   "devDependencies": {
