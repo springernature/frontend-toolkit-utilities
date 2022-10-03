@@ -2,12 +2,15 @@
 
 const fs = require('fs').promises;
 const path = require('path');
+const semver = require('semver');
 const npmInstall = require('@springernature/util-package-installer');
 const reporter = require('@springernature/util-cli-reporter');
 const handlebarsHelper = require('./handlebars-helper');
 const jsHelper = require('./js-helper');
 const sassHelper = require('./sass-helper');
 const file = require('./utils/file');
+
+const MINIMUM_CONTEXT_VERSION = '28.1.1';
 
 /**
  * Check package.json contents
@@ -39,23 +42,25 @@ const getPackageJson = packageRoot => {
  * @return {String}
  */
 const getBrandContextContents = async (packageRoot, brand) => {
-	const brandContextPath = path.resolve(packageRoot, `node_modules/@springernature/brand-context/${brand}/scss/abstracts.scss`);
-	const result = await file.getContent(brandContextPath);
+	const brandContextPath = path.resolve(packageRoot, 'node_modules/@springernature/brand-context/');
+	const packageJsonPath = path.join(brandContextPath, 'package.json');
+	const abstractsPath = path.join(brandContextPath, brand, '/scss/abstracts.scss');
+	const brandContextVersion = require(packageJsonPath).version;
+	const result = await file.getContent(abstractsPath);
 
+	// Lack of brand context installation is fatal
 	if (result instanceof Error) {
-		reporter.fail('package rendering', 'missing brand context', brandContextPath);
+		reporter.fail('package rendering', 'missing brand context', abstractsPath);
 		throw result;
 	}
 
-	if (brand === 'default') {
-		return result;
+	// Minimum version of brand-context required for successful compilation
+	if (semver.lt(brandContextVersion, MINIMUM_CONTEXT_VERSION)) {
+		reporter.fail('package rendering', 'invalid brand context version', brandContextVersion);
+		throw new Error(`brand-context version should be "${MINIMUM_CONTEXT_VERSION}" or greater to compile sass for distribution`);
 	}
 
-	// Always include default abstracts first
-	// This is a bit flakey. Better solution? include default abstracts in brand abstracts?
-	const defaultAbstractPath = '../../default/scss/abstracts.scss';
-	const defaultImports = `// must import default abstract first\n@import '${defaultAbstractPath}';`;
-	return `${defaultImports}\n\n${result}`;
+	return result;
 };
 
 /**
