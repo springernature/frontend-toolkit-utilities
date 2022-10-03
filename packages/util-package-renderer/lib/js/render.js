@@ -26,7 +26,7 @@ const getPackageJson = packageRoot => {
 	try {
 		packageJSON = require(packageJsonPath);
 	} catch (error) {
-		reporter.warning('not found', 'package.json');
+		reporter.warning('package rendering', 'package.json not found', packageRoot);
 	}
 
 	return packageJSON;
@@ -38,14 +38,13 @@ const getPackageJson = packageRoot => {
  * @private
  * @function getBrandContextContents
  * @param {String} packageRoot path of the package to render
- * @param {Object} brand the brand specified in the endpoint
+ * @param {String} brand the brand specified in the endpoint
  * @return {String}
  */
 const getBrandContextContents = async (packageRoot, brand) => {
 	const brandContextPath = path.resolve(packageRoot, 'node_modules/@springernature/brand-context/');
-	const packageJsonPath = path.join(brandContextPath, 'package.json');
 	const abstractsPath = path.join(brandContextPath, brand, '/scss/abstracts.scss');
-	const brandContextVersion = require(packageJsonPath).version;
+	const brandContextVersion = getPackageJson(brandContextPath).version;
 	const result = await file.getContent(abstractsPath);
 
 	// Lack of brand context installation is fatal
@@ -99,7 +98,7 @@ const writeHtmlFile = async (distFolderPath, distFolderPathRelative, html, repor
  * Install package dependencies relative to the package
  * @async
  * @function installPackageDependencies
- * @param {Object} packageRoot package path on filesystem
+ * @param {String} packageRoot package path on filesystem
  * @param {String} contextName name of the brand context package on NPM
  * @return {Promise}
  */
