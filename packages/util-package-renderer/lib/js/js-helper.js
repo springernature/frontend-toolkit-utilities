@@ -1,5 +1,6 @@
 'use strict';
 
+const path = require('path');
 const esbuild = require('esbuild');
 const reporter = require('@springernature/util-cli-reporter');
 const file = require('./utils/file');
@@ -20,7 +21,7 @@ const transpileJS = async (jsEndpoint, minify, renderForDemo) => {
 	let outputBuffer = '';
 	let bundle;
 
-	reporter.info('package rendering', 'generating transpiled javascript');
+	reporter.info('package rendering', 'generating transpiled javascript', path.relative(process.cwd(), jsEndpoint));
 
 	// Lack of packageJS should not be fatal
 	if (packageJS instanceof Error) {

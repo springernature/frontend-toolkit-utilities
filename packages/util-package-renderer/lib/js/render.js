@@ -154,7 +154,7 @@ const compilePackageAssets = async ({
 	assetConfig,
 	installDependencies = false
 } = {}) => {
-	const result = {};
+	const compiledAssets = {...assetConfig};
 
 	// Set reporting level
 	reporter.init(reportingLevel);
@@ -166,33 +166,29 @@ const compilePackageAssets = async ({
 
 	// Compile javascript
 	if (assetConfig && assetConfig.js) {
-		result.js = await jsHelper(assetConfig.js.endpoint, minify, false);
+		compiledAssets.js.result = await jsHelper(assetConfig.js.endpoint, minify, false);
 	}
 
 	// Loop through all CSS endpoints and compile
 	if (assetConfig && assetConfig.css) {
-		for (let asset of assetConfig.css) {
+		for (let index = 0; index < assetConfig.css.length; index++) {
+			const asset = assetConfig.css[index];
 			const brandContext = await getBrandContextContents(packageRoot, asset.brand);
 			const loadPaths = [
-				path.resolve(packageRoot, `node_modules/@springernature/brand-context/${asset.brand}/scss`),
-				path.parse(asset.endpoint).dir
+				path.resolve(packageRoot, `node_modules/@springernature/brand-context/${asset.brand}/scss`), // brand-context relative paths
+				path.parse(asset.endpoint).dir // component relative paths
 			];
-			let compiledPackageCSS = await sassHelper(asset.endpoint, minify, loadPaths, brandContext);
-
-			if (!Object.prototype.hasOwnProperty.call(result, 'css')) {
-				result.css = {};
-			}
-			result.css[asset.brand] = compiledPackageCSS;
+			compiledAssets.css[index].result = await sassHelper(asset.endpoint, minify, loadPaths, brandContext);
 		}
 	}
 
 	// Report on successful compile
-	if (Object.entries(result).length !== 0) {
+	if (assetConfig && (assetConfig.js || assetConfig.css)) {
 		reporter.success('package rendering', 'successfully compiled static assets', (minify) ? 'minified' : 'unminified');
 	}
 
 	// Return the compiled assets
-	return result;
+	return compiledAssets;
 };
 
 /**

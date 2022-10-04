@@ -1,5 +1,6 @@
 'use strict';
 
+const path = require('path');
 const sass = require('sass');
 const reporter = require('@springernature/util-cli-reporter');
 const file = require('./utils/file');
@@ -20,7 +21,7 @@ const compileSASS = async (sassEndpoint, minify, loadPaths, brandContext) => {
 	let packageSASS = await file.getContent(sassEndpoint);
 	let result;
 
-	reporter.info('package rendering', 'generating compiled css');
+	reporter.info('package rendering', 'generating compiled css', path.relative(process.cwd(), sassEndpoint));
 
 	// Lack of packageSASS should not be fatal
 	if (packageSASS instanceof Error) {
