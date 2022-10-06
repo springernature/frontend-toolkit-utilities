@@ -70,10 +70,9 @@ const getBrandContextContents = async (packageRoot, brand) => {
  * @param {String} distFolderPath absolute path to write the index.html file
  * @param {String} distFolderPathRelative relative path to report the index.html file
  * @param {String} html content to be written to file
- * @param {String} reporterText report the correct process, demo or compilation
  * @return {Promise}
  */
-const writeHtmlFile = async (distFolderPath, distFolderPathRelative, html, reporterText) => {
+const writeHtmlFile = async (distFolderPath, distFolderPathRelative, html) => {
 	const htmlFilePath = path.join(distFolderPath, 'index.html');
 	const htmlFilePathRelative = path.join(distFolderPathRelative, 'index.html');
 
@@ -86,12 +85,12 @@ const writeHtmlFile = async (distFolderPath, distFolderPathRelative, html, repor
 
 		await fs.writeFile(htmlFilePath, html);
 	} catch (error) {
-		reporter.fail(reporterText, 'writing file', htmlFilePath);
+		reporter.fail('package rendering', 'writing file', htmlFilePath);
 		throw error;
 	}
 
 	const sizeInBytes = await file.getSizeInBytes(htmlFilePath);
-	reporter.success(reporterText, 'rendered to file', htmlFilePathRelative, sizeInBytes);
+	reporter.success('package rendering', 'rendered to file', htmlFilePathRelative, sizeInBytes);
 };
 
 /**
@@ -173,12 +172,12 @@ const compilePackageAssets = async ({
 	if (assetConfig && assetConfig.css) {
 		for (let index = 0; index < assetConfig.css.length; index++) {
 			const asset = assetConfig.css[index];
-			const brandContext = await getBrandContextContents(packageRoot, asset.brand);
+			const brandContextScss = await getBrandContextContents(packageRoot, asset.brand);
 			const loadPaths = [
-				path.resolve(packageRoot, `node_modules/@springernature/brand-context/${asset.brand}/scss`), // brand-context relative paths
+				path.resolve(packageRoot, `node_modules/${brandContext}/${asset.brand}/scss`), // brand-context relative paths
 				path.parse(asset.endpoint).dir // component relative paths
 			];
-			compiledAssets.css[index].result = await sassHelper(asset.endpoint, minify, loadPaths, brandContext);
+			compiledAssets.css[index].result = await sassHelper(asset.endpoint, minify, loadPaths, brandContextScss);
 		}
 	}
 
@@ -211,33 +210,31 @@ const renderDemo = async ({
 	dynamicTemplateLocation = '.',
 	minify = false,
 	packageRoot,
-	distFolderPath
+	distFolderPath,
+	installDependencies = false
 } = {}) => {
-	// Confirm path of package to render & get package.json
-	const cwd = process.cwd();
 	const packageRootPath = path.resolve(file.sanitisePath(packageRoot));
 	const packageJSON = getPackageJson(packageRootPath);
 	const demoCodePath = path.join(packageRootPath, demoCodeFolder);
-	const distFolderPathRelative = (distFolderPath) ? path.relative(cwd, distFolderPath) : undefined;
-	const renderDemoText = 'rendering demo';
+	const distFolderPathRelative = (distFolderPath) ? path.relative(process.cwd(), distFolderPath) : undefined;
 
-	// Set reporting level and switch to package dir
+	// Set reporting level
 	reporter.init(reportingLevel);
 	reporter.title(`Rendering demo of ${packageJSON.name}`);
-	reporter.info(renderDemoText, 'demo code location', path.relative(cwd, demoCodePath));
-	reporter.info(renderDemoText, 'minify asset output', minify.toString());
+	reporter.info('package rendering', 'demo code location', path.relative(process.cwd(), demoCodePath));
 
-	// Switch to the package path
-	process.chdir(packageRootPath);
-
-	// Install dependencies
-	await installDependencies(packageJSON, brandContext, renderDemoText);
+	// Optionally install dependencies
+	if (installDependencies) {
+		await installPackageDependencies(packageRoot, brandContext);
+	}
 
 	// Generate static HTML
 	const jsEntrypoint = path.join(packageRootPath, demoCodeFolder, 'main.js');
 	const sassEntryPoint = path.join(packageRoot, demoCodeFolder, 'main.scss');
+	const loadPaths = [path.join(packageRoot, demoCodeFolder)];
+
 	const transpiledPackageJS = await jsHelper(jsEntrypoint, minify, true);
-	const compiledPackageCSS = await sassHelper(sassEntryPoint, minify, true); // Can also do multi-brand demos at the same time
+	const compiledPackageCSS = await sassHelper(sassEntryPoint, minify, loadPaths); // Can also do multi-brand demos at the same time
 	const html = await handlebarsHelper({
 		packageRoot: packageRootPath,
 		startingLocation: dynamicTemplateLocation,
@@ -246,18 +243,16 @@ const renderDemo = async ({
 		demoCodeFolder: demoCodeFolder,
 		demoCodePath: demoCodePath,
 		name: packageJSON.name
-	}, renderDemoText);
+	});
 
 	// Write html to file
 	if (distFolderPath) {
-		await writeHtmlFile(distFolderPath, distFolderPathRelative, html, renderDemoText);
-		process.chdir(cwd);
+		await writeHtmlFile(distFolderPath, distFolderPathRelative, html);
 		return;
 	}
 
-	// Switch back to original dir
-	reporter.success(renderDemoText, 'compiled static demo');
-	process.chdir(cwd);
+	// Report on successful demo compilation
+	reporter.success('package rendering', 'compiled static demo', (minify) ? 'minified' : 'unminified');
 
 	// Return the html content
 	return html;

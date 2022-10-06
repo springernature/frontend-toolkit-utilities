@@ -14,10 +14,10 @@ const ERR_NO_PACKAGE_SASS_FOUND = 'no sass found for package';
  * @param {String} sassEndpoint path to the sass endpoint for compilation
  * @param {Boolean} minify should we minify the css
  * @param {Array} loadPaths relative @import path locations
- * @param {String} brandContext uncompiled brand context abstracts
+ * @param {String} [brandContextScss=''] uncompiled brand context abstracts
  * @return {Promise<String>}
  */
-const compileSASS = async (sassEndpoint, minify, loadPaths, brandContext) => {
+const compileSASS = async (sassEndpoint, minify, loadPaths, brandContextScss = '') => {
 	let packageSASS = await file.getContent(sassEndpoint);
 	let result;
 
@@ -31,15 +31,11 @@ const compileSASS = async (sassEndpoint, minify, loadPaths, brandContext) => {
 
 	// Render the SASS to CSS
 	try {
-		result = sass.compileString(brandContext.concat(packageSASS), {
+		result = sass.compileString(brandContextScss.concat(packageSASS), {
 			style: (minify) ? 'compressed' : 'expanded',
 			indentType: 'tab',
 			indentWidth: 1,
-			// so that relative @import paths resolve
-			// needs to be an array
-			// demo: point to demo code folder
-			// compile: point to the brand context location
-			loadPaths: loadPaths
+			loadPaths: loadPaths // so that relative @import paths resolve
 		});
 	} catch (error) {
 		reporter.fail('package rendering', 'could not compile sass to css');
