@@ -11,6 +11,8 @@ const sassHelper = require('./sass-helper');
 const file = require('./utils/file');
 
 const MINIMUM_CONTEXT_VERSION = '28.1.1';
+const BRAND_CONTEXT_NAME = '@springernature/brand-context';
+const BRAND_CONTEXT_LOCATION = `node_modules/${BRAND_CONTEXT_NAME}`;
 
 /**
  * Check package.json contents
@@ -42,7 +44,7 @@ const getPackageJson = packageRoot => {
  * @return {String}
  */
 const getBrandContextContents = async (packageRoot, brand) => {
-	const brandContextPath = path.resolve(packageRoot, 'node_modules/@springernature/brand-context/');
+	const brandContextPath = path.resolve(packageRoot, BRAND_CONTEXT_LOCATION);
 	const abstractsPath = path.join(brandContextPath, brand, '/scss/abstracts.scss');
 	const brandContextVersion = getPackageJson(brandContextPath).version;
 	const result = await file.getContent(abstractsPath);
@@ -67,7 +69,7 @@ const getBrandContextContents = async (packageRoot, brand) => {
  * @async
  * @private
  * @function writeCompiledFile
- * @param {String} filePath absolute path to write the the file
+ * @param {String} filePath absolute path to write the file
  * @param {String} html content to be written to file
  * @return {Promise}
  */
@@ -128,10 +130,10 @@ const writeDistFolderContents = async compiledAssets => {
  * @async
  * @function installPackageDependencies
  * @param {String} packageRoot package path on filesystem
- * @param {String} [contextName='@springernature/brand-context'] name of the brand context package on NPM
+ * @param {String} [contextName=BRAND_CONTEXT_NAME] name of the brand context package on NPM
  * @return {Promise}
  */
-const installPackageDependencies = async (packageRoot, contextName = '@springernature/brand-context') => {
+const installPackageDependencies = async (packageRoot, contextName = BRAND_CONTEXT_NAME) => {
 	const packageRootPath = path.resolve(file.sanitisePath(packageRoot));
 	const packageJSON = getPackageJson(packageRootPath);
 
@@ -167,7 +169,7 @@ const installPackageDependencies = async (packageRoot, contextName = '@springern
  * Compile the assets for a package into a distribution folder
  * @async
  * @function compilePackageAssets
- * @param {String} [brandContext='@springernature/brand-context'] name of the brand context package on NPM
+ * @param {String} [brandContext=BRAND_CONTEXT_NAME] name of the brand context package on NPM
  * @param {String} [reportingLevel='title'] amount of reporting, defaults to all
  * @param {Boolean} [minify=false] minify the JS and SASS
  * @param {Boolean} [writeDistFiles=false] write the files to disk
@@ -177,7 +179,7 @@ const installPackageDependencies = async (packageRoot, contextName = '@springern
  * @return {Promise}
  */
 const compilePackageAssets = async ({
-	brandContext = '@springernature/brand-context',
+	brandContext = BRAND_CONTEXT_NAME,
 	reportingLevel = 'title',
 	minify = false,
 	writeDistFiles = false,
@@ -215,7 +217,7 @@ const compilePackageAssets = async ({
 			const asset = assetConfig.css[index];
 			const brandContextScss = await getBrandContextContents(packageRoot, asset.brand);
 			const loadPaths = [
-				path.resolve(packageRoot, `node_modules/${brandContext}/${asset.brand}/scss`), // brand-context relative paths
+				path.resolve(packageRoot, `${BRAND_CONTEXT_LOCATION}/${asset.brand}/scss`), // brand-context relative paths
 				path.parse(asset.endpoint).dir // component relative paths
 			];
 			compiledAssets.css[index].result = await sassHelper(asset.endpoint, minify, loadPaths, brandContextScss);
@@ -240,7 +242,7 @@ const compilePackageAssets = async ({
  * @async
  * @function renderDemo
  * @param {String} [demoCodeFolder='demo'] name of folder where demo code stored
- * @param {String} [brandContext='@springernature/brand-context'] name of the brand context package on NPM
+ * @param {String} [brandContext=BRAND_CONTEXT_NAME] name of the brand context package on NPM
  * @param {String} [reportingLevel='title'] amount of reporting, defaults to all
  * @param {String} [dynamicTemplateLocation='.'] where to start looking for dynamic handlebars templates
  * @param {Boolean} [minify=false] minify the JS and SASS
@@ -251,7 +253,7 @@ const compilePackageAssets = async ({
  */
 const renderDemo = async ({
 	demoCodeFolder = 'demo',
-	brandContext = '@springernature/brand-context',
+	brandContext = BRAND_CONTEXT_NAME,
 	reportingLevel = 'title',
 	dynamicTemplateLocation = '.',
 	minify = false,
