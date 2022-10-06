@@ -3,7 +3,7 @@
 const path = require('path');
 const esbuild = require('esbuild');
 const reporter = require('@springernature/util-cli-reporter');
-const file = require('./utils/file');
+const file = require('./file');
 
 const ERR_NO_PACKAGE_JS_FOUND = 'no JS found for package';
 

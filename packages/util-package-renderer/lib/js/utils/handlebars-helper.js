@@ -5,7 +5,7 @@ const Handlebars = require('handlebars');
 const reporter = require('@springernature/util-cli-reporter');
 const dynamicPartials = require('@springernature/util-dynamic-partial');
 const imgHelper = require('./img-helper');
-const file = require('./utils/file');
+const file = require('./file');
 const baseTemplate = require('./template');
 
 const HBARS_CONTEXT_KEY = 'utilPackageRenderState';

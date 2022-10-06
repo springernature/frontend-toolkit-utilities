@@ -5,9 +5,9 @@ const path = require('path');
 const semver = require('semver');
 const npmInstall = require('@springernature/util-package-installer');
 const reporter = require('@springernature/util-cli-reporter');
-const handlebarsHelper = require('./handlebars-helper');
-const jsHelper = require('./js-helper');
-const sassHelper = require('./sass-helper');
+const handlebarsHelper = require('./utils/handlebars-helper');
+const jsHelper = require('./utils/js-helper');
+const sassHelper = require('./utils/sass-helper');
 const file = require('./utils/file');
 
 const MINIMUM_CONTEXT_VERSION = '28.1.1';

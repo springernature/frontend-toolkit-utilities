@@ -3,7 +3,7 @@
 const path = require('path');
 const sass = require('sass');
 const reporter = require('@springernature/util-cli-reporter');
-const file = require('./utils/file');
+const file = require('./file');
 
 const ERR_NO_PACKAGE_SASS_FOUND = 'no sass found for package';
 
