@@ -63,34 +63,64 @@ const getBrandContextContents = async (packageRoot, brand) => {
 };
 
 /**
- * Write content to HTML index file
+ * Write content of a file to disk
  * @async
  * @private
- * @function writeHtmlFile
- * @param {String} distFolderPath absolute path to write the index.html file
- * @param {String} distFolderPathRelative relative path to report the index.html file
+ * @function writeCompiledFile
+ * @param {String} filePath absolute path to write the the file
  * @param {String} html content to be written to file
  * @return {Promise}
  */
-const writeHtmlFile = async (distFolderPath, distFolderPathRelative, html) => {
-	const htmlFilePath = path.join(distFolderPath, 'index.html');
-	const htmlFilePathRelative = path.join(distFolderPathRelative, 'index.html');
+const writeCompiledFile = async (filePath, html) => {
+	const filePathRelative = path.relative(process.cwd(), filePath);
+	const parentDirectory = path.parse(filePath).dir;
 
 	try {
-		const distFolderExists = await file.isDir(distFolderPath);
+		const distFolderExists = await file.isDir(parentDirectory);
 
 		if (!distFolderExists) {
-			await fs.mkdir(distFolderPath);
+			await fs.mkdir(parentDirectory);
 		}
 
-		await fs.writeFile(htmlFilePath, html);
+		await fs.writeFile(filePath, html, 'utf-8');
 	} catch (error) {
-		reporter.fail('package rendering', 'writing file', htmlFilePath);
+		reporter.fail('package rendering', 'writing file', filePathRelative);
 		throw error;
 	}
 
-	const sizeInBytes = await file.getSizeInBytes(htmlFilePath);
-	reporter.success('package rendering', 'rendered to file', htmlFilePathRelative, sizeInBytes);
+	const sizeInBytes = await file.getSizeInBytes(filePath);
+	reporter.success('package rendering', 'rendered to file', filePathRelative, sizeInBytes);
+};
+
+/**
+ * Write compiled javascript and css to disk
+ * @async
+ * @private
+ * @function writeDistFolderContents
+ * @param {Object} compiledAssets content and file names for all assets
+ * @return {Promise}
+ */
+const writeDistFolderContents = async compiledAssets => {
+	const assetPaths = {};
+
+	// Get javascript file information
+	if (compiledAssets.js) {
+		assetPaths[compiledAssets.js.destination] = compiledAssets.js.result;
+	}
+
+	// Get css file information
+	if (compiledAssets.css) {
+		for (let index = 0; index < compiledAssets.css.length; index++) {
+			assetPaths[compiledAssets.css[index].destination] = compiledAssets.css[index].result;
+		}
+	}
+
+	// write all javascript and css files to disk
+	await Promise.all(
+		Object.keys(assetPaths).map(filePath => writeCompiledFile(filePath, assetPaths[filePath]).catch(error => {
+			throw error;
+		}))
+	);
 };
 
 /**
@@ -98,10 +128,10 @@ const writeHtmlFile = async (distFolderPath, distFolderPathRelative, html) => {
  * @async
  * @function installPackageDependencies
  * @param {String} packageRoot package path on filesystem
- * @param {String} contextName name of the brand context package on NPM
+ * @param {String} [contextName='@springernature/brand-context'] name of the brand context package on NPM
  * @return {Promise}
  */
-const installPackageDependencies = async (packageRoot, contextName) => {
+const installPackageDependencies = async (packageRoot, contextName = '@springernature/brand-context') => {
 	const packageRootPath = path.resolve(file.sanitisePath(packageRoot));
 	const packageJSON = getPackageJson(packageRootPath);
 
@@ -134,29 +164,40 @@ const installPackageDependencies = async (packageRoot, contextName) => {
 };
 
 /**
- * Compile the assets for a package
+ * Compile the assets for a package into a distribution folder
  * @async
  * @function compilePackageAssets
- * @param {String} packageRoot path of the package to render
+ * @param {String} [brandContext='@springernature/brand-context'] name of the brand context package on NPM
  * @param {String} [reportingLevel='title'] amount of reporting, defaults to all
  * @param {Boolean} [minify=false] minify the JS and SASS
- * @param {String} [brandContext='@springernature/brand-context'] name of the brand context package on NPM
- * @param {Object} assetConfig configuration to compile the component JS and SASS
- * @param {Boolean} installDependencies Do we need to install the dependencies first
+ * @param {Boolean} [writeDistFiles=false] write the files to disk
+ * @param {Boolean} [installDependencies=false] Do we need to install package dependencies first
+ * @param {Object} [assetConfig={}] configuration to compile the component JS and SASS
+ * @param {String} packageRoot path of the package to render
  * @return {Promise}
  */
 const compilePackageAssets = async ({
-	packageRoot,
+	brandContext = '@springernature/brand-context',
 	reportingLevel = 'title',
 	minify = false,
-	brandContext = '@springernature/brand-context',
-	assetConfig,
-	installDependencies = false
+	writeDistFiles = false,
+	installDependencies = false,
+	assetConfig = {},
+	packageRoot
 } = {}) => {
+	const packageRootPath = path.resolve(file.sanitisePath(packageRoot));
+	const packageJSON = getPackageJson(packageRootPath);
 	const compiledAssets = {...assetConfig};
+
+	// Check assetConfig is configured with either javascript or css
+	if (Object.prototype.toString.call(assetConfig) !== '[object Object]' || (!assetConfig.js && !assetConfig.css)) {
+		reporter.warning('package rendering', 'could not find expected assets', packageJSON.name);
+		return;
+	}
 
 	// Set reporting level
 	reporter.init(reportingLevel);
+	reporter.title(`Compiling assets for ${packageJSON.name}`);
 
 	// Optionally install dependencies
 	if (installDependencies) {
@@ -164,12 +205,12 @@ const compilePackageAssets = async ({
 	}
 
 	// Compile javascript
-	if (assetConfig && assetConfig.js) {
+	if (assetConfig.js) {
 		compiledAssets.js.result = await jsHelper(assetConfig.js.endpoint, minify, false);
 	}
 
 	// Loop through all CSS endpoints and compile
-	if (assetConfig && assetConfig.css) {
+	if (assetConfig.css) {
 		for (let index = 0; index < assetConfig.css.length; index++) {
 			const asset = assetConfig.css[index];
 			const brandContextScss = await getBrandContextContents(packageRoot, asset.brand);
@@ -181,10 +222,14 @@ const compilePackageAssets = async ({
 		}
 	}
 
-	// Report on successful compile
-	if (assetConfig && (assetConfig.js || assetConfig.css)) {
-		reporter.success('package rendering', 'successfully compiled static assets', (minify) ? 'minified' : 'unminified');
+	// Write html to file
+	if (writeDistFiles) {
+		await writeDistFolderContents(compiledAssets);
+		return;
 	}
+
+	// Report on successful compile
+	reporter.success('package rendering', 'compiled static assets', (minify) ? 'minified' : 'unminified');
 
 	// Return the compiled assets
 	return compiledAssets;
@@ -199,8 +244,9 @@ const compilePackageAssets = async ({
  * @param {String} [reportingLevel='title'] amount of reporting, defaults to all
  * @param {String} [dynamicTemplateLocation='.'] where to start looking for dynamic handlebars templates
  * @param {Boolean} [minify=false] minify the JS and SASS
+ * @param {Boolean} [installDependencies=false] Do we need to install package dependencies first
  * @param {String} packageRoot path of the package to render
- * @param {String} [distFolderPath] path to write the index.html file
+ * @param {String} distFolderPath path to write the index.html file
  * @return {Promise}
  */
 const renderDemo = async ({
@@ -209,19 +255,20 @@ const renderDemo = async ({
 	reportingLevel = 'title',
 	dynamicTemplateLocation = '.',
 	minify = false,
+	installDependencies = false,
 	packageRoot,
-	distFolderPath,
-	installDependencies = false
+	distFolderPath
 } = {}) => {
 	const packageRootPath = path.resolve(file.sanitisePath(packageRoot));
 	const packageJSON = getPackageJson(packageRootPath);
 	const demoCodePath = path.join(packageRootPath, demoCodeFolder);
-	const distFolderPathRelative = (distFolderPath) ? path.relative(process.cwd(), distFolderPath) : undefined;
+	const jsEntrypoint = path.join(packageRootPath, demoCodeFolder, 'main.js');
+	const sassEntryPoint = path.join(packageRoot, demoCodeFolder, 'main.scss');
+	const loadPaths = [path.join(packageRoot, demoCodeFolder)];
 
 	// Set reporting level
 	reporter.init(reportingLevel);
 	reporter.title(`Rendering demo of ${packageJSON.name}`);
-	reporter.info('package rendering', 'demo code location', path.relative(process.cwd(), demoCodePath));
 
 	// Optionally install dependencies
 	if (installDependencies) {
@@ -229,12 +276,8 @@ const renderDemo = async ({
 	}
 
 	// Generate static HTML
-	const jsEntrypoint = path.join(packageRootPath, demoCodeFolder, 'main.js');
-	const sassEntryPoint = path.join(packageRoot, demoCodeFolder, 'main.scss');
-	const loadPaths = [path.join(packageRoot, demoCodeFolder)];
-
 	const transpiledPackageJS = await jsHelper(jsEntrypoint, minify, true);
-	const compiledPackageCSS = await sassHelper(sassEntryPoint, minify, loadPaths); // Can also do multi-brand demos at the same time
+	const compiledPackageCSS = await sassHelper(sassEntryPoint, minify, loadPaths);
 	const html = await handlebarsHelper({
 		packageRoot: packageRootPath,
 		startingLocation: dynamicTemplateLocation,
@@ -247,7 +290,10 @@ const renderDemo = async ({
 
 	// Write html to file
 	if (distFolderPath) {
-		await writeHtmlFile(distFolderPath, distFolderPathRelative, html);
+		await writeCompiledFile(
+			path.join(distFolderPath, 'index.html'),
+			html
+		);
 		return;
 	}
 
