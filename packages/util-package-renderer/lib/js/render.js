@@ -96,7 +96,7 @@ const writeCompiledFile = async (filePath, html) => {
 	}
 
 	const sizeInBytes = await file.getSizeInBytes(filePath);
-	reporter.success('render files', 'rendered to file', filePathRelative, sizeInBytes);
+	reporter.success('render files', 'created', filePathRelative, sizeInBytes);
 };
 
 /**
@@ -148,8 +148,6 @@ const installPackageDependencies = async (packageRoot, contextName = BRAND_CONTE
 		return;
 	}
 
-	reporter.info('render files', 'installing package dependencies');
-
 	// Add optional brand context to dependencies
 	if (packageJSON.brandContext) {
 		if (!packageJSON.dependencies) {
@@ -160,6 +158,8 @@ const installPackageDependencies = async (packageRoot, contextName = BRAND_CONTE
 
 	// Install dependencies
 	if (packageJSON.dependencies) {
+		reporter.info('render files', 'installing package dependencies');
+
 		try {
 			// Don't save back to dependencies in package.json
 			// If brand-context is used we don't want that added
