@@ -1,47 +1,77 @@
 {
 	"onlyJs": {
-    "js": {
-      "endpoint": "nature-package/js/index.js",
-      "destination": "nature-package/dist/js/index.js"
-    }
+    "js": [
+      {
+        "endpoint": "nature-package/js/index.js",
+        "destination": "nature-package/dist/js/index.js"
+      }
+    ]
   },
 	"JsAndCss": {
-    "js": {
-      "endpoint": "nature-package/js/index.js",
-      "destination": "nature-package/dist/js/index.js"
-    },
+    "js": [
+      {
+        "endpoint": "nature-package/js/index.js",
+        "destination": "nature-package/dist/js/index.js"
+      }
+    ],
     "css": [
       {
-        "destination": "nature-package/dist/css/index.css",
         "toolkit": "nature",
         "brand": "nature",
-        "endpoint": "nature-package/scss/index.scss"
+        "endpoint": "nature-package/scss/index.scss",
+        "destination": "nature-package/dist/css/index.css"
       }
     ]
   },
   "cssBranded": {
     "css": [
       {
-        "destination": "nature-package/dist/css/index.css",
         "toolkit": "nature",
         "brand": "nature",
-        "endpoint": "nature-package/scss/index.scss"
+        "endpoint": "nature-package/scss/index.scss",
+        "destination": "nature-package/dist/css/index.css"
       }
     ]
   },
   "cssMultiBranded": {
     "css": [
       {
-        "destination": "global-package/dist/css/default.css",
         "toolkit": "global",
         "brand": "default",
-        "endpoint": "global-package/scss/default.scss"
+        "endpoint": "global-package/scss/default.scss",
+        "destination": "global-package/dist/css/default.css"
       },
       {
-        "destination": "global-package/dist/css/nature.css",
         "toolkit": "global",
         "brand": "nature",
-        "endpoint": "global-package/scss/nature.scss"
+        "endpoint": "global-package/scss/nature.scss",
+        "destination": "global-package/dist/css/nature.css"
+      }
+    ]
+  },
+  "brandContext": {
+    "js": [
+      {
+        "endpoint": "brand-context/default/js/helpers/index.js",
+        "destination": "brand-context/dist/js/default/helpers/index.js"
+      }
+    ],
+    "css": [
+      {
+        "endpoint": "brand-context/default/scss/core.scss",
+        "destination": "brand-context/dist/css/default/core.css"
+      },
+      {
+        "endpoint": "brand-context/default/scss/enhanced.scss",
+        "destination": "brand-context/dist/css/default/enhanced.css"
+      },
+      {
+        "endpoint": "brand-context/nature/scss/core.scss",
+        "destination": "brand-context/dist/css/nature/core.css"
+      },
+      {
+        "endpoint": "brand-context/nature/scss/enhanced.scss",
+        "destination": "brand-context/dist/css/nature/enhanced.css"
       }
     ]
   }

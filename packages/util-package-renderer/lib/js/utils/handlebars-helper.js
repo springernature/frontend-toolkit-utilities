@@ -100,7 +100,7 @@ const getDemoContext = async (packageRoot, demoCodeFolder) => {
  * @return {Promise<String>}
  */
 const compileTemplate = async config => {
-	reporter.info('package rendering', 'generating compiled static html from handlebars');
+	reporter.info('render files', 'generating compiled static html from handlebars');
 
 	// Get the demo template
 	const packageTemplate = await getDemoTemplate(config.packageRoot, config.demoCodeFolder);
@@ -114,7 +114,7 @@ const compileTemplate = async config => {
 
 	// Reserved JSON key HBARS_CONTEXT_KEY
 	if (Object.prototype.hasOwnProperty.call(packageContextJSON, HBARS_CONTEXT_KEY)) {
-		reporter.fail('package rendering', 'handlebars compilation error', 'invalid key in data file');
+		reporter.fail('render files', 'handlebars compilation error', 'invalid key in data file');
 		throw new Error(`"${HBARS_CONTEXT_KEY}" ${ERR_INVALID_CONTEXT_KEY_NAME}`);
 	}
 

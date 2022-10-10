@@ -28,7 +28,7 @@ const getPackageJson = packageRoot => {
 	try {
 		packageJSON = require(packageJsonPath);
 	} catch (error) {
-		reporter.warning('package rendering', 'package.json not found', packageRoot);
+		reporter.warning('render files', 'package.json not found', packageRoot);
 	}
 
 	return packageJSON;
@@ -44,6 +44,11 @@ const getPackageJson = packageRoot => {
  * @return {String}
  */
 const getBrandContextContents = async (packageRoot, brand) => {
+	// only include context for toolkit packages
+	if (!brand) {
+		return '';
+	}
+
 	const brandContextPath = path.resolve(packageRoot, BRAND_CONTEXT_LOCATION);
 	const abstractsPath = path.join(brandContextPath, brand, '/scss/abstracts.scss');
 	const brandContextVersion = getPackageJson(brandContextPath).version;
@@ -51,13 +56,13 @@ const getBrandContextContents = async (packageRoot, brand) => {
 
 	// Lack of brand context installation is fatal
 	if (result instanceof Error) {
-		reporter.fail('package rendering', 'missing brand context', abstractsPath);
+		reporter.fail('render files', 'missing brand context', abstractsPath);
 		throw result;
 	}
 
 	// Minimum version of brand-context required for successful compilation
 	if (semver.lt(brandContextVersion, MINIMUM_CONTEXT_VERSION)) {
-		reporter.fail('package rendering', 'invalid brand context version', brandContextVersion);
+		reporter.fail('render files', 'invalid brand context version', brandContextVersion);
 		throw new Error(`brand-context version should be "${MINIMUM_CONTEXT_VERSION}" or greater to compile sass for distribution`);
 	}
 
@@ -86,12 +91,12 @@ const writeCompiledFile = async (filePath, html) => {
 
 		await fs.writeFile(filePath, html, 'utf-8');
 	} catch (error) {
-		reporter.fail('package rendering', 'writing file', filePathRelative);
+		reporter.fail('render files', 'writing file', filePathRelative);
 		throw error;
 	}
 
 	const sizeInBytes = await file.getSizeInBytes(filePath);
-	reporter.success('package rendering', 'rendered to file', filePathRelative, sizeInBytes);
+	reporter.success('render files', 'rendered to file', filePathRelative, sizeInBytes);
 };
 
 /**
@@ -107,7 +112,9 @@ const writeDistFolderContents = async compiledAssets => {
 
 	// Get javascript file information
 	if (compiledAssets.js) {
-		assetPaths[compiledAssets.js.destination] = compiledAssets.js.result;
+		for (let index = 0; index < compiledAssets.js.length; index++) {
+			assetPaths[compiledAssets.js[index].destination] = compiledAssets.js[index].result;
+		}
 	}
 
 	// Get css file information
@@ -141,7 +148,7 @@ const installPackageDependencies = async (packageRoot, contextName = BRAND_CONTE
 		return;
 	}
 
-	reporter.info('package rendering', 'installing package dependencies');
+	reporter.info('render files', 'installing package dependencies');
 
 	// Add optional brand context to dependencies
 	if (packageJSON.brandContext) {
@@ -157,9 +164,9 @@ const installPackageDependencies = async (packageRoot, contextName = BRAND_CONTE
 			// Don't save back to dependencies in package.json
 			// If brand-context is used we don't want that added
 			await npmInstall.dependencies(packageJSON, {arguments: ['--no-save'], prefix: packageRootPath});
-			reporter.success('package rendering', 'dependencies installed');
+			reporter.success('render files', 'dependencies installed');
 		} catch (error) {
-			reporter.fail('package rendering', 'dependency installation');
+			reporter.fail('render files', 'dependency installation');
 			throw error;
 		}
 	}
@@ -193,7 +200,7 @@ const compilePackageAssets = async ({
 
 	// Check assetConfig is configured with either javascript or css
 	if (Object.prototype.toString.call(assetConfig) !== '[object Object]' || (!assetConfig.js && !assetConfig.css)) {
-		reporter.warning('package rendering', 'could not find expected assets', packageJSON.name);
+		reporter.warning('render files', 'could not find expected assets', packageJSON.name);
 		return;
 	}
 
@@ -206,18 +213,21 @@ const compilePackageAssets = async ({
 		await installPackageDependencies(packageRoot, brandContext);
 	}
 
-	// Compile javascript
-	if (assetConfig.js) {
-		compiledAssets.js.result = await jsHelper(assetConfig.js.endpoint, minify, false);
+	// Loop through all javascript endpoints and compile
+	if (assetConfig.js.length > 0) {
+		for (let index = 0; index < assetConfig.js.length; index++) {
+			const asset = assetConfig.js[index];
+			compiledAssets.js[index].result = await jsHelper(asset.endpoint, minify, false);
+		}
 	}
 
 	// Loop through all CSS endpoints and compile
-	if (assetConfig.css) {
+	if (assetConfig.css.length > 0) {
 		for (let index = 0; index < assetConfig.css.length; index++) {
 			const asset = assetConfig.css[index];
 			const brandContextScss = await getBrandContextContents(packageRoot, asset.brand);
 			const loadPaths = [
-				path.resolve(packageRoot, `${BRAND_CONTEXT_LOCATION}/${asset.brand}/scss`), // brand-context relative paths
+				...(asset.brand ? [path.resolve(packageRoot, `${BRAND_CONTEXT_LOCATION}/${asset.brand}/scss`)] : []), // optional brand-context relative paths
 				path.parse(asset.endpoint).dir // component relative paths
 			];
 			compiledAssets.css[index].result = await sassHelper(asset.endpoint, minify, loadPaths, brandContextScss);
@@ -231,7 +241,7 @@ const compilePackageAssets = async ({
 	}
 
 	// Report on successful compile
-	reporter.success('package rendering', 'compiled static assets', (minify) ? 'minified' : 'unminified');
+	reporter.success('render files', 'compiled static assets', (minify) ? 'minified' : 'unminified');
 
 	// Return the compiled assets
 	return compiledAssets;
@@ -300,7 +310,7 @@ const renderDemo = async ({
 	}
 
 	// Report on successful demo compilation
-	reporter.success('package rendering', 'compiled static demo', (minify) ? 'minified' : 'unminified');
+	reporter.success('render files', 'compiled static demo', (minify) ? 'minified' : 'unminified');
 
 	// Return the html content
 	return html;

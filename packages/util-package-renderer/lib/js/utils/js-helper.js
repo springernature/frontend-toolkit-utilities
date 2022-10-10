@@ -21,11 +21,11 @@ const transpileJS = async (jsEndpoint, minify, renderForDemo) => {
 	let outputBuffer = '';
 	let bundle;
 
-	reporter.info('package rendering', 'generating transpiled javascript', path.relative(process.cwd(), jsEndpoint));
+	reporter.info('render files', 'generating transpiled javascript', path.relative(process.cwd(), jsEndpoint));
 
 	// Lack of packageJS should not be fatal
 	if (packageJS instanceof Error) {
-		reporter.warning('package rendering', 'missing JS', ERR_NO_PACKAGE_JS_FOUND);
+		reporter.warning('render files', 'missing JS', ERR_NO_PACKAGE_JS_FOUND);
 		return `// ${ERR_NO_PACKAGE_JS_FOUND}`;
 	}
 
@@ -44,13 +44,13 @@ const transpileJS = async (jsEndpoint, minify, renderForDemo) => {
 			target: ['chrome76', 'firefox67', 'safari12', 'edge79', 'ios13', 'opera62']
 		});
 	} catch (error) {
-		reporter.fail('package rendering', 'could not create js bundle');
+		reporter.fail('render files', 'could not create js bundle');
 		throw error;
 	}
 
 	// Report any warnings in the build process
 	for (let warning of bundle.warnings) {
-		reporter.warning('package rendering', warning.text, `${warning.location.file}:${warning.location.line}:${warning.location.column}`);
+		reporter.warning('render files', warning.text, `${warning.location.file}:${warning.location.line}:${warning.location.column}`);
 	}
 
 	// Concatenate the output

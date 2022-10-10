@@ -21,11 +21,11 @@ const compileSASS = async (sassEndpoint, minify, loadPaths, brandContextScss = '
 	let packageSASS = await file.getContent(sassEndpoint);
 	let result;
 
-	reporter.info('package rendering', 'generating compiled css', path.relative(process.cwd(), sassEndpoint));
+	reporter.info('render files', 'generating compiled css', path.relative(process.cwd(), sassEndpoint));
 
 	// Lack of packageSASS should not be fatal
 	if (packageSASS instanceof Error) {
-		reporter.warning('package rendering', 'missing sass', ERR_NO_PACKAGE_SASS_FOUND);
+		reporter.warning('render files', 'missing sass', ERR_NO_PACKAGE_SASS_FOUND);
 		packageSASS = `/* ${ERR_NO_PACKAGE_SASS_FOUND} */`;
 	}
 
@@ -38,7 +38,7 @@ const compileSASS = async (sassEndpoint, minify, loadPaths, brandContextScss = '
 			loadPaths: loadPaths // so that relative @import paths resolve
 		});
 	} catch (error) {
-		reporter.fail('package rendering', 'could not compile sass to css');
+		reporter.fail('render files', 'could not compile sass to css');
 		throw error;
 	}
 
