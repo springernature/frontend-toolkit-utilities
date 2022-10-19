@@ -37,15 +37,37 @@ const getLocalPackageHtml = async packageName => {
 		onlyFiles: true
 	});
 
+	if (localDemoFiles.length === 0) {
+		reporter.fail('unable to find local package', packageName);
+		throw new Error('404: local package not found');
+	}
+
 	// Should only be a single rendered demo
-	// Return the html
-	return fs.readFile(localDemoFiles[0], 'utf-8');
+	// Return the html and version number
+	const pathToLocalDemo = localDemoFiles[0];
+	const pathToPackageJson = path.join(pathToLocalDemo.replace(packageDemoPath, ''), 'package.json');
+	const version = require(pathToPackageJson).version;
+	const html = await fs.readFile(pathToLocalDemo, 'utf-8');
+
+	return {
+		html: html,
+		version: version
+	};
 };
 
-const createServer = async (remoteHtml, localHtml) => {
-	const remoteHtmlMinified = htmlminifier(remoteHtml, minifyOptions);
-	const localHtmlMinified = htmlminifier(localHtml, minifyOptions);
-	const page = baseTemplate(remoteHtmlMinified, localHtmlMinified);
+// const createServer = async (remoteHtml, localHtml) => {
+const createServer = async (remote, local) => {
+	const remoteHtmlMinified = htmlminifier(remote.html, minifyOptions);
+	const localHtmlMinified = htmlminifier(local.html, minifyOptions);
+	const page = baseTemplate({
+		html: remoteHtmlMinified,
+		name: remote.name,
+		version: remote.version
+	}, {
+		html: localHtmlMinified,
+		name: local.name,
+		version: local.version
+	});
 
 	reporter.info('manual diff available', 'http://localhost:3000/');
 	server([
@@ -67,7 +89,7 @@ const diffPackage = async (npmPackage, scope) => {
 	const packageVersion = npmPackageArray[1];
 	const npmPackageUrl = path.join(packageCdnLocation, `${scope}/${npmPackage}`, packageDemoPath);
 	let npmPackageHtml;
-	let localPackageHtml;
+	let localPackage;
 
 	reporter.info('visual comparison for package', packageName);
 
@@ -82,16 +104,24 @@ const diffPackage = async (npmPackage, scope) => {
 		throw error;
 	}
 
-	// Get local package html
+	// Get local package html and version
 	try {
-		localPackageHtml = await getLocalPackageHtml(packageName);
+		localPackage = await getLocalPackageHtml(packageName);
 	} catch (error) {
 		reporter.fail('getting package from local', packageName, 'could not find package html');
 		throw error;
 	}
 
 	// create server for local comparison
-	await createServer(npmPackageHtml.body, localPackageHtml);
+	await createServer({
+		html: npmPackageHtml.body,
+		name: packageName,
+		version: packageVersion
+	}, {
+		html: localPackage.html,
+		name: packageName,
+		version: localPackage.version
+	});
 };
 
 module.exports = diffPackage;
