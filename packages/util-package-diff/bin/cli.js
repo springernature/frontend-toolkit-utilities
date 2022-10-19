@@ -15,10 +15,12 @@ const cli = meow(`
 	Options
 		--package, -p        Name and version of package
 		--scope, -s          NPM scope, default: @springernature
+		--port, -t           Port for local server, default: 3000
 
 	Examples
 		sn-package-diff -p package-name@1.0.0
 		sn-package-diff -p package-name@1.0.0 -s @some-other-scope
+		sn-package-diff -p package-name@1.0.0 -s @some-other-scope -t 5000
 `, {
 	booleanDefault: undefined,
 	flags: {
@@ -30,12 +32,17 @@ const cli = meow(`
 			type: 'string',
 			alias: 's',
 			default: '@springernature'
+		},
+		port: {
+			type: 'number',
+			alias: 't',
+			default: 3000
 		}
 	}
 });
 
 (async () => {
-	await diffPackage(cli.flags.package, cli.flags.scope);
+	await diffPackage(cli.flags.package, cli.flags.scope, cli.flags.port);
 })().catch(error => {
 	const renderedError = pe.render(error);
 	console.log(renderedError);

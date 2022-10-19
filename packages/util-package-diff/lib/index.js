@@ -2,10 +2,10 @@
 
 const fs = require('fs').promises;
 const path = require('path');
+const http = require('http');
 const globby = require('globby');
 const got = require('got');
 const htmlminifier = require('html-minifier').minify;
-const server = require('server');
 const reporter = require('@springernature/util-cli-reporter');
 const baseTemplate = require('./template');
 
@@ -21,8 +21,6 @@ const minifyOptions = {
 	minifyCSS: true,
 	minifyJS: true
 };
-
-const {get} = server.router;
 
 const checkPackageVersion = (npmPackage, packageVersion) => {
 	if (!semverRegex.test(packageVersion)) {
@@ -46,7 +44,7 @@ const getLocalPackageHtml = async packageName => {
 	// Return the html and version number
 	const pathToLocalDemo = localDemoFiles[0];
 	const pathToPackageJson = path.join(pathToLocalDemo.replace(packageDemoPath, ''), 'package.json');
-	const version = require(pathToPackageJson).version;
+	const version = require(path.resolve(pathToPackageJson)).version;
 	const html = await fs.readFile(pathToLocalDemo, 'utf-8');
 
 	return {
@@ -55,24 +53,34 @@ const getLocalPackageHtml = async packageName => {
 	};
 };
 
-// const createServer = async (remoteHtml, localHtml) => {
-const createServer = async (remote, local) => {
-	const remoteHtmlMinified = htmlminifier(remote.html, minifyOptions);
-	const localHtmlMinified = htmlminifier(local.html, minifyOptions);
-	const page = baseTemplate({
-		html: remoteHtmlMinified,
-		name: remote.name,
-		version: remote.version
-	}, {
-		html: localHtmlMinified,
-		name: local.name,
-		version: local.version
-	});
+const createServer = (port, remote, local) => {
+	return new Promise(function (resolve, reject) {
+		const server = http.createServer();
+		const remoteHtmlMinified = htmlminifier(remote.html, minifyOptions);
+		const localHtmlMinified = htmlminifier(local.html, minifyOptions);
+		const page = baseTemplate({
+			html: remoteHtmlMinified,
+			name: remote.name,
+			version: remote.version
+		}, {
+			html: localHtmlMinified,
+			name: local.name,
+			version: local.version
+		});
 
-	reporter.info('manual diff available', 'http://localhost:3000/');
-	server([
-		get('/', () => page)
-	]);
+		server.on('request', (_req, res) => {
+			res.writeHead(200, {'Content-Type': 'text/html; charset=UTF-8'});
+			res.end(page);
+		}).listen(port, () => {
+			reporter.info('manual diff available', `http://localhost:${port}/`);
+			resolve();
+		});
+
+		server.on('error', error => {
+			reporter.fail('unable to create server', `http://localhost:${port}/`);
+			reject(error);
+		});
+	});
 };
 
 /**
@@ -81,9 +89,10 @@ const createServer = async (remote, local) => {
  * @function diffPackage
  * @param {String} npmPackage name and version of package on NPM
  * @param {String} scope NPM scope
+ * @param {Number} port local server port
  * @return {Promise}
  */
-const diffPackage = async (npmPackage, scope) => {
+const diffPackage = async (npmPackage, scope, port) => {
 	const npmPackageArray = npmPackage.split('@');
 	const packageName = npmPackageArray[0];
 	const packageVersion = npmPackageArray[1];
@@ -113,7 +122,7 @@ const diffPackage = async (npmPackage, scope) => {
 	}
 
 	// create server for local comparison
-	await createServer({
+	await createServer(port, {
 		html: npmPackageHtml.body,
 		name: packageName,
 		version: packageVersion
