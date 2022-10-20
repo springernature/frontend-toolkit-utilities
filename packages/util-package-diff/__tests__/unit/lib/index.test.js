@@ -6,7 +6,7 @@
 
 jest.mock('@springernature/util-cli-reporter');
 
-const diffPackage = require('../../../lib');
+// const diffPackage = require('../../../lib');
 
 describe('package diff', () => {
 	test('diff two packages', async () => {
