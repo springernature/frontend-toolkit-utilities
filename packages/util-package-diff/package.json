@@ -1,9 +1,11 @@
 {
   "name": "@springernature/util-package-diff",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "visual diff between two elements packages on a local server",
   "main": "lib/index.js",
-  "bin": "bin/cli.js",
+  "bin": {
+    "util-package-diff": "bin/cli.js"
+  },
   "scripts": {
     "test": "echo \"Run tests from the top of the repo please.\" && exit 1"
   },
