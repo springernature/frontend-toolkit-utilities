@@ -10,7 +10,7 @@ const pe = new PrettyError();
 
 const cli = meow(`
 	Usage
-		sn-package-diff [options]
+		npx @springernature/util-package-diff [options]
 
 	Options
 		--package, -p        Name and version of package
@@ -18,9 +18,9 @@ const cli = meow(`
 		--port, -t           Port for local server, default: 3000
 
 	Examples
-		sn-package-diff -p package-name@1.0.0
-		sn-package-diff -p package-name@1.0.0 -s @some-other-scope
-		sn-package-diff -p package-name@1.0.0 -s @some-other-scope -t 5000
+		npx @springernature/util-package-diff -p package-name@1.0.0
+		npx @springernature/util-package-diff -p package-name@1.0.0 -s @some-other-scope
+		npx @springernature/util-package-diff -p package-name@1.0.0 -s @some-other-scope -t 5000
 `, {
 	booleanDefault: undefined,
 	flags: {
