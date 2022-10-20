@@ -11,12 +11,12 @@ Can be used to test the affect of `brand-context` or other updates on a componen
 ## Usage
 
 ```
-$ npx sn-package-diff --help                                  
+$ npx @springernature/util-package-diff --help                                  
 
   visual diff between two elements packages on a local server
 
   Usage
-        sn-package-diff [options]
+        npx @springernature/util-package-diff [options]
 
   Options
         --package, -p        Name and version of package
@@ -24,14 +24,14 @@ $ npx sn-package-diff --help
         --port, -t           Port for local server, default: 3000
 
   Examples
-        sn-package-diff -p package-name@1.0.0
-        sn-package-diff -p package-name@1.0.0 -s @some-other-scope
-        sn-package-diff -p package-name@1.0.0 -s @some-other-scope -t 5000
+        npx @springernature/util-package-diff -p package-name@1.0.0
+        npx @springernature/util-package-diff -p package-name@1.0.0 -s @some-other-scope
+        npx @springernature/util-package-diff -p package-name@1.0.0 -s @some-other-scope -t 5000
 ```
 
 ### Example
 
-`$ npx sn-package-diff -p global-corporate-footer@4.0.0 -t 5000`
+`$ npx @springernature/util-package-diff -p global-corporate-footer@4.0.0 -t 5000`
 
 ## License
 
