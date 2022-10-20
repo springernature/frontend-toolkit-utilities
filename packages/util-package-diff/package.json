@@ -1,0 +1,29 @@
+{
+  "name": "@springernature/util-package-diff",
+  "version": "0.0.1",
+  "description": "visual diff between two elements packages on a local server",
+  "main": "lib/index.js",
+  "bin": {
+    "sn-package-diff": "bin/cli.js"
+  },
+  "scripts": {
+    "test": "echo \"Run tests from the top of the repo please.\" && exit 1"
+  },
+  "keywords": [
+    "elements",
+    "components",
+    "diff",
+    "testing"
+  ],
+  "author": "ajk",
+  "license": "MIT",
+  "dependencies": {
+    "@springernature/util-cli-reporter": "^2.0.0",
+    "globby": "^11.0.3",
+    "got": "^11.8.3",
+    "html-minifier": "^4.0.0",
+    "meow": "^9.0.0",
+    "pretty-error": "^4.0.0",
+    "server": "^1.0.37"
+  }
+}
