@@ -22,13 +22,28 @@ const minifyOptions = {
 	minifyJS: true
 };
 
-const checkPackageVersion = (npmPackage, packageVersion) => {
+/**
+ * Check the remote package version number is valid semver
+ * @private
+ * @function checkPackageVersion
+ * @param {String} packageName name of the package
+ * @param {String} packageVersion version number to check
+ */
+const checkPackageVersion = (packageName, packageVersion) => {
 	if (!semverRegex.test(packageVersion)) {
-		reporter.fail('getting package from npm', npmPackage, 'invalid version number');
+		reporter.fail('getting package from npm', `${packageName} v${packageVersion}`, 'invalid version number');
 		throw new Error(`Invalid semver '${packageVersion}'`);
 	}
 };
 
+/**
+ * Get the html for displaying the local demo version
+ * @async
+ * @private
+ * @function getLocalPackageHtml
+ * @param {String} packageName name and version of package on NPM
+ * @return {Promise<Object>}
+ */
 const getLocalPackageHtml = async packageName => {
 	const localDemoFiles = await globby(`**/${packageName}/${packageDemoPath}`, {
 		expandDirectories: false,
@@ -36,8 +51,8 @@ const getLocalPackageHtml = async packageName => {
 	});
 
 	if (localDemoFiles.length === 0) {
-		reporter.fail('unable to find local package', packageName);
-		throw new Error('404: local package not found');
+		reporter.fail('unable to find local package demo', packageName);
+		throw new Error('404: local package demo not found');
 	}
 
 	// Should only be a single rendered demo
@@ -53,18 +68,27 @@ const getLocalPackageHtml = async packageName => {
 	};
 };
 
-const createServer = (port, remote, local) => {
+/**
+ * Create a server and display demos side by side
+ * @async
+ * @private
+ * @function createServer
+ * @param {String} port port to open local server on
+ * @param {String} packageName name of the package to display
+ * @param {Object} remote html and version from npm demo
+ * @param {Object} local html and version from local demo
+ * @return {Promise}
+ */
+const createServer = (port, packageName, remote, local) => {
 	return new Promise(function (resolve, reject) {
 		const server = http.createServer();
 		const remoteHtmlMinified = htmlminifier(remote.html, minifyOptions);
 		const localHtmlMinified = htmlminifier(local.html, minifyOptions);
-		const page = baseTemplate({
+		const page = baseTemplate(packageName, {
 			html: remoteHtmlMinified,
-			name: remote.name,
 			version: remote.version
 		}, {
 			html: localHtmlMinified,
-			name: local.name,
 			version: local.version
 		});
 
@@ -103,7 +127,7 @@ const diffPackage = async (npmPackage, scope, port) => {
 	reporter.info('visual comparison for package', packageName);
 
 	// Check valid semver convention
-	checkPackageVersion(npmPackage, packageVersion);
+	checkPackageVersion(packageName, packageVersion);
 
 	// Get remote package html
 	try {
@@ -121,14 +145,12 @@ const diffPackage = async (npmPackage, scope, port) => {
 		throw error;
 	}
 
-	// create server for local comparison
-	await createServer(port, {
+	// Create server for local comparison
+	await createServer(port, packageName, {
 		html: npmPackageHtml.body,
-		name: packageName,
 		version: packageVersion
 	}, {
 		html: localPackage.html,
-		name: packageName,
 		version: localPackage.version
 	});
 };

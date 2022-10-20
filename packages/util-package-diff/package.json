@@ -1,7 +1,7 @@
 {
   "name": "@springernature/util-package-diff",
   "version": "0.0.1",
-  "description": "visual diff between two elements packages",
+  "description": "visual diff between two elements packages on a local server",
   "main": "lib/index.js",
   "bin": {
     "sn-package-diff": "bin/cli.js"

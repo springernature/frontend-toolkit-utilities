@@ -1,5 +1,5 @@
 // HTML template wrapper
-module.exports = (remote, local) => {
+module.exports = (packageName, remote, local) => {
 	return `<!doctype html>
 <html lang="en">
 	<head>
@@ -8,7 +8,7 @@ module.exports = (remote, local) => {
 		</script>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>example</title>
+		<title>Visual Diff for ${packageName}</title>
 		<style>
 			html,
 			body {
@@ -35,11 +35,11 @@ module.exports = (remote, local) => {
 			.column-child {
 				flex: 1;
 			}
-			.flex-container {
+			.row-container {
 				display: flex;
 				height: 100%;
 			}
-			.flex-child {
+			.row-child {
 				flex: 1;
 			}
 		</style>
@@ -47,14 +47,14 @@ module.exports = (remote, local) => {
 	<body>
 		<div class="column-container">
 			<div class="column-child">
-				<div class="flex-container">
-					<div class="flex-child">
-						<h2>${remote.name} v${remote.version}</h2>
-						<iframe height="100%" width="100%" title="thing" scrolling="auto" allowtransparency="true" loading="lazy" srcdoc='${remote.html}' frameborder="0"></iframe>
+				<div class="row-container">
+					<div class="row-child">
+						<h2>${packageName} v${remote.version}</h2>
+						<iframe height="100%" width="100%" title="${packageName}@${remote.version}" scrolling="auto" allowtransparency="true" loading="lazy" srcdoc='${remote.html}' frameborder="0"></iframe>
 					</div>
-					<div class="flex-child">
-						<h2>${local.name} v${local.version}</h2>
-						<iframe height="100%" width="100%" title="thing" scrolling="auto" allowtransparency="true" loading="lazy" srcdoc='${local.html}' frameborder="0"></iframe>
+					<div class="row-child">
+						<h2>${packageName} v${local.version}</h2>
+						<iframe height="100%" width="100%" title="${packageName}@${local.version}" scrolling="auto" allowtransparency="true" loading="lazy" srcdoc='${local.html}' frameborder="0"></iframe>
 					</div>
 				</div>
 			</div>
