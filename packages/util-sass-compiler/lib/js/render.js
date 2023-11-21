@@ -7,7 +7,7 @@
 const util = require('util');
 
 const css2json = require('css2json');
-const sass = require('node-sass');
+const sass = require('sass');
 
 const sassRender = util.promisify(sass.render);
 
