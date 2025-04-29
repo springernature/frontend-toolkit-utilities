@@ -27,7 +27,7 @@ const filterResults = (json, opts) => {
 		json.results = json.results.filter(
 			item => {
 				const regex = new RegExp(`@${opts.scope}/`);
-				return regex.test(item.package.name)
+				return regex.test(item.package.name);
 			}
 		);
 		// filter by user filters
