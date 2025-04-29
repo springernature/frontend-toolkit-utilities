@@ -28,7 +28,7 @@
     "test": "echo \"Run tests from the repository root please.\" && exit 1"
   },
   "dependencies": {
-    "boxen": "^2.0.0",
+    "boxen": "^5.1.2",
     "figures": "^2.0.0",
     "jest-fetch-mock": "^3.0.3",
     "kleur": "^3.0.3",
