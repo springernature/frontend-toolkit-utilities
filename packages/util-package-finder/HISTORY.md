@@ -1,7 +1,8 @@
 # History
 
 ## 0.5.0 (2025-04-29)
-	* Fixes #97 - updates filterResults after NPM API change (#98). This is breaking, and an essential bugfix.
+	* Fixes #97 - updates filterResults after NPM API change (#98). This is breaking, and an essential bugfix
+	* Updates `boxen` to 5.1.2, maintaning compatibility with node 10
 
 ## 0.4.2 (2021-02-10)
 	* Updates dependencies
