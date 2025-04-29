@@ -24,7 +24,12 @@ const filterResults = (json, opts) => {
 		delete json.objects;
 
 		// first filter by scope
-		json.results = json.results.filter(item => opts.scope === item.package.scope);
+		json.results = json.results.filter(
+			item => {
+				const regex = new RegExp(`@${opts.scope}/`);
+				return regex.test(item.package.name)
+			}
+		);
 		// filter by user filters
 		if (opts.filters.length === 0) {
 			resolve(json);
