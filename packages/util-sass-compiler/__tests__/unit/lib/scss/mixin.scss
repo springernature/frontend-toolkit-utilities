@@ -1,5 +1,5 @@
-@import './imports';
+@use './imports';
 
 .foo {
-	@include box;
+	@include imports.box;
 }

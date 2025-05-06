@@ -1,5 +1,5 @@
-@import './imports';
+@use './imports';
 
 .foo {
-	width: half(10px);
+	width: imports.half(10px);
 }

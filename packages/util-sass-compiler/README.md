@@ -28,39 +28,23 @@ The `render` function returns an Object of the form
 
 ### Example
 
-Below is a simple example, see the [test folder](__tests__/unit/lib/js/render.test.js) for more.
+Below is a simple example, see the [demo folder](demo/index.js) for more.
 
 ```js
-import {render} from '@springernature/util-sass-compiler';
+const render = require('@springernature/util-sass-compiler');
 
-describe('Compile Some SASS', () => {
-  test('CSS String', async () => {
-    const result = await render({
-	  data: `
-	    $size: 100px;
-        .foo {
-          width: $size;
-        }`;
-    });
-    expect(result.css.toString().trim()).toEqual('.foo{width:100px}');
-  });
+// Pass data to compile
+await render({
+	data: `
+		$size: 100px;
+		.foo {
+			width: $size;
+		}`;
+	});
 
-  test('JSON match', async () => {
-    const result = await render({
-	  data: `
-	    $size: 100px;
-        .foo {
-          width: $size;
-        }`;
-    });
-    expect(result.json).toEqual(
-      expect.objectContaining({
-        '.foo': {
-          'width': '100px'
-        }
-      })
-    );
-  });
+// Pass file to compile
+await render({
+	file: 'path/to/file.scss'
 });
 ```
 
